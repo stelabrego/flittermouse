@@ -1,0 +1,69 @@
+Event Website Design Meeting
+
+What is the purpose?
+
+What are the needs that are not being fulfilled?
+- don't want to be on facebook
+- they enable genocide
+- an easy way to find events.
+- events are hard to find. they  only find them when they get an invite. The discovery feature sucks and no one uses it.
+
+What's annoying about Facebook. What would a better facebook events look like?
+
+
+Do users need to log in to view events?
+Is it anonymous? x
+People can log in, view, create, delete events
+Comments on events?
+Can you see if other users are going to events? If not, is that setting global or per event.
+google maps
+advanced feature: discover feed based on friendships, location, or interests, or mutual event goers
+can users friend eachother
+what functionality
+what's on the homepage? what are the aethstics
+
+
+- subscribe to a place
+- like indeed or monster
+- anonymous: event and/or person based, the more options the better. start by sharing nothing have fined grained options. also have options per event. you could have the option of releasing certain information at a time before the event that you choose.
+- friends: ability to friend good, hate suggested friends.
+- should anyone be able to create events? invite only fast and loose is good. 
+- moderation will still have to happen. human moderation is necessary. every user can report things. their can bring tiers. Privileged users can view lists and pick out things that look sketchy. Then paid people can look at those sketchy ones.
+- facebook events but with granular privacy settings and a way to search for events
+- the point is not a social network. it's to find events.
+- it should look interesting
+- websites that are designed for everyone SUCK
+- explicitly leftist in the signup page
+- make it accessible and usable
+- figure out what would make white supremacist bored
+- RAINBOWS
+- look up gothjournal
+- help the users that I'm interested in find events, not trying to accumulate as many users as possible
+- what if we made it like craigslist where it's location specific
+- EVNTZ
+- no app
+- mobile friendly, responsive design
+- vidyah can help with scaling, moderation, UX when we get there.
+
+------------
+9/12/19
+
+Priorities:
+- database 0.1
+- server/api 0.2
+- front end 0.3
+- moderation/admin 0.4
+- security (sql infection/server hardening/https) 0.5
+
+DM's can be open to friends or public
+friend vs follow mechanism
+
+this website can be as anti social as you want
+antisocial network
+
+privacy settings
+- subscribed_events_visibility: (public, friends, none)
+all events by default start off as private (invite only)
+
+
+
