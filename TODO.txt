@@ -1,0 +1,14 @@
+database
+- tell jacob that dbdiagram.io uses DBML language. kind of interesting.
+- add question board to event table
+- add pictures to user, event tables
+    - probably should use CDN
+    - cloudinary is a good option
+- use sqlite references as enums https://stackoverflow.com/a/10811837/9091281
+    https://sqlite.org/foreignkeys.html
+    PRAGMA foreign_keys = ON; has to be set in order for the references to be enforced.
+- i don't think we need a first name/last name field in user table
+- tell jacob i don't like the term "follower" and "followed". What about link? Like let's link up. Let's link arms. activist shit. Because it's not like people are pushing out a lot of content anyway. You're just linking up. It's casual. trusted? Trust someone? That sounds too serious. It might be cool to see how many people "trust" you and you don't necesarily have to trust them back.
+- tell jacob I redid a bunch of shit on the database schema
+- add message table to database schema
+- add bio to user
