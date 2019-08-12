@@ -1,0 +1,19 @@
+{
+  "name": "eventz",
+  "version": "0.0.1",
+  "description": "dope evntz shit",
+  "main": "y",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stelabr/eventz.git"
+  },
+  "author": "stel abrego & jacob cacciamani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stelabr/eventz/issues"
+  },
+  "homepage": "https://github.com/stelabr/eventz#readme"
+}
