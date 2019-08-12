@@ -1,0 +1,80 @@
+// Goto website https://dbdiagram.io/d
+ 
+// create database with "trust" and "block" records
+Table relationship_enum {
+  id int [primary key, increment]
+  title varchar [unique]
+}
+
+// create database with "public", "trusted", and "private" records
+Table visibility_enum {
+  id int [primary key, increment]
+  title varchar [unique]
+}
+
+Table user {
+  id int [primary key, increment]
+  display_name varchar [not null, unique]
+  email varchar [unique]
+  username varchar [not null, unique]
+  password varchar [not null]
+  phone_number varchar [note: "maybe unique"]
+  address varchar
+  created_at datetime [not null]
+}
+
+Table user_privacy {
+  id int [primary key, increment]
+  user_id int [ref: - user.id]
+  subscribed_events_visiblity varchar [ref: > visibility_enum.title]
+  address_visibility varchar [ref: > visibility_enum.title]
+  name_visibility varchar [ref: > visibility_enum.title]
+  email_visibility varchar [ref: > visibility_enum.title]
+  phone_number_visibility varchar [ref: > visibility_enum.title]
+}
+
+Table user_relationship {
+  id int [primary key, increment]
+  initating_user int [ref: > user.id]  
+  target_user int [ref: > user.id]
+  relationship varchar [ref: > relationship_enum.title]
+  //i don't think anything needs to be pending
+  //pending boolean [not null]
+}
+
+Table event {
+  id int [primary key, increment]
+  user_id int [ref: > user.id]
+  created_at datetime [not null]
+  date_of datetime [not null]
+  address varchar [not null]
+}
+
+Table event_privacy {
+  id int [primary key, increment]
+  event_id int [ref: - event.id]
+  display_address datetime
+  display_date datetime
+  visibility varchar [ref: > visibility_enum.title]
+}
+
+Table attendance {
+  id int [primary key, increment]
+  event_id int [ref: > event.id]
+  user_id int [ref: > user.id]
+}
+
+Table event_question {
+  id int [primary key, increment]
+  event_id int [ref: > event.id]
+  question varchar [not null]
+  answer varchar [not null, default: ""]
+  visible boolean [not null, default: false]
+}
+
+Table event_tag {
+  id int [primary key, increment]
+  event_id int [ref: > event.id]
+  tag_name varchar
+}
+
