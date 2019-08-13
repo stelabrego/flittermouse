@@ -16,4 +16,10 @@ database
 
 8/13
 - populate dev database by adding to create_databse.sql script
-- get api working to 
+- get api working with database
+- look up invite link tutorial find best practices
+- add the feature of accessing users by eventz.com/username
+- what if we used camelcase for everything including the database?
+- we need a userKey and inviteKey field for the user table.
+    - userKey is for url
+    - inviteKey is more secret, for invites only
