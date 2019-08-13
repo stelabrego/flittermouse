@@ -5,7 +5,8 @@
   "main": "y",
   "scripts": {
     "build": "babel --watch --out-dir build --copy-files ./src",
-    "start": "nodemon ./build/app.js"
+    "start": "nodemon ./build/app.js",
+    "setup-db": "sqlite3 build/eventz.db < create_database.sql"
   },
   "repository": {
     "type": "git",
