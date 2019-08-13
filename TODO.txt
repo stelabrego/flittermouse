@@ -13,3 +13,7 @@ database
 - add message table to database schema
 - add bio to user
 - use babel and typescript with this guide https://devblogs.microsoft.com/typescript/typescript-and-babel-7/
+
+8/13
+- populate dev database by adding to create_databse.sql script
+- get api working to 
