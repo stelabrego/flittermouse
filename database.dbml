@@ -22,6 +22,7 @@ Table user {
   address varchar
   created_at datetime [not null]
   avatar_url varchar
+  bio varchar
 }
 
 Table user_privacy {

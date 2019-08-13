@@ -12,3 +12,4 @@ database
 - tell jacob I redid a bunch of shit on the database schema
 - add message table to database schema
 - add bio to user
+- use babel and typescript with this guide https://devblogs.microsoft.com/typescript/typescript-and-babel-7/
