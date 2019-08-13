@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stelabr/eventz.git"
+    "url": "git+https://github.com/stelabrego/eventz.git"
   },
   "author": "stel abrego & jacob cacciamani",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/stelabr/eventz/issues"
+    "url": "https://github.com/stelabrego/eventz/issues"
   },
-  "homepage": "https://github.com/stelabr/eventz#readme"
+  "homepage": "https://github.com/stelabrego/eventz#readme"
 }
