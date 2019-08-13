@@ -21,16 +21,17 @@ Table user {
   phone_number varchar [note: "maybe unique"]
   address varchar
   created_at datetime [not null]
+  avatar_url varchar
 }
 
 Table user_privacy {
   id int [primary key, increment]
   user_id int [ref: - user.id]
-  subscribed_events_visiblity varchar [ref: > visibility_enum.title]
-  address_visibility varchar [ref: > visibility_enum.title]
-  name_visibility varchar [ref: > visibility_enum.title]
-  email_visibility varchar [ref: > visibility_enum.title]
-  phone_number_visibility varchar [ref: > visibility_enum.title]
+  subscribed_events_visiblity varchar [not null, ref: > visibility_enum.title]
+  address_visibility varchar [not null, ref: > visibility_enum.title]
+  name_visibility varchar [not null, ref: > visibility_enum.title]
+  email_visibility varchar [not null, ref: > visibility_enum.title]
+  phone_number_visibility varchar [not null, ref: > visibility_enum.title]
 }
 
 Table user_relationship {
@@ -48,6 +49,12 @@ Table event {
   created_at datetime [not null]
   date_of datetime [not null]
   address varchar [not null]
+}
+
+Table event_picture {
+  id int [primary key, increment]
+  event_id int [ref: > event.id]
+  url varchar [not null]
 }
 
 Table event_privacy {

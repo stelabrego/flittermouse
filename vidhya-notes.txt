@@ -49,11 +49,7 @@ what's on the homepage? what are the aethstics
 9/12/19
 
 Priorities:
-- database 0.1
-- server/api 0.2
-- front end 0.3
-- moderation/admin 0.4
-- security (sql infection/server hardening/https) 0.5
+
 
 DM's can be open to friends or public
 friend vs follow mechanism
