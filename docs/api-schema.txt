@@ -1,0 +1,38 @@
+https://stackoverflow.com/a/4028874/9091281
+
+POST /user/add/ creates new user
+    req
+    {
+        username: string
+        email: string
+        password: string
+        inviteKey: string
+    }
+    res
+    {
+        status: int
+        message: string
+        userKey: string optional
+    }
+
+POST /event/add/ creates new event
+    req
+    {
+        name: string
+        userKey: string
+        location: string optional
+        dateOf: string optional
+    }
+    res
+    {
+        status: int
+        message: string
+        eventKey: string optional
+    }
+
+GET / returns homepage
+GET /:username returns user profile page
+GET /users/:userKey redirects to /:username
+GET /signup returns "sorry invite only rn"
+GET /signup/:inviteKey returns signup page, let user know if inviteKey is valid
+GET /events/:eventKey returns event page
