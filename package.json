@@ -4,7 +4,8 @@
   "description": "dope evntz shit",
   "main": "y",
   "scripts": {
-    "test": "test"
+    "build": "babel ./src --out-dir lib --extensions \".ts,.tsx\"",
+    "test": "tsc"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,16 @@
   "bugs": {
     "url": "https://github.com/stelabrego/eventz/issues"
   },
-  "homepage": "https://github.com/stelabrego/eventz#readme"
+  "homepage": "https://github.com/stelabrego/eventz#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4"
+  }
 }
