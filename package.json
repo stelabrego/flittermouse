@@ -4,8 +4,8 @@
   "description": "dope evntz shit",
   "main": "y",
   "scripts": {
-    "build": "babel ./src --out-dir lib --extensions \".ts,.tsx\"",
-    "test": "tsc"
+    "build": "babel --watch ./src --out-dir build",
+    "start": "nodemon ./build/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,10 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
-    "@babel/preset-typescript": "^7.3.3"
+    "nodemon": "^1.19.1"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.4"
+    "@babel/polyfill": "^7.4.4",
+    "express": "^4.17.1"
   }
 }
