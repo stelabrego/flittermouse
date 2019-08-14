@@ -1,4 +1,5 @@
--- delete all tables. start from scratch
+-- DELETE ALL TABLES
+-- start from scratch
 DROP TABLE IF EXISTS relationship_enum;
 DROP TABLE IF EXISTS visibility_enum;
 DROP TABLE IF EXISTS user;
@@ -11,9 +12,10 @@ DROP TABLE IF EXISTS attendance;
 DROP TABLE IF EXISTS event_question;
 DROP TABLE IF EXISTS event_tag;
 
--- turn on foreign key checks
+-- TURN ON FOREIGN KEY CHECKS
 PRAGMA foreign_keys = ON;
 
+-- CREATE TABLES
 -- NOTE: we need to create our own primary key because you have to explicitly declare it in
 -- in order to reference it with a foreign key in another table
 CREATE TABLE `user`
@@ -124,14 +126,15 @@ CREATE TABLE `event_tag`
   FOREIGN KEY (`event_id`) REFERENCES `event` (`ROWID`)
 );
 
--- create enum tables
+-- ENUM TABLES
 CREATE TABLE `relationship_enum`(`title` varchar(255) UNIQUE);
 CREATE TABLE `visibility_enum`(`title` varchar(255) UNIQUE);
--- fill enum tables
+
+-- FILL ENUM TABLES
 INSERT INTO visibility_enum (title) VALUES ('public'), ('trusted'), ('private');
 INSERT INTO relationship_enum (title) VALUES ('trust'), ('block');
 
--- DUMMY DATA
+-- FILL DATABASE WITH DUMMY DATA
 -- USERS
 INSERT INTO user (username, email, password, key) VALUES ('stelabrego', 'stelabrego@icloud.com', 'password123', 'abcdefgh');
 INSERT INTO user (username, email, password, key) VALUES ('bobishere', 'bob@gmail.com', 'password123', 'bcdefghi');
