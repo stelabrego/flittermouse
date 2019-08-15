@@ -40,4 +40,25 @@ router.delete('/delete', (req, res, next) => {
   db.close()
 })
 
+// can only change one thing at a time
+router.put('/update', (req, res, next) => {
+  const columns = ['name', 'location', 'dateOf']
+  const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
+    if (columns.includes(curr)) return curr
+  }, null)
+  if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
+    res.send({ success: false, message: 'request keys are not correct' })
+  }
+  const statement = `UPDATE event SET ${targetColumn} = $newValue WHERE event.key = $eventKey`
+  const values = { $eventKey: req.body.eventKey, $newValue: req.body[targetColumn] }
+  console.log(values)
+  const db = getDatabase((err) => {
+    res.send({ success: false, message: err.message })
+  })
+  db.run(statement, values, function (err) {
+    if (err || this.changes === 0) res.send({ success: false, message: 'Could not update user', err: err.message })
+    else res.send({ success: true, message: 'Updated event successfully' })
+  })
+})
+
 module.exports = router

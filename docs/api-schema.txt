@@ -57,6 +57,19 @@ POST /event/add/ creates new event
         eventKey: string optional
     }
 
+PUT /events/update updates event
+    req {
+        eventKey: string
+        name: string optional
+        location: string optional
+        dateOf: string optional
+    }
+    res
+    {
+        status: int
+        message: string
+    }
+
 DELETE /events/delete deletes event
     req {
         eventKey: string
