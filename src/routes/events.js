@@ -21,7 +21,7 @@ router.post('/add', function (req, res, next) {
         else {
             db.run('INSERT INTO event_privacy (event_id) VALUES (?)', this.lastID, (err) => {
                 if (err) res.send({ success: false, message: err.message });
-                else res.send({ success: true, eventKey });
+                else res.send({ success: true, eventKey, message: 'Created event successfully' });
             });
         }
     });
@@ -31,12 +31,12 @@ router.post('/add', function (req, res, next) {
 router.delete('/delete', (req, res, next) => {
     let statement = "DELETE FROM event WHERE event.key = ?";
     let db = getDatabase((err) => {
-      res.send({ success: false, message: err.message });
+        res.send({ success: false, message: err.message });
     });
     db.run(statement, req.body.eventKey, (err) => {
-      if (err) res.send({ success: false, message: err.message });
-      else res.send({ success: true });
+        if (err) res.send({ success: false, message: err.message, message: 'Deleted event successfully' });
+        else res.send({ success: true });
     })
-  })
+})
 
 module.exports = router;

@@ -21,7 +21,7 @@ router.post('/add', function (req, res, next) {
     else {
       db.run('INSERT INTO user_privacy (user_id) VALUES (?)', this.lastID, (err) => {
         if (err) res.send({ success: false, message: err.message });
-        else res.send({ success: true, userKey });
+        else res.send({ success: true, userKey, message: 'Created new user successfully' });
       });
     }
   });
@@ -35,7 +35,7 @@ router.delete('/delete', (req, res, next) => {
   });
   db.run(statement, req.body.userKey, (err) => {
     if (err) res.send({ success: false, message: err.message });
-    else res.send({ success: true });
+    else res.send({ success: true, message: 'Deleted user successfully' });
   })
 })
 
