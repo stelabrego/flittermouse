@@ -6,13 +6,30 @@ POST /user/add/ creates new user
         username: string
         email: string
         password: string
-        inviteKey: string
+        inviteKey: string TODO
     }
     res
     {
         status: int
         message: string
         userKey: string optional
+    }
+
+PUT /users/update updates user
+    req {
+        userKey: string
+        username: string optional
+        email: string optional
+        password: string optional
+        displayName: string optional
+        phoneNumber: string optional
+        address: string optional
+        bio: string optional
+    }
+    res
+    {
+        status: int
+        message: string
     }
 
 DELETE /users/delete deletes user
