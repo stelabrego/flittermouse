@@ -15,9 +15,15 @@ router.post('/add', function (req, res, next) {
     let db = getDatabase((err) => {
         res.send({ success: false, message: err.message });
     })
-    db.run(statement, values, (err) => {
+    // callback can't be lambda because lambdas use a new this object which makes this.lastID undefined
+    db.run(statement, values, function (err) {
         if (err) res.send({ success: false, message: err.message });
-        else res.send({ success: true });
+        else {
+            db.run('INSERT INTO event_privacy (event_id) VALUES (?)', this.lastID, (err) => {
+                if (err) res.send({ success: false, message: err.message });
+                else res.send({ success: true });
+            });
+        }
     });
     db.close();
 });
