@@ -6,12 +6,12 @@ const getDatabase = require('../lib/getDatabase')
 // Add event
 router.post('/add', function (req, res, next) {
   const eventKey = crypto.randomBytes(6).toString('hex')
-  const columns = ['user_id', 'name', 'date_of', 'address']
+  const columns = ['userKey', 'name', 'date_of', 'address']
   const values = columns.reduce((prev, curr) => {
     prev['$' + curr] = req.body[curr] || null
     return prev
   }, { $key: eventKey })
-  const statement = 'INSERT INTO event (user_id, name, key, date_of, address) VALUES ($user_id, $name, $key, $date_of, $address)'
+  const statement = 'INSERT INTO event (user_id, name, key, date_of, address) SELECT user.ROWID, $name, $key, $date_of, $address FROM user WHERE user.key = $userKey'
   const db = getDatabase((err) => {
     res.send({ success: false, message: err.message })
   })
