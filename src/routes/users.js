@@ -14,10 +14,15 @@ router.post('/add', function (req, res, next) {
   let statement = "INSERT INTO user (username, password, email, key, display_name, phone_number, address, avatar_url, bio) VALUES ($username, $password, $email, $key, $display_name, $phone_number, $address, $avatar_url, $bio)";
   let db = getDatabase((err) => {
     res.send({ success: false, message: err.message });
-  })
-  db.run(statement, values, (err) => {
+  });
+  db.run(statement, values, function (err) {
     if (err) res.send({ success: false, message: err.message });
-    else res.send({ success: true });
+    else {
+      db.run('INSERT INTO user_privacy (user_id) VALUES (?)', this.lastID, (err) => {
+        if (err) res.send({ success: false, message: err.message });
+        else res.send({ success: true });
+      });
+    }
   });
   db.close();
 });
