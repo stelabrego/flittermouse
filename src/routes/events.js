@@ -28,4 +28,15 @@ router.post('/add', function (req, res, next) {
     db.close();
 });
 
+router.delete('/delete', (req, res, next) => {
+    let statement = "DELETE FROM event WHERE event.key = ?";
+    let db = getDatabase((err) => {
+      res.send({ success: false, message: err.message });
+    });
+    db.run(statement, req.body.eventKey, (err) => {
+      if (err) res.send({ success: false, message: err.message });
+      else res.send({ success: true });
+    })
+  })
+
 module.exports = router;
