@@ -10,7 +10,7 @@ POST /user/add/ creates new user
     }
     res
     {
-        status: int
+        status: bool
         message: string
         userKey: string optional
     }
@@ -28,7 +28,7 @@ PUT /users/update updates user
     }
     res
     {
-        status: int
+        status: bool
         message: string
     }
 
@@ -38,7 +38,7 @@ DELETE /users/delete deletes user
     }
     res
     {
-        status: int
+        status: bool
         message: string
     }
 
@@ -52,7 +52,7 @@ POST /event/add/ creates new event
     }
     res
     {
-        status: int
+        status: bool
         message: string
         eventKey: string optional
     }
@@ -66,7 +66,7 @@ PUT /events/update updates event
     }
     res
     {
-        status: int
+        status: bool
         message: string
     }
 
@@ -76,7 +76,7 @@ DELETE /events/delete deletes event
     }
     res
     {
-        status: int
+        status: bool
         message: string
     }
 
