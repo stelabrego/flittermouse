@@ -42,7 +42,7 @@ router.delete('/delete', (req, res, next) => {
 
 // can only change one thing at a time
 router.put('/update', (req, res, next) => {
-  const columns = ['name', 'location', 'dateOf']
+  const columns = ['name', 'location', 'date_of']
   const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
     if (columns.includes(curr)) return curr
   }, null)
