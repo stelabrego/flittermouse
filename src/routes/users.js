@@ -32,8 +32,8 @@ router.delete('/delete', (req, res, next) => {
   const db = getDatabase((err) => {
     res.send({ success: false, message: err.message })
   })
-  db.run(statement, req.body.userKey, (err) => {
-    if (err) res.send({ success: false, message: err.message })
+  db.run(statement, req.body.userKey, function (err) {
+    if (err || this.changes === 0) res.send({ success: false, message: 'Could not delete user' })
     else res.send({ success: true, message: 'Deleted user successfully' })
   })
 })

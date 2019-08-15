@@ -33,10 +33,11 @@ router.delete('/delete', (req, res, next) => {
   const db = getDatabase((err) => {
     res.send({ success: false, message: err.message })
   })
-  db.run(statement, req.body.eventKey, (err) => {
-    if (err) res.send({ success: false, message: err.message })
+  db.run(statement, req.body.eventKey, function (err) {
+    if (err || this.changes === 0) res.send({ success: false, message: 'Could not delete event' })
     else res.send({ success: true, message: 'Deleted event successfully' })
   })
+  db.close()
 })
 
 module.exports = router
