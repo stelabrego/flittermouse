@@ -1,42 +1,42 @@
-let express = require('express');
-let router = express.Router();
-let crypto = require('crypto');
-let getDatabase = require('../lib/getDatabase')
+const express = require('express')
+const router = express.Router()
+const crypto = require('crypto')
+const getDatabase = require('../lib/getDatabase')
 
 // Add event
 router.post('/add', function (req, res, next) {
-    let eventKey = crypto.randomBytes(6).toString('hex');
-    let columns = ['user_id', 'name', 'date_of', 'address']
-    let values = columns.reduce((prev, curr) => {
-        prev['$' + curr] = req.body[curr] || null;
-        return prev;
-    }, { $key: eventKey });
-    let statement = "INSERT INTO event (user_id, name, key, date_of, address) VALUES ($user_id, $name, $key, $date_of, $address)";
-    let db = getDatabase((err) => {
-        res.send({ success: false, message: err.message });
-    })
-    // callback can't be lambda because lambdas use a new this object which makes this.lastID undefined
-    db.run(statement, values, function (err) {
-        if (err) res.send({ success: false, message: err.message });
-        else {
-            db.run('INSERT INTO event_privacy (event_id) VALUES (?)', this.lastID, (err) => {
-                if (err) res.send({ success: false, message: err.message });
-                else res.send({ success: true, eventKey, message: 'Created event successfully' });
-            });
-        }
-    });
-    db.close();
-});
-
-router.delete('/delete', (req, res, next) => {
-    let statement = "DELETE FROM event WHERE event.key = ?";
-    let db = getDatabase((err) => {
-        res.send({ success: false, message: err.message });
-    });
-    db.run(statement, req.body.eventKey, (err) => {
-        if (err) res.send({ success: false, message: err.message, message: 'Deleted event successfully' });
-        else res.send({ success: true });
-    })
+  const eventKey = crypto.randomBytes(6).toString('hex')
+  const columns = ['user_id', 'name', 'date_of', 'address']
+  const values = columns.reduce((prev, curr) => {
+    prev['$' + curr] = req.body[curr] || null
+    return prev
+  }, { $key: eventKey })
+  const statement = 'INSERT INTO event (user_id, name, key, date_of, address) VALUES ($user_id, $name, $key, $date_of, $address)'
+  const db = getDatabase((err) => {
+    res.send({ success: false, message: err.message })
+  })
+  // callback can't be lambda because lambdas use a new this object which makes this.lastID undefined
+  db.run(statement, values, function (err) {
+    if (err) res.send({ success: false, message: err.message })
+    else {
+      db.run('INSERT INTO event_privacy (event_id) VALUES (?)', this.lastID, (err) => {
+        if (err) res.send({ success: false, message: err.message })
+        else res.send({ success: true, eventKey, message: 'Created event successfully' })
+      })
+    }
+  })
+  db.close()
 })
 
-module.exports = router;
+router.delete('/delete', (req, res, next) => {
+  const statement = 'DELETE FROM event WHERE event.key = ?'
+  const db = getDatabase((err) => {
+    res.send({ success: false, message: err.message })
+  })
+  db.run(statement, req.body.eventKey, (err) => {
+    if (err) res.send({ success: false, message: err.message })
+    else res.send({ success: true, message: 'Deleted event successfully' })
+  })
+})
+
+module.exports = router

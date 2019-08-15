@@ -15,6 +15,16 @@ POST /user/add/ creates new user
         userKey: string optional
     }
 
+DELETE /users/delete deletes user
+    req {
+        userKey: string
+    }
+    res
+    {
+        status: int
+        message: string
+    }
+
 POST /event/add/ creates new event
     req
     {
@@ -29,6 +39,18 @@ POST /event/add/ creates new event
         message: string
         eventKey: string optional
     }
+
+DELETE /events/delete deletes event
+    req {
+        eventKey: string
+    }
+    res
+    {
+        status: int
+        message: string
+    }
+
+
 
 GET / returns homepage
 GET /:username returns user profile page
