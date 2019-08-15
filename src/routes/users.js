@@ -54,7 +54,7 @@ router.put('/update', (req, res, next) => {
     res.send({ success: false, message: err.message })
   })
   db.run(statement, values, function (err) {
-    if (err || this.changes === 0) res.send({ success: false, message: 'Could not update user', err: err.message })
+    if (err) res.send({ success: false, message: err.message })
     else res.send({ success: true, message: 'Updated user successfully' })
   })
 })
