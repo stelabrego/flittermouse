@@ -42,6 +42,19 @@ DELETE /users/delete deletes user
         message: string
     }
 
+PUT /users/privacy/update updates user privacy
+    req {
+        userKey: string,
+        displayAddress: string optional
+        displayDate: string optional
+        visibility: string optional
+    }
+    res
+    {
+        status: bool
+        message: string
+    }
+
 POST /event/add/ creates new event
     req
     {
@@ -80,7 +93,7 @@ DELETE /events/delete deletes event
         message: string
     }
 
-PUT /events/privacy updates event privacy
+PUT /events/privacy/update updates event privacy
     req {
         eventKey: string,
         displayAddress: string optional
