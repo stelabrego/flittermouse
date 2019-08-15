@@ -15,6 +15,7 @@ router.post('/add', function (req, res, next) {
   let db = getDatabase((err) => {
     res.send({ success: false, message: err.message });
   });
+  // callback can't be lambda because lambdas use a new this object which makes this.lastID undefined
   db.run(statement, values, function (err) {
     if (err) res.send({ success: false, message: err.message });
     else {
