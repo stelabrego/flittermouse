@@ -87,8 +87,8 @@ CREATE TABLE `eventPicture`
 CREATE TABLE `eventPrivacy`
 (
   `eventID` int NOT NULL,
-  `displayAddress` datetime,
-  `displayDate` datetime,
+  `displayAddress` datetime DEFAULT CURRENT_TIMESTAMP,
+  `displayDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `visibility` varchar(255) NOT NULL DEFAULT 'private',
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
@@ -109,12 +109,14 @@ CREATE TABLE `attendance`
 CREATE TABLE `eventQuestion`
 (
   `eventID` int NOT NULL,
+  `userID` int NOT NULL,
   `question` varchar(255) NOT NULL,
-  `answer` varchar(255) NOT NULL,
+  `answer` varchar(255),
   `visible` boolean NOT NULL DEFAULT 0,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`)
+  FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`),
+  FOREIGN KEY (`userID`) REFERENCES `user1` (`ROWID`)
 );
 
 CREATE TABLE `eventTag`
@@ -131,7 +133,7 @@ CREATE TABLE `relationshipEnum`(`title` varchar(255) UNIQUE);
 CREATE TABLE `visibilityEnum`(`title` varchar(255) UNIQUE);
 
 -- FILL ENUM TABLES
-INSERT INTO visibilityEnum (title) VALUES ('public'), ('trusted'), ('private');
+INSERT INTO visibilityEnum (title) VALUES ('public'), ('trust'), ('private');
 INSERT INTO relationshipEnum (title) VALUES ('trust'), ('block');
 
 -- FILL DATABASE WITH DUMMY DATA
@@ -139,6 +141,24 @@ INSERT INTO relationshipEnum (title) VALUES ('trust'), ('block');
 INSERT INTO user (username, email, password, key) VALUES ('stelabrego', 'stelabrego@icloud.com', 'password123', 'abcdefgh');
 INSERT INTO user (username, email, password, key) VALUES ('bobishere', 'bob@gmail.com', 'password123', 'bcdefghi');
 INSERT INTO user (username, email, password, key) VALUES ('indicasmoke', 'indicaabrego@gmail.com','password123', 'cdefghij');
+-- USER PRIVACY
+INSERT INTO userPrivacy (userID, subscribedEventsVisiblity, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'private', 'trust', 'trust', 'private' FROM user WHERE user.username = 'stelabrego';
+INSERT INTO userPrivacy (userID, subscribedEventsVisiblity, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'public', 'public', 'trust', 'trust' FROM user WHERE user.username = 'bobishere';
+INSERT INTO userPrivacy (userID, subscribedEventsVisiblity, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'public', 'public', 'public', 'public' FROM user WHERE user.username = 'indicasmoke';
+-- USER RELATIONSHIP
+INSERT INTO userRelationship (initatingUser, targetUser, relationship) SELECT user.ROWID, (SELECT user.ROWID FROM user WHERE user.username = 'stelabrego'), 'trust' FROM user WHERE user.username = 'bobishere';
 -- EVENTS
 INSERT INTO event (userID, name, key) SELECT user.ROWID, 'Stel Bday Party', '12345678' FROM user WHERE user.username = 'stelabrego';
 INSERT INTO event (userID, name, key) SELECT user.ROWID, 'Solstice Party', '23456789' FROM user WHERE user.username = 'stelabrego';
+-- EVENT PRIVACY
+INSERT INTO eventPrivacy (eventID, displayAddress, displayDate, visibility) SELECT event.ROWID, '10/20/19', '10/15/19', 'trust' FROM event WHERE event.key = '12345678';
+INSERT INTO eventPrivacy (eventID) SELECT event.ROWID FROM event WHERE event.key = '23456789';
+-- EVENT PICTURE
+INSERT INTO eventPicture (eventID, url) SELECT event.ROWID, 'https://cdn.pixabay.com/photo/2017/12/08/11/53/event-party-3005668_960_720.jpg' FROM event WHERE event.key = '12345678';
+-- ATTENDANCE
+INSERT INTO attendance (eventID, userID) SELECT event.ROWID, (SELECT user.ROWID FROM user WHERE user.username = 'bobishere') FROM event WHERE event.key = '12345678';
+-- EVENT QUESTION
+INSERT INTO eventQuestion (eventID, userID, question) SELECT event.ROWID, (SELECT user.ROWID FROM user WHERE user.username = 'indicasmoke'), "Will this event be rad?" FROM event WHERE event.key = '12345678';
+-- EVENT TAG
+INSERT INTO eventTag (eventID, tagName) SELECT event.ROWID, "cool" FROM event WHERE event.key = '12345678';
+INSERT INTO eventTag (eventID, tagName) SELECT event.ROWID, "amazing" FROM event WHERE event.key = '12345678';
