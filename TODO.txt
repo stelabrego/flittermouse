@@ -23,3 +23,5 @@ database
 - we need a userKey and inviteKey field for the user table.
     - userKey is for url
     - inviteKey is more secret, for invites only
+
+-http://expressjs.com/en/advanced/best-practice-security.html#overview
