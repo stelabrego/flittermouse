@@ -3,3 +3,23 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  h3 add a user
+  div
+    div(class='form-container')
+      form(action='/users/add', method='POST', id='add-user')
+        p email
+          span(class='required-field') *
+        input(type='text', name='email', value='', required)
+        p username
+          span(class='required-field') *
+        input(type='text', name='username', required)
+        p password
+          span(class='required-field') *
+        input(type='password', name='password', value='', required)
+        p display name
+        input(type='text', name='display-name', required)
+        &nbsp;
+      button(type='submit' form='add-user' value='Add') Add User
+      p updated
+
+      
