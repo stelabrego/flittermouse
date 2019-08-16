@@ -5,9 +5,10 @@
   "main": "y",
   "scripts": {
     "build": "babel --watch --out-dir build --copy-files ./src",
-    "start": "nodemon ./build/app.js",
+    "start": "nodemon ./build/server.js",
     "setup-db": "sqlite3 build/eventz.db < create_database.sql",
-    "lint": "eslint --fix src/"
+    "lint": "eslint --fix src/",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.1"
   },
   "dependencies": {
