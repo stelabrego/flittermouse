@@ -45,9 +45,11 @@ DELETE /users/delete deletes user
 PUT /users/privacy/update updates user privacy
     req {
         userKey: string,
-        displayAddress: string optional
-        displayDate: string optional
-        visibility: string optional
+        subscribedEventsVisibility: string optional
+        addressVisibility string optional
+        nameVisibility: string optional
+        emailVisibility: string optional
+        phoneNumberVisibility: string optional
     }
     res
     {
