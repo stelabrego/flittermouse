@@ -1,19 +1,19 @@
 -- DELETE ALL TABLES
 -- start from scratch
-DROP TABLE IF EXISTS relationship_enum;
-DROP TABLE IF EXISTS visibility_enum;
+DROP TABLE IF EXISTS relationshipEnum;
+DROP TABLE IF EXISTS visibilityEnum;
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS user_privacy;
-DROP TABLE IF EXISTS user_relationship;
+DROP TABLE IF EXISTS userPrivacy;
+DROP TABLE IF EXISTS userRelationship;
 DROP TABLE IF EXISTS event;
-DROP TABLE IF EXISTS event_picture;
-DROP TABLE IF EXISTS event_privacy;
+DROP TABLE IF EXISTS eventPicture;
+DROP TABLE IF EXISTS eventPrivacy;
 DROP TABLE IF EXISTS attendance;
-DROP TABLE IF EXISTS event_question;
-DROP TABLE IF EXISTS event_tag;
+DROP TABLE IF EXISTS eventQuestion;
+DROP TABLE IF EXISTS eventTag;
 
 -- TURN ON FOREIGN KEY CHECKS
-PRAGMA foreign_keys = ON;
+PRAGMA foreignKeys = ON;
 
 -- CREATE TABLES
 -- NOTE: we need to create our own primary key because you have to explicitly declare it in
@@ -24,115 +24,115 @@ CREATE TABLE `user`
 `email` varchar(255) UNIQUE NOT NULL,
 `password` varchar(255) NOT NULL,
 `key` varchar(8) UNIQUE NOT NULL,
-`display_name` varchar(255),
-`phone_number` varchar(255),
+`displayName` varchar(255),
+`phoneNumber` varchar(255),
 `address` varchar(255),
-`avatar_url` varchar(255),
+`avatarUrl` varchar(255),
 `bio` varchar(255),
-`created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 `rowid` INTEGER PRIMARY KEY
 );
 
-CREATE TABLE `user_privacy`
+CREATE TABLE `userPrivacy`
 (
-  `user_id` int NOT NULL,
-  `subscribed_events_visiblity` varchar(255) NOT NULL DEFAULT 'private',
-  `address_visibility` varchar(255) NOT NULL DEFAULT 'private',
-  `name_visibility` varchar(255) NOT NULL DEFAULT 'private',
-  `email_visibility` varchar(255) NOT NULL  DEFAULT 'private',
-  `phone_number_visibility` varchar(255) NOT NULL DEFAULT 'private',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userID` int NOT NULL,
+  `subscribedEventsVisiblity` varchar(255) NOT NULL DEFAULT 'private',
+  `addressVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `nameVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `emailVisibility` varchar(255) NOT NULL  DEFAULT 'private',
+  `phoneNumberVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`ROWID`),
-  FOREIGN KEY (`subscribed_events_visiblity`) REFERENCES `visibility_enum` (`title`),
-  FOREIGN KEY (`address_visibility`) REFERENCES `visibility_enum` (`title`),
-  FOREIGN KEY (`name_visibility`) REFERENCES `visibility_enum` (`title`),
-  FOREIGN KEY (`email_visibility`) REFERENCES `visibility_enum` (`title`),
-  FOREIGN KEY (`phone_number_visibility`) REFERENCES `visibility_enum` (`title`)
+  FOREIGN KEY (`userID`) REFERENCES `user` (`ROWID`),
+  FOREIGN KEY (`subscribedEventsVisiblity`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`addressVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`nameVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`emailVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`phoneNumberVisibility`) REFERENCES `visibilityEnum` (`title`)
 );
 
-CREATE TABLE `user_relationship`
+CREATE TABLE `userRelationship`
 (
-  `initating_user` int,
-  `target_user` int,
+  `initatingUser` int,
+  `targetUser` int,
   `relationship` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`initating_user`) REFERENCES `user` (`ROWID`),
-  FOREIGN KEY (`target_user`) REFERENCES `user` (`ROWID`),
-  FOREIGN KEY (`relationship`) REFERENCES `relationship_enum` (`title`)
+  FOREIGN KEY (`initatingUser`) REFERENCES `user` (`ROWID`),
+  FOREIGN KEY (`targetUser`) REFERENCES `user` (`ROWID`),
+  FOREIGN KEY (`relationship`) REFERENCES `relationshipEnum` (`title`)
 );
 
 CREATE TABLE `event`
 (
-  `user_id` int NOT NULL,
+  `userID` int NOT NULL,
   `name` varchar(255) NOT NULL,
   `key` varchar(8) UNIQUE NOT NULL,
-  `date_of` datetime,
+  `dateOf` datetime,
   `address` varchar(255),
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`ROWID`)
+  FOREIGN KEY (`userID`) REFERENCES `user` (`ROWID`)
 );
 
-CREATE TABLE `event_picture`
+CREATE TABLE `eventPicture`
 (
-  `event_id` int NOT NULL,
+  `eventID` int NOT NULL,
   `url` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`event_id`) REFERENCES `event` (`ROWID`)
+  FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`)
 );
 
-CREATE TABLE `event_privacy`
+CREATE TABLE `eventPrivacy`
 (
-  `event_id` int NOT NULL,
-  `display_address` datetime,
-  `display_date` datetime,
+  `eventID` int NOT NULL,
+  `displayAddress` datetime,
+  `displayDate` datetime,
   `visibility` varchar(255) NOT NULL DEFAULT 'private',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`event_id`) REFERENCES `event` (`ROWID`),
-  FOREIGN KEY (`visibility`) REFERENCES `visibility_enum` (`title`)
+  FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`),
+  FOREIGN KEY (`visibility`) REFERENCES `visibilityEnum` (`title`)
 );
 
 CREATE TABLE `attendance`
 (
-  `event_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eventID` int NOT NULL,
+  `userID` int NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`event_id`) REFERENCES `event` (`ROWID`),
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`ROWID`)
+  FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`),
+  FOREIGN KEY (`userID`) REFERENCES `user` (`ROWID`)
 );
 
-CREATE TABLE `event_question`
+CREATE TABLE `eventQuestion`
 (
-  `event_id` int NOT NULL,
+  `eventID` int NOT NULL,
   `question` varchar(255) NOT NULL,
   `answer` varchar(255) NOT NULL,
   `visible` boolean NOT NULL DEFAULT 0,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`event_id`) REFERENCES `event` (`ROWID`)
+  FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`)
 );
 
-CREATE TABLE `event_tag`
+CREATE TABLE `eventTag`
 (
-  `event_id` int NOT NULL,
-  `tag_name` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eventID` int NOT NULL,
+  `tagName` varchar(255) NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`event_id`) REFERENCES `event` (`ROWID`)
+  FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`)
 );
 
 -- ENUM TABLES
-CREATE TABLE `relationship_enum`(`title` varchar(255) UNIQUE);
-CREATE TABLE `visibility_enum`(`title` varchar(255) UNIQUE);
+CREATE TABLE `relationshipEnum`(`title` varchar(255) UNIQUE);
+CREATE TABLE `visibilityEnum`(`title` varchar(255) UNIQUE);
 
 -- FILL ENUM TABLES
-INSERT INTO visibility_enum (title) VALUES ('public'), ('trusted'), ('private');
-INSERT INTO relationship_enum (title) VALUES ('trust'), ('block');
+INSERT INTO visibilityEnum (title) VALUES ('public'), ('trusted'), ('private');
+INSERT INTO relationshipEnum (title) VALUES ('trust'), ('block');
 
 -- FILL DATABASE WITH DUMMY DATA
 -- USERS
@@ -140,5 +140,5 @@ INSERT INTO user (username, email, password, key) VALUES ('stelabrego', 'stelabr
 INSERT INTO user (username, email, password, key) VALUES ('bobishere', 'bob@gmail.com', 'password123', 'bcdefghi');
 INSERT INTO user (username, email, password, key) VALUES ('indicasmoke', 'indicaabrego@gmail.com','password123', 'cdefghij');
 -- EVENTS
-INSERT INTO event (user_id, name, key) SELECT user.ROWID, 'Stel Bday Party', '12345678' FROM user WHERE user.username = 'stelabrego';
-INSERT INTO event (user_id, name, key) SELECT user.ROWID, 'Solstice Party', '23456789' FROM user WHERE user.username = 'stelabrego';
+INSERT INTO event (userID, name, key) SELECT user.ROWID, 'Stel Bday Party', '12345678' FROM user WHERE user.username = 'stelabrego';
+INSERT INTO event (userID, name, key) SELECT user.ROWID, 'Solstice Party', '23456789' FROM user WHERE user.username = 'stelabrego';
