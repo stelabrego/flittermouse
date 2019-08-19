@@ -1,3 +1,5 @@
+.PHONY: clean db build start lint test
+
 clean:
 	rm -rf ./build
 	mkdir build
@@ -13,3 +15,6 @@ start:
 
 lint:
 	./node_modules/eslint/bin/eslint.js --fix src/
+
+test:
+	./node_modules/mocha/bin/mocha
