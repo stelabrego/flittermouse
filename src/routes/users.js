@@ -30,11 +30,11 @@ router.post('/add', async (req, res, next) => {
 
 router.delete('/delete', async (req, res, next) => {
   try {
-    if (!res.body || !res.body.userKey || Object.keys(res.body) !== 1) throw Error('request fields are incorrect')
+    if (!req.body.userKey || Object.keys(req.body).length !== 1) throw Error('request fields are incorrect')
     const statement = SQL`
       DELETE
       FROM user
-      WHERE user.key = ${res.body.userKey}
+      WHERE user.key = ${req.body.userKey}
     `
     const db = await dbPromise
     const results = await db.run(statement)

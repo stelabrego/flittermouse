@@ -4,10 +4,13 @@ const app = require('../src/app')
 const exec = require('child_process').exec
 const crypto = require('crypto')
 
-let goodAddRequests = [
+const goodAddRequests = [
   { username: 'lovenoone', password: 'hibob', email: 'emogoth@gmail.com' },
   { username: 'anlasifs', password: 'password', email: 'haonicnen@gmail.com' }
 ]
+
+const goodAddRequestsWithKeys = []
+
 const badAddRequests = [
   {},
   { username: 'hithere', email: 'generic@gmail.com' }
@@ -15,6 +18,12 @@ const badAddRequests = [
 const badDeleteRequests = [
   {},
   { userKey: 'doesNotExist' }
+]
+
+const badPrivacyUpdateRequests = [
+  {},
+  { userKey: 'doesNotExist' },
+  { userKey: 'doesNotExist', subscribedEventsVisibility: 'trusted' }
 ]
 
 describe('/users endpoints', () => {
@@ -45,7 +54,6 @@ describe('/users endpoints', () => {
     })
     it('should accept good requests', () => {
       // add userKey to user object
-      const goodAddRequestsWithKeys = []
       const tests =
         goodAddRequests.map((reqBody) => {
           return request(app)
@@ -64,7 +72,6 @@ describe('/users endpoints', () => {
               throw err
             })
         })
-      goodAddRequests = goodAddRequestsWithKeys
       return Promise.all(tests)
     })
   })
@@ -109,14 +116,14 @@ describe('/users endpoints', () => {
     it('should accept good requests', () => {
       // change the data for the users we have already entered in previous tests
       // so we can attempt to update the database with the new data user their userKey
-      goodAddRequests.map((reqBody) => {
+      goodAddRequestsWithKeys.map((reqBody) => {
         reqBody.username = crypto.randomBytes(6).toString('hex')
         reqBody.email = crypto.randomBytes(6).toString('hex')
         reqBody.password = crypto.randomBytes(6).toString('hex')
         return reqBody
       })
       const tests =
-        goodAddRequests.map((reqBody) => {
+        goodAddRequestsWithKeys.map((reqBody) => {
           return request(app)
             .put('/users/update')
             .send({ userKey: reqBody.userKey, username: reqBody.username })
@@ -131,7 +138,7 @@ describe('/users endpoints', () => {
             })
         })
           .concat(
-            goodAddRequests.map((reqBody) => {
+            goodAddRequestsWithKeys.map((reqBody) => {
               return request(app)
                 .put('/users/update')
                 .send({ userKey: reqBody.userKey, password: reqBody.password })
@@ -147,7 +154,7 @@ describe('/users endpoints', () => {
             })
           )
           .concat(
-            goodAddRequests.map((reqBody) => {
+            goodAddRequestsWithKeys.map((reqBody) => {
               return request(app)
                 .put('/users/update')
                 .send({ userKey: reqBody.userKey, email: reqBody.email })
@@ -166,7 +173,7 @@ describe('/users endpoints', () => {
     })
     it('should accept good requests with no material changes', () => {
       const tests =
-        goodAddRequests.map((reqBody) => {
+        goodAddRequestsWithKeys.map((reqBody) => {
           return request(app)
             .put('/users/update')
             .send({ userKey: reqBody.userKey, username: reqBody.username })
@@ -183,22 +190,62 @@ describe('/users endpoints', () => {
       return Promise.all(tests)
     })
   })
+
+  describe('UPDATE /users/privacy', () => {
+    it('should reject bad requests', () => {
+      const tests =
+        badPrivacyUpdateRequests.map((reqBody) => {
+          return request(app)
+            .put('/users/privacy/update')
+            .send(reqBody)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .then((res) => {
+              assert(!res.body.success, JSON.stringify(res.body))
+            })
+            .catch((err) => {
+              throw err
+            })
+        })
+      return Promise.all(tests)
+    })
+  })
+
   describe('DELETE /users/delete', () => {
     it('should reject bad requests', () => {
-      const tests = badDeleteRequests.map((reqBody) => {
-        return request(app)
-          .delete('/users/delete')
-          .send(reqBody)
-          .set('Accept', 'application/json')
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .then((res) => {
-            assert(!res.body.success, JSON.stringify(res.body))
-          })
-          .catch((err) => {
-            throw err
-          })
-      })
+      const tests =
+        badDeleteRequests.map((reqBody) => {
+          return request(app)
+            .delete('/users/delete')
+            .send(reqBody)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .then((res) => {
+              assert(!res.body.success, JSON.stringify(res.body))
+            })
+            .catch((err) => {
+              throw err
+            })
+        })
+      return Promise.all(tests)
+    })
+    it('should accept good requests', () => {
+      const tests =
+        goodAddRequestsWithKeys.map((reqBody) => {
+          return request(app)
+            .delete('/users/delete')
+            .send({ userKey: reqBody.userKey })
+            .set('Accept', 'application/json')
+            .expect(200)
+            .then((res) => {
+              assert(res.body.success, JSON.stringify(res.body))
+            })
+            .catch((err) => {
+              throw err
+            })
+        })
       return Promise.all(tests)
     })
   })
