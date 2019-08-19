@@ -30,9 +30,18 @@ router.post('/add', async (req, res, next) => {
 })
 
 router.delete('/delete', async (req, res, next) => {
+  if (!res.body.userKey || Object.keys(res.body) !== 1) {
+    res.json({ success: false, message: 'request fields are incorrect' })
+    return
+  }
+  const statement = SQL`
+    DELETE
+    FROM user
+    WHERE user.key = ${res.body.userKey}
+  `
   try {
     const db = await dbPromise
-    const results = await db.run('DELETE FROM user WHERE user.key = ?', req.body.userKey)
+    const results = await db.run(statement)
     if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
     else res.json({ success: true, message: 'Deleted user successfully' })
   } catch (err) {
@@ -50,11 +59,14 @@ router.put('/update', async (req, res, next) => {
     res.json({ success: false, message: 'request keys are not correct' })
     return
   }
-  const statement = `UPDATE user SET ${targetColumn} = $newValue WHERE user.key = $userKey`
-  const values = { $userKey: req.body.userKey, $newValue: req.body[targetColumn] }
+  const statement = SQL`
+    UPDATE user
+    SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
+    WHERE user.key = ${req.body.userKey}
+  `)
   try {
     const db = await dbPromise
-    const results = await db.run(statement, values)
+    const results = await db.run(statement)
     if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
     else res.json({ success: true, message: 'Updated user successfully' })
   } catch (err) {
