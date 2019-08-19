@@ -2,46 +2,46 @@ const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
 const getDatabase = require('../lib/getDatabase')
+const dbPromise = require('../lib/dbPromise')
+const SQL = require('sql-template-strings')
 
-router.post('/add', function (req, res, next) {
+router.post('/add', async (req, res, next) => {
   const userKey = crypto.randomBytes(6).toString('hex')
   const columns = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'avatarUrl', 'bio']
   const values = columns.reduce((prev, curr) => {
-    prev['$' + curr] = req.body[curr] || null
+    prev[curr] = req.body[curr] || null
     return prev
-  }, { $key: userKey })
-  const statement = 'INSERT INTO user (username, password, email, key, displayName, phoneNumber, address, avatarUrl, bio) VALUES ($username, $password, $email, $key, $displayName, $phoneNumber, $address, $avatarUrl, $bio)'
-  const db = getDatabase((err) => {
+  }, { key: userKey })
+  const statement = SQL`
+    INSERT
+    INTO    user
+            (username, password, email, key, displayName, phoneNumber, address, avatarUrl, bio)
+    VALUES  (${values.username}, ${values.password}, ${values.email}, ${values.key}, ${values.displayName},
+              ${values.phoneNumber}, ${values.address}, ${values.avatarUrl}, ${values.bio})
+  `
+  try {
+    const db = await dbPromise
+    const results = await db.run(statement)
+    await db.run('INSERT INTO userPrivacy (userID) VALUES (?)', results.lastID)
+    res.json({ success: true, userKey, message: 'Created new user successfully' })
+  } catch (err) {
     res.json({ success: false, message: err.message })
-  })
-  // callback can't be lambda because lambdas use a new this object which makes this.lastID undefined
-  db.run(statement, values, function (err) {
-    if (err) res.json({ success: false, message: err.message })
-    else {
-      db.run('INSERT INTO userPrivacy (userID) VALUES (?)', this.lastID, (err) => {
-        if (err) res.json({ success: false, message: err.message })
-        else res.json({ success: true, userKey, message: 'Created new user successfully' })
-      })
-    }
-  })
-  db.close()
+  }
 })
 
-router.delete('/delete', (req, res, next) => {
-  const statement = 'DELETE FROM user WHERE user.key = ?'
-  const db = getDatabase((err) => {
-    res.json({ success: false, message: err.message })
-  })
-  db.run(statement, req.body.userKey, function (err) {
-    if (err || this.changes === 0) res.json({ success: false, message: 'Could not delete user' })
-    else if (this.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
+router.delete('/delete', async (req, res, next) => {
+  try {
+    const db = await dbPromise
+    const results = await db.run('DELETE FROM user WHERE user.key = ?', req.body.userKey)
+    if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
     else res.json({ success: true, message: 'Deleted user successfully' })
-  })
-  db.close()
+  } catch (err) {
+    res.json({ success: false, message: err.message })
+  }
 })
 
 // can only change one thing at a time
-router.put('/update', (req, res, next) => {
+router.put('/update', async (req, res, next) => {
   const columns = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'bio']
   const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
     if (columns.includes(curr)) return curr
@@ -52,15 +52,14 @@ router.put('/update', (req, res, next) => {
   }
   const statement = `UPDATE user SET ${targetColumn} = $newValue WHERE user.key = $userKey`
   const values = { $userKey: req.body.userKey, $newValue: req.body[targetColumn] }
-  const db = getDatabase((err) => {
-    res.json({ success: false, message: err.message })
-  })
-  db.run(statement, values, function (err) {
-    if (err) res.json({ success: false, message: err.message })
-    else if (this.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
+  try {
+    const db = await dbPromise
+    const results = await db.run(statement, values)
+    if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
     else res.json({ success: true, message: 'Updated user successfully' })
-  })
-  db.close()
+  } catch (err) {
+    res.json({ success: false, message: err.message })
+  }
 })
 
 router.put('/privacy/update', (req, res, next) => {
@@ -73,17 +72,16 @@ router.put('/privacy/update', (req, res, next) => {
   }
   const statement = `UPDATE userPrivacy SET ${targetColumn} = $newValue WHERE userPrivacy.userID = (SELECT (rowID) FROM user WHERE user.key = $userKey)`
   const values = { $userKey: req.body.userKey, $newValue: req.body[targetColumn] }
-  console.log(values)
-  const db = getDatabase((err) => {
-    res.json({ success: false, message: err.message })
-  })
-  db.run(statement, values, function (err) {
-    console.log(err)
-    if (err) res.json({ success: false, message: err.message })
-    else if (this.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
-    else res.json({ success: true, message: 'Updated user privacy successfully' })
-  })
-  db.close()
+  // const db = getDatabase((err) => {
+  //   res.json({ success: false, message: err.message })
+  // })
+  // db.run(statement, values, function (err) {
+  //   console.log(err)
+  //   if (err) res.json({ success: false, message: err.message })
+  //   else if (this.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
+  //   else res.json({ success: true, message: 'Updated user privacy successfully' })
+  // })
+  // db.close()
 })
 
 module.exports = router
