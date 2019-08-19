@@ -73,7 +73,7 @@ router.put('/privacy/update', async (req, res, next) => {
     const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
       if (columns.includes(curr)) return curr
     }, null)
-    if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) throw Error('request keys are not correct')
+    if (!targetColumn || !req.body.userKey || Object.keys(req.body).length !== 2) throw Error('request keys are not correct')
     const statement = SQL`
       UPDATE userPrivacy
       SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
