@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
-const getDatabase = require('../lib/getDatabase')
 const dbPromise = require('../lib/dbPromise')
 const SQL = require('sql-template-strings')
 
@@ -74,26 +73,32 @@ router.put('/update', async (req, res, next) => {
   }
 })
 
-router.put('/privacy/update', (req, res, next) => {
+router.put('/privacy/update', async (req, res, next) => {
   const columns = ['subscribedEventsVisibility', 'addressVisibility', 'nameVisibility', 'emailVisibility', 'phoneNumberVisibility']
   const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
     if (columns.includes(curr)) return curr
   }, null)
   if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
     res.json({ success: false, message: 'request keys are not correct' })
+    return
   }
-  const statement = `UPDATE userPrivacy SET ${targetColumn} = $newValue WHERE userPrivacy.userID = (SELECT (rowID) FROM user WHERE user.key = $userKey)`
-  const values = { $userKey: req.body.userKey, $newValue: req.body[targetColumn] }
-  // const db = getDatabase((err) => {
-  //   res.json({ success: false, message: err.message })
-  // })
-  // db.run(statement, values, function (err) {
-  //   console.log(err)
-  //   if (err) res.json({ success: false, message: err.message })
-  //   else if (this.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
-  //   else res.json({ success: true, message: 'Updated user privacy successfully' })
-  // })
-  // db.close()
+  const statement = SQL`
+    UPDATE userPrivacy
+    SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
+    WHERE userPrivacy.userID = (
+      SELECT (rowID)
+      FROM user
+      WHERE user.key = ${req.body.userKey}
+    )
+  `)
+  try {
+    const db = await dbPromise
+    const results = await db.run(statement)
+    if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
+    else res.json({ success: true, message: 'Updated user privacy successfully' })
+  } catch (err) {
+    res.json({ success: false, message: err.message })
+  }
 })
 
 module.exports = router
