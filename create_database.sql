@@ -36,7 +36,7 @@ CREATE TABLE `user`
 CREATE TABLE `userPrivacy`
 (
   `userID` int NOT NULL,
-  `subscribedEventsVisiblity` varchar(255) NOT NULL DEFAULT 'private',
+  `subscribedEventsVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `addressVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `nameVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `emailVisibility` varchar(255) NOT NULL  DEFAULT 'private',
@@ -44,7 +44,7 @@ CREATE TABLE `userPrivacy`
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
   FOREIGN KEY (`userID`) REFERENCES `user` (`ROWID`),
-  FOREIGN KEY (`subscribedEventsVisiblity`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`subscribedEventsVisibility`) REFERENCES `visibilityEnum` (`title`),
   FOREIGN KEY (`addressVisibility`) REFERENCES `visibilityEnum` (`title`),
   FOREIGN KEY (`nameVisibility`) REFERENCES `visibilityEnum` (`title`),
   FOREIGN KEY (`emailVisibility`) REFERENCES `visibilityEnum` (`title`),
@@ -142,9 +142,9 @@ INSERT INTO user (username, email, password, key) VALUES ('stelabrego', 'stelabr
 INSERT INTO user (username, email, password, key) VALUES ('bobishere', 'bob@gmail.com', 'password123', 'bcdefghi');
 INSERT INTO user (username, email, password, key) VALUES ('indicasmoke', 'indicaabrego@gmail.com','password123', 'cdefghij');
 -- USER PRIVACY
-INSERT INTO userPrivacy (userID, subscribedEventsVisiblity, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'private', 'trust', 'trust', 'private' FROM user WHERE user.username = 'stelabrego';
-INSERT INTO userPrivacy (userID, subscribedEventsVisiblity, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'public', 'public', 'trust', 'trust' FROM user WHERE user.username = 'bobishere';
-INSERT INTO userPrivacy (userID, subscribedEventsVisiblity, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'public', 'public', 'public', 'public' FROM user WHERE user.username = 'indicasmoke';
+INSERT INTO userPrivacy (userID, subscribedEventsVisibility, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'private', 'trust', 'trust', 'private' FROM user WHERE user.username = 'stelabrego';
+INSERT INTO userPrivacy (userID, subscribedEventsVisibility, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'public', 'public', 'trust', 'trust' FROM user WHERE user.username = 'bobishere';
+INSERT INTO userPrivacy (userID, subscribedEventsVisibility, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ROWID, 'public', 'public', 'public', 'public', 'public' FROM user WHERE user.username = 'indicasmoke';
 -- USER RELATIONSHIP
 INSERT INTO userRelationship (initatingUser, targetUser, relationship) SELECT user.ROWID, (SELECT user.ROWID FROM user WHERE user.username = 'stelabrego'), 'trust' FROM user WHERE user.username = 'bobishere';
 -- EVENTS

@@ -28,7 +28,7 @@ Table user {
 Table user_privacy {
   id int [primary key, increment]
   user_id int [ref: - user.id]
-  subscribed_events_visiblity varchar [not null, ref: > visibility_enum.title]
+  subscribed_events_visibility varchar [not null, ref: > visibility_enum.title]
   address_visibility varchar [not null, ref: > visibility_enum.title]
   name_visibility varchar [not null, ref: > visibility_enum.title]
   email_visibility varchar [not null, ref: > visibility_enum.title]
