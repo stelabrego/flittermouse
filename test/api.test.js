@@ -191,7 +191,7 @@ describe('/users endpoints', () => {
     })
   })
 
-  describe('UPDATE /users/privacy', () => {
+  describe('PUT /users/privacy', () => {
     it('should reject bad requests', () => {
       const tests =
         badPrivacyUpdateRequests.map((reqBody) => {
@@ -203,6 +203,24 @@ describe('/users endpoints', () => {
             .expect(200)
             .then((res) => {
               assert(!res.body.success, JSON.stringify(res.body))
+            })
+            .catch((err) => {
+              throw err
+            })
+        })
+      return Promise.all(tests)
+    })
+    it('should accept good requests', () => {
+      const tests =
+        goodAddRequestsWithKeys.map((reqBody) => {
+          return request(app)
+            .put('/users/privacy/update')
+            .send({ userKey: reqBody.userKey, subscribedEventsVisibility: 'trusted' })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .then((res) => {
+              assert(res.body.success, JSON.stringify(res.body))
             })
             .catch((err) => {
               throw err
