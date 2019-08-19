@@ -37,6 +37,7 @@ router.delete('/delete', (req, res, next) => {
     else if (this.changes === 0) res.send({ success: false, message: "User key doesn't exist" })
     else res.send({ success: true, message: 'Deleted user successfully' })
   })
+  db.close()
 })
 
 // can only change one thing at a time
@@ -59,6 +60,7 @@ router.put('/update', (req, res, next) => {
     else if (this.changes === 0) res.send({ success: false, message: "User key doesn't exist" })
     else res.send({ success: true, message: 'Updated user successfully' })
   })
+  db.close()
 })
 
 router.put('/privacy/update', (req, res, next) => {
@@ -81,6 +83,7 @@ router.put('/privacy/update', (req, res, next) => {
     else if (this.changes === 0) res.send({ success: false, message: "User key doesn't exist" })
     else res.send({ success: true, message: 'Updated user privacy successfully' })
   })
+  db.close()
 })
 
 module.exports = router

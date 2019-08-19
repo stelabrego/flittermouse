@@ -64,6 +64,7 @@ router.put('/update', (req, res, next) => {
     else if (this.changes === 0) res.send({ success: false, message: "Event key doesn't exist" })
     else res.send({ success: true, message: 'Updated event successfully' })
   })
+  db.close()
 })
 
 // can only change one thing at a time
@@ -87,6 +88,7 @@ router.put('/privacy/update', (req, res, next) => {
     else if (this.changes === 0) res.send({ success: false, message: "Event key doesn't exist" })
     else res.send({ success: true, message: 'Updated event privacy successfully' })
   })
+  db.close()
 })
 
 module.exports = router
