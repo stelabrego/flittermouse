@@ -5,20 +5,20 @@ const dbPromise = require('../lib/dbPromise')
 const SQL = require('sql-template-strings')
 
 router.post('/add', async (req, res, next) => {
-  const userKey = crypto.randomBytes(6).toString('hex')
-  const columns = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'avatarUrl', 'bio']
-  const values = columns.reduce((prev, curr) => {
-    prev[curr] = req.body[curr] || null
-    return prev
-  }, { key: userKey })
-  const statement = SQL`
-    INSERT
-    INTO    user
-            (username, password, email, key, displayName, phoneNumber, address, avatarUrl, bio)
-    VALUES  (${values.username}, ${values.password}, ${values.email}, ${values.key}, ${values.displayName},
-              ${values.phoneNumber}, ${values.address}, ${values.avatarUrl}, ${values.bio})
-  `
   try {
+    const userKey = crypto.randomBytes(6).toString('hex')
+    const columns = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'avatarUrl', 'bio']
+    const values = columns.reduce((prev, curr) => {
+      prev[curr] = req.body[curr] || null
+      return prev
+    }, { key: userKey })
+    const statement = SQL`
+      INSERT
+      INTO    user
+              (username, password, email, key, displayName, phoneNumber, address, avatarUrl, bio)
+      VALUES  (${values.username}, ${values.password}, ${values.email}, ${values.key}, ${values.displayName},
+                ${values.phoneNumber}, ${values.address}, ${values.avatarUrl}, ${values.bio})
+    `
     const db = await dbPromise
     const results = await db.run(statement)
     await db.run('INSERT INTO userPrivacy (userID) VALUES (?)', results.lastID)
@@ -31,7 +31,6 @@ router.post('/add', async (req, res, next) => {
 router.delete('/delete', async (req, res, next) => {
   try {
     if (!res.body || !res.body.userKey || Object.keys(res.body) !== 1) throw Error('request fields are incorrect')
-    console.log(req.body.userKey)
     const statement = SQL`
       DELETE
       FROM user
@@ -40,7 +39,7 @@ router.delete('/delete', async (req, res, next) => {
     const db = await dbPromise
     const results = await db.run(statement)
     if (results.changes === 0) throw Error("User key doesn't exist")
-    else res.json({ success: true, message: 'Deleted user successfully' })
+    res.json({ success: true, message: 'Deleted user successfully' })
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
@@ -48,52 +47,46 @@ router.delete('/delete', async (req, res, next) => {
 
 // can only change one thing at a time
 router.put('/update', async (req, res, next) => {
-  const columns = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'bio']
-  const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
-    if (columns.includes(curr)) return curr
-  }, null)
-  if (!targetColumn || !req.body.userKey || Object.keys(req.body).length !== 2) {
-    res.json({ success: false, message: 'request keys are not correct' })
-    return
-  }
-  const statement = SQL`
-    UPDATE user
-    SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
-    WHERE user.key = ${req.body.userKey}
-  `)
   try {
+    const columns = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'bio']
+    const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
+      if (columns.includes(curr)) return curr
+    }, null)
+    if (!targetColumn || !req.body.userKey || Object.keys(req.body).length !== 2) throw Error('request keys are not correct')
+    const statement = SQL`
+      UPDATE user
+      SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
+      WHERE user.key = ${req.body.userKey}
+    `)
     const db = await dbPromise
     const results = await db.run(statement)
-    if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
-    else res.json({ success: true, message: 'Updated user successfully' })
+    if (results.changes === 0) throw Error("User key doesn't exist")
+    res.json({ success: true, message: 'Updated user successfully' })
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
 })
 
 router.put('/privacy/update', async (req, res, next) => {
-  const columns = ['subscribedEventsVisibility', 'addressVisibility', 'nameVisibility', 'emailVisibility', 'phoneNumberVisibility']
-  const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
-    if (columns.includes(curr)) return curr
-  }, null)
-  if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
-    res.json({ success: false, message: 'request keys are not correct' })
-    return
-  }
-  const statement = SQL`
-    UPDATE userPrivacy
-    SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
-    WHERE userPrivacy.userID = (
-      SELECT (rowID)
-      FROM user
-      WHERE user.key = ${req.body.userKey}
-    )
-  `)
   try {
+    const columns = ['subscribedEventsVisibility', 'addressVisibility', 'nameVisibility', 'emailVisibility', 'phoneNumberVisibility']
+    const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
+      if (columns.includes(curr)) return curr
+    }, null)
+    if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) throw Error('request keys are not correct')
+    const statement = SQL`
+      UPDATE userPrivacy
+      SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
+      WHERE userPrivacy.userID = (
+        SELECT (rowID)
+        FROM user
+        WHERE user.key = ${req.body.userKey}
+      )
+    `)
     const db = await dbPromise
     const results = await db.run(statement)
-    if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
-    else res.json({ success: true, message: 'Updated user privacy successfully' })
+    if (results.changes === 0) throw Error("User key doesn't exist")
+    res.json({ success: true, message: 'Updated user privacy successfully' })
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
