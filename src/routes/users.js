@@ -29,19 +29,17 @@ router.post('/add', async (req, res, next) => {
 })
 
 router.delete('/delete', async (req, res, next) => {
-  if (!res.body.userKey || Object.keys(res.body) !== 1) {
-    res.json({ success: false, message: 'request fields are incorrect' })
-    return
-  }
-  const statement = SQL`
-    DELETE
-    FROM user
-    WHERE user.key = ${res.body.userKey}
-  `
   try {
+    if (!res.body || !res.body.userKey || Object.keys(res.body) !== 1) throw Error('request fields are incorrect')
+    console.log(req.body.userKey)
+    const statement = SQL`
+      DELETE
+      FROM user
+      WHERE user.key = ${res.body.userKey}
+    `
     const db = await dbPromise
     const results = await db.run(statement)
-    if (results.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
+    if (results.changes === 0) throw Error("User key doesn't exist")
     else res.json({ success: true, message: 'Deleted user successfully' })
   } catch (err) {
     res.json({ success: false, message: err.message })
