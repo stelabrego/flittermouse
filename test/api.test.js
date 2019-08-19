@@ -8,6 +8,10 @@ const goodUsers = [
   { username: 'anlasifs', password: 'password', email: 'haonicnen@gmail.com' }
 ]
 
+const badUsers = [
+  { username: 'hithere', email: 'generic@gmail.com' }
+]
+
 const goodEvents = [
   { name: 'stel bday party 2' }
 ]
@@ -33,6 +37,19 @@ describe('database api', () => {
     })
     it('should accept new users with correct schema', () => {
       goodUsers.forEach((val) => {
+        request(app)
+          .post('/users/add')
+          .send({ username: 'alkjslsfi', password: 'skjdhfkjd', email: 'lsfdjsskhsh' })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect((res) => {
+            assert(res.body.success === true, JSON.stringify(res.body))
+          })
+          .expect(200)
+      })
+    })
+    it('should reject new users with incorrect schema', () => {
+      badUsers.forEach((val) => {
         request(app)
           .post('/users/add')
           .send({ username: 'alkjslsfi', password: 'skjdhfkjd', email: 'lsfdjsskhsh' })
