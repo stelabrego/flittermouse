@@ -206,7 +206,7 @@ describe('/users endpoints', () => {
         goodDeleteRequests.map((reqBody) => {
           return request(app)
             .delete('/users/delete')
-            .send({ userKey: reqBody.userKey })
+            .send(reqBody)
             .set('Accept', 'application/json')
             .expect(200)
             .then((res) => {
