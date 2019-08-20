@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
-const getDatabase = require('../lib/getDatabase')
 const dbPromise = require('../lib/dbPromise')
 const SQL = require('sql-template-strings')
 
