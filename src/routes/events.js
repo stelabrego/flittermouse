@@ -25,7 +25,7 @@ router.post('/add', async (req, res, next) => {
     if (results.changes === 0) throw Error('Invalid userKey')
     res.json({ success: true, eventKey, message: 'Created event successfully' })
   } catch (err) {
-    res.json({ success: false, message: err.message })
+    res.status(400).json({ success: false, message: err.message })
   }
 })
 
@@ -42,7 +42,7 @@ router.delete('/delete', async (req, res, next) => {
     if (results.changes === 0) throw Error('Invalid eventKey')
     res.json({ success: true, message: 'Deleted event successfully' })
   } catch (err) {
-    res.json({ success: false, message: err.message })
+    res.status(400).json({ success: false, message: err.message })
   }
 })
 
@@ -66,32 +66,36 @@ router.put('/update', async (req, res, next) => {
     if (results.changes === 0) throw Error('Invalid eventKey')
     res.json({ success: true })
   } catch (err) {
-    res.json({ success: false, message: err.message })
+    res.status(400).json({ success: false, message: err.message })
   }
 })
 
 // can only change one thing at a time
-router.put('/privacy/update', (req, res, next) => {
-  const columns = ['displayAddress', 'displayDate', 'visibility']
-  const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
-    if (columns.includes(curr)) return curr
-  }, null)
-  if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
-    res.json({ success: false, message: 'request keys are not correct' })
+router.put('/privacy/update', async (req, res, next) => {
+  try {
+    const columns = ['displayAddress', 'displayDate', 'visibility']
+    const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
+      if (columns.includes(curr)) return curr
+    }, null)
+    if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
+      throw Error('request keys are not correct')
+    }
+    const statement = SQL`
+      UPDATE eventPrivacy
+      SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
+      WHERE eventPrivacy.eventID = (
+        SELECT (rowid) 
+        FROM event 
+        WHERE event.key = ${req.body.eventKey}
+      )
+    `)
+    const db = await dbPromise
+    const results = await db.run(statement)
+    if (results.changes === 0) throw Error('Event key doesn\'t exist')
+    res.json({ success: true, message: 'Updated event privacy successfully' })
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message })
   }
-  const statement = `UPDATE eventPrivacy SET ${targetColumn} = $newValue WHERE eventPrivacy.event_id = (SELECT (rowid) FROM event WHERE event.key = $eventKey)`
-  const values = { $eventKey: req.body.eventKey, $newValue: req.body[targetColumn] }
-  console.log(values)
-  const db = getDatabase((err) => {
-    res.json({ success: false, message: err.message })
-  })
-  db.run(statement, values, function (err) {
-    console.log(err)
-    if (err) res.json({ success: false, message: err.message })
-    else if (this.changes === 0) res.json({ success: false, message: "Event key doesn't exist" })
-    else res.json({ success: true, message: 'Updated event privacy successfully' })
-  })
-  db.close()
 })
 
 module.exports = router
