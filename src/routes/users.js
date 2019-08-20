@@ -23,6 +23,7 @@ router.post('/add', async (req, res, next) => {
     const results = await db.run(statement)
     await db.run('INSERT INTO userPrivacy (userID) VALUES (?)', results.lastID)
     res.json({ success: true, userKey, message: 'Created new user successfully' })
+    await db.close()
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
@@ -40,6 +41,7 @@ router.delete('/delete', async (req, res, next) => {
     const results = await db.run(statement)
     if (results.changes === 0) throw Error("User key doesn't exist")
     res.json({ success: true, message: 'Deleted user successfully' })
+    await db.close()
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
@@ -62,6 +64,7 @@ router.put('/update', async (req, res, next) => {
     const results = await db.run(statement)
     if (results.changes === 0) throw Error("User key doesn't exist")
     res.json({ success: true, message: 'Updated user successfully' })
+    await db.close()
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
@@ -87,6 +90,7 @@ router.put('/privacy/update', async (req, res, next) => {
     const results = await db.run(statement)
     if (results.changes === 0) throw Error("User key doesn't exist")
     res.json({ success: true, message: 'Updated user privacy successfully' })
+    await db.close()
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
