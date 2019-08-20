@@ -1,3 +1,9 @@
+-- TURN ON FOREIGN KEY CHECKS
+PRAGMA foreign_keys = ON;
+
+-- MAKE DATABASE WAY FASTER
+-- PRAGMA schema.journal_mode = WAL;
+
 -- DELETE ALL TABLES
 -- start from scratch
 DROP TABLE IF EXISTS relationshipEnum;
@@ -11,9 +17,6 @@ DROP TABLE IF EXISTS eventPrivacy;
 DROP TABLE IF EXISTS attendance;
 DROP TABLE IF EXISTS eventQuestion;
 DROP TABLE IF EXISTS eventTag;
-
--- TURN ON FOREIGN KEY CHECKS
-PRAGMA foreignKeys = ON;
 
 -- CREATE TABLES
 -- NOTE: we need to create our own primary key because you have to explicitly declare it in
