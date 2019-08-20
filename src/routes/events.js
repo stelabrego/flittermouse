@@ -19,7 +19,7 @@ router.post('/add', async (req, res, next) => {
     (userID, name, key, dateOf, address)
     SELECT user.ROWID, ${values.name}, ${values.eventKey}, ${values.dateOf}, ${values.address}
     FROM user WHERE user.key = ${values.userKey}`
-    const db = await dbPromise
+    const db = await dbPromise()
     const results = await db.run(statement)
     if (results.changes === 0) throw Error('Invalid userKey')
     res.json({ success: true, eventKey, message: 'Created event successfully' })
@@ -36,7 +36,7 @@ router.delete('/delete', async (req, res, next) => {
       FROM event
       WHERE event.key = ${req.body.eventKey}
     `
-    const db = await dbPromise
+    const db = await dbPromise()
     const results = await db.run(statement)
     if (results.changes === 0) throw Error('Invalid eventKey')
     res.json({ success: true, message: 'Deleted event successfully' })
@@ -60,7 +60,7 @@ router.put('/update', async (req, res, next) => {
       SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
       WHERE event.key = ${req.body.eventKey}
     `)
-    const db = await dbPromise
+    const db = await dbPromise()
     const results = await db.run(statement)
     if (results.changes === 0) throw Error('Invalid eventKey')
     res.json({ success: true })
@@ -88,7 +88,7 @@ router.put('/privacy/update', async (req, res, next) => {
         WHERE event.key = ${req.body.eventKey}
       )
     `)
-    const db = await dbPromise
+    const db = await dbPromise()
     const results = await db.run(statement)
     if (results.changes === 0) throw Error('Event key doesn\'t exist')
     res.json({ success: true, message: 'Updated event privacy successfully' })

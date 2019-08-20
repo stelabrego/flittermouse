@@ -21,7 +21,7 @@ router.post('/add', async (req, res, next) => {
       VALUES  (${reqValues.username}, ${reqValues.password}, ${reqValues.email}, ${reqValues.userKey}, ${reqValues.displayName},
                 ${reqValues.phoneNumber}, ${reqValues.address}, ${reqValues.avatarUrl}, ${reqValues.bio})
     `
-    const db = await dbPromise
+    const db = await dbPromise()
     const results = await db.run(statement)
     await db.run('INSERT INTO userPrivacy (userID) VALUES (?)', results.lastID)
     res.json({ success: true, userKey, message: 'Created new user successfully' })
@@ -38,7 +38,7 @@ router.delete('/delete', async (req, res, next) => {
       FROM user
       WHERE user.key = ${req.body.userKey}
     `
-    const db = await dbPromise
+    const db = await dbPromise()
     const results = await db.run(statement)
     if (results.changes === 0) throw Error("User key doesn't exist")
     res.json({ success: true, message: 'Deleted user successfully' })
@@ -53,7 +53,7 @@ router.put('/update', async (req, res, next) => {
     const reqFieldNames = Object.keys(req.body)
     const validFieldNames = ['userKey', 'username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'bio']
     if (!reqFieldNames.includes('userKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
-    const db = await dbPromise
+    const db = await dbPromise()
     const dbUpdates =
       reqFieldNames
         .filter((fieldName) => fieldName !== 'userKey')
@@ -79,7 +79,7 @@ router.put('/privacy/update', async (req, res, next) => {
     const reqFieldNames = Object.keys(req.body)
     const validFieldNames = ['userKey', 'subscribedEventsVisibility', 'addressVisibility', 'nameVisibility', 'emailVisibility', 'phoneNumberVisibility']
     if (!reqFieldNames.includes('userKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
-    const db = await dbPromise
+    const db = await dbPromise()
     const dbUpdates =
       reqFieldNames
         .filter(fieldName => fieldName !== 'userKey')
