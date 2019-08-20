@@ -2,69 +2,72 @@ const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
 const getDatabase = require('../lib/getDatabase')
+const dbPromise = require('../lib/dbPromise')
+const SQL = require('sql-template-strings')
 
 // Add event
-router.post('/add', function (req, res, next) {
-  const eventKey = crypto.randomBytes(6).toString('hex')
-  const columns = ['userKey', 'name', 'dateOf', 'address']
-  const values = columns.reduce((prev, curr) => {
-    prev['$' + curr] = req.body[curr] || null
-    return prev
-  }, { $key: eventKey })
-  console.log(values);
-  const statement = 'INSERT INTO event (userID, name, key, dateOf, address) SELECT user.ROWID, $name, $key, $dateOf, $address FROM user WHERE user.key = $userKey'
-  const db = getDatabase((err) => {
+router.post('/add', async (req, res, next) => {
+  try {
+    const eventKey = crypto.randomBytes(6).toString('hex')
+    const columns = ['userKey', 'name', 'dateOf', 'address']
+    const values = columns.reduce((prev, curr) => {
+      prev[curr] = req.body[curr] || null
+      return prev
+    }, { eventKey })
+    const statement = SQL`
+    INSERT
+    INTO event
+    (userID, name, key, dateOf, address)
+    SELECT user.ROWID, ${values.name}, ${values.eventKey}, ${values.dateOf}, ${values.address}
+    FROM user WHERE user.key = ${values.userKey}`
+    const db = await dbPromise
+    const results = await db.run(statement)
+    if (results.changes === 0) throw Error('Invalid userKey')
+    res.json({ success: true, eventKey, message: 'Created event successfully' })
+  } catch (err) {
     res.json({ success: false, message: err.message })
-  })
-  // callback can't be lambda because lambdas use a new this object which makes this.lastID undefined
-  db.run(statement, values, function (err) {
-    console.log(this)
-    if (err) res.json({ success: false, message: err.message })
-    else if (this.changes === 0) res.json({ success: false, message: "User key doesn't exist" })
-    else {
-      db.run('INSERT INTO eventPrivacy (eventID) VALUES (?)', this.lastID, (err) => {
-        if (err) res.json({ success: false, message: err.message })
-        else res.json({ success: true, eventKey, message: 'Created event successfully' })
-      })
-    }
-  })
-  db.close()
+  }
 })
 
-router.delete('/delete', (req, res, next) => {
-  const statement = 'DELETE FROM event WHERE event.key = ?'
-  const db = getDatabase((err) => {
+router.delete('/delete', async (req, res, next) => {
+  try {
+    if (!req.body.eventKey || Object.keys(req.body).length !== 1) throw Error('request fields are incorrect')
+    const statement = SQL`
+      DELETE
+      FROM event
+      WHERE event.key = ${req.body.eventKey}
+    `
+    const db = await dbPromise
+    const results = await db.run(statement)
+    if (results.changes === 0) throw Error('Invalid eventKey')
+    res.json({ success: true, message: 'Deleted event successfully' })
+  } catch (err) {
     res.json({ success: false, message: err.message })
-  })
-  db.run(statement, req.body.eventKey, function (err) {
-    if (err) res.json({ success: false, message: err.message })
-    else if (this.changes === 0) res.json({ success: false, message: "Event key doesn't exist" })
-    else res.json({ success: true, message: 'Deleted event successfully' })
-  })
-  db.close()
+  }
 })
 
 // can only change one thing at a time
-router.put('/update', (req, res, next) => {
-  const columns = ['name', 'location', 'dateOf']
-  const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
-    if (columns.includes(curr)) return curr
-  }, null)
-  if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
-    res.json({ success: false, message: 'request keys are not correct' })
-  }
-  const statement = `UPDATE event SET ${targetColumn} = $newValue WHERE event.key = $eventKey`
-  const values = { $eventKey: req.body.eventKey, $newValue: req.body[targetColumn] }
-  console.log(values)
-  const db = getDatabase((err) => {
+router.put('/update', async (req, res, next) => {
+  try {
+    const columns = ['name', 'location', 'dateOf']
+    const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
+      if (columns.includes(curr)) return curr
+    }, null)
+    if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
+      throw Error('request keys are not correct')
+    }
+    const statement = SQL`
+      UPDATE event
+      SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
+      WHERE event.key = ${req.body.eventKey}
+    `)
+    const db = await dbPromise
+    const results = await db.run(statement)
+    if (results.changes === 0) throw Error('Invalid eventKey')
+    res.json({ success: true })
+  } catch (err) {
     res.json({ success: false, message: err.message })
-  })
-  db.run(statement, values, function (err) {
-    if (err) res.json({ success: false, message: err.message })
-    else if (this.changes === 0) res.json({ success: false, message: "Event key doesn't exist" })
-    else res.json({ success: true, message: 'Updated event successfully' })
-  })
-  db.close()
+  }
 })
 
 // can only change one thing at a time
