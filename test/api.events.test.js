@@ -53,7 +53,7 @@ describe('/events endpoints', () => {
   describe('PUT events/update', () => {
     it('should accept good requests', () => {
       const goodUpdateRequests = [
-        { eventKey: 'validEventKey', name: 'Updated name event' },
+        { eventKey: 'validEventKey', name: 'Updated name event', dateOf: '248792874' },
         { eventKey: 'validEventKey', dateOf: '44244525' }
       ]
       const tests =

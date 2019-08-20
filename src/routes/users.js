@@ -11,8 +11,8 @@ router.post('/add', async (req, res, next) => {
     const validFieldNames = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'avatarUrl', 'bio']
     if (reqFieldNames.length < 1 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
     const userKey = crypto.randomBytes(6).toString('hex')
-    const reqValues = validFieldNames.reduce((result, column) => {
-      result[column] = req.body[column] || null
+    const reqValues = validFieldNames.reduce((result, fieldName) => {
+      result[fieldName] = req.body[fieldName] || null
       return result
     }, { userKey })
     const statement = SQL`

@@ -8,18 +8,20 @@ const SQL = require('sql-template-strings')
 router.post('/add', async (req, res, next) => {
   let db
   try {
+    const reqFieldNames = Object.keys(req.body)
+    const validFieldNames = ['userKey', 'name', 'dateOf', 'address']
+    if (reqFieldNames.length < 1 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
     const eventKey = crypto.randomBytes(6).toString('hex')
-    const columns = ['userKey', 'name', 'dateOf', 'address']
-    const values = columns.reduce((prev, curr) => {
-      prev[curr] = req.body[curr] || null
-      return prev
+    const reqValues = validFieldNames.reduce((result, fieldName) => {
+      result[fieldName] = req.body[fieldName] || null
+      return result
     }, { eventKey })
     const statement = SQL`
     INSERT
     INTO event
     (userID, name, key, dateOf, address)
-    SELECT user.ROWID, ${values.name}, ${values.eventKey}, ${values.dateOf}, ${values.address}
-    FROM user WHERE user.key = ${values.userKey}`
+    SELECT user.ROWID, ${reqValues.name}, ${reqValues.eventKey}, ${reqValues.dateOf}, ${reqValues.address}
+    FROM user WHERE user.key = ${reqValues.userKey}`
     db = await dbPromise()
     const results = await db.run(statement)
     if (results.changes === 0) throw Error('Invalid userKey')
@@ -55,21 +57,22 @@ router.delete('/delete', async (req, res, next) => {
 router.put('/update', async (req, res, next) => {
   let db
   try {
-    const columns = ['name', 'location', 'dateOf']
-    const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
-      if (columns.includes(curr)) return curr
-    }, null)
-    if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
-      throw Error('request keys are not correct')
-    }
-    const statement = SQL`
-      UPDATE event
-      SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
-      WHERE event.key = ${req.body.eventKey}
-    `)
+    const reqFieldNames = Object.keys(req.body)
+    const validFieldNames = ['eventKey', 'name', 'location', 'dateOf']
+    if (!reqFieldNames.includes('eventKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
     db = await dbPromise()
-    const results = await db.run(statement)
-    if (results.changes === 0) throw Error('Invalid eventKey')
+    const dbUpdates =
+      reqFieldNames
+        .filter((fieldName) => fieldName !== 'eventKey')
+        .map((fieldName) => SQL`
+          UPDATE event
+          SET `.append(fieldName).append(SQL` = ${req.body[fieldName]}
+          WHERE event.key = ${req.body.eventKey}`))
+        .map((statement) => db.run(statement))
+    const results = await Promise.all(dbUpdates)
+    results.forEach(result => {
+      if (result.changes === 0) throw Error("Event key doesn't exist")
+    })
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
@@ -82,25 +85,27 @@ router.put('/update', async (req, res, next) => {
 router.put('/privacy/update', async (req, res, next) => {
   let db
   try {
-    const columns = ['displayAddress', 'displayDate', 'visibility']
-    const targetColumn = Object.keys(req.body).reduce((prev, curr) => {
-      if (columns.includes(curr)) return curr
-    }, null)
-    if (!targetColumn || !req.body.eventKey || Object.keys(req.body).length !== 2) {
-      throw Error('request keys are not correct')
-    }
-    const statement = SQL`
-      UPDATE eventPrivacy
-      SET `.append(targetColumn).append(SQL` = ${req.body[targetColumn]}
-      WHERE eventPrivacy.eventID = (
-        SELECT (rowid) 
-        FROM event 
-        WHERE event.key = ${req.body.eventKey}
-      )
-    `)
+    const reqFieldNames = Object.keys(req.body)
+    const validFieldNames = ['eventKey', 'displayAddress', 'displayDate', 'visibility']
+    if (!reqFieldNames.includes('eventKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
     db = await dbPromise()
-    const results = await db.run(statement)
-    if (results.changes === 0) throw Error('Event key doesn\'t exist')
+    const dbUpdates =
+      reqFieldNames
+        .filter(fieldName => fieldName !== 'eventKey')
+        .map(fieldName => SQL`
+          UPDATE eventPrivacy
+          SET `.append(fieldName).append(SQL` = ${req.body[fieldName]}
+          WHERE eventPrivacy.eventID = (
+            SELECT (rowid) 
+            FROM event 
+            WHERE event.key = ${req.body.eventKey}
+          )`)
+        )
+        .map(statement => db.run(statement))
+    const results = await Promise.all(dbUpdates)
+    results.forEach(result => {
+      if (result.changes === 0) throw Error("Event key doesn't exist")
+    })
     res.json({ success: true, message: 'Updated event privacy successfully' })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
