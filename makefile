@@ -8,10 +8,11 @@ db:
 	sqlite3 build/eventz.db < create_database.sql
 
 build: clean db
-	./node_modules/@babel/cli/bin/babel.js --watch --out-dir ./build --copy-files ./src
+# we were using babel but i just realized we don't need it at all unless we want to transpile browser scripts
+#./node_modules/@babel/cli/bin/babel.js --watch -o ./build/server.js --copy-files ./src
 
 start:
-	./node_modules/nodemon/bin/nodemon.js ./build/server.js
+	./node_modules/nodemon/bin/nodemon.js ./src/server.js
 
 lint:
 	./node_modules/eslint/bin/eslint.js --fix src/
