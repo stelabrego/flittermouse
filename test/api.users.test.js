@@ -1,15 +1,8 @@
 const assert = require('assert')
 const request = require('supertest')
 const app = require('../src/app')
-const exec = require('child_process').exec
 
 describe('/users endpoints', () => {
-  before((done) => {
-    exec('make db', (err, stdout, stderr) => {
-      if (err) done(err)
-      done()
-    })
-  })
   describe('POST /users/add', () => {
     it('should reject bad requests', () => {
       const badAddRequests = [
@@ -85,7 +78,8 @@ describe('/users endpoints', () => {
     it('should accept good requests', () => {
       const goodUpdateRequests = [
         { userKey: 'validUserKey', username: 'CardiB' },
-        { userKey: 'validUserKey2', bio: 'I am also Cardi B' }
+        { userKey: 'validUserKey2', bio: 'I am also Cardi B' },
+        { userKey: 'validUserKey3', username: 'playboi carti', bio: 'hi there' }
       ]
       const tests =
         goodUpdateRequests.map((reqBody) => {

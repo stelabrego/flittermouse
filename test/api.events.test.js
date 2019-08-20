@@ -1,15 +1,8 @@
 const assert = require('assert')
 const request = require('supertest')
 const app = require('../src/app')
-const exec = require('child_process').exec
 
 describe('/events endpoints', () => {
-  before((done) => {
-    exec('make db', (err, stdout, stderr) => {
-      if (err) done(err)
-      done()
-    })
-  })
   describe('POST events/add', () => {
     it('should accept good requests', () => {
       const goodAddRequests = [

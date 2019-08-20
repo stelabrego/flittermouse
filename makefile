@@ -16,5 +16,5 @@ start:
 lint:
 	./node_modules/eslint/bin/eslint.js --fix src/
 
-test:
+test: db
 	./node_modules/mocha/bin/mocha

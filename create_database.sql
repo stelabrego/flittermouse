@@ -1,13 +1,10 @@
--- TURN ON FOREIGN KEY CHECKS
-PRAGMA foreign_keys = ON;
-
 -- MAKE DATABASE WAY FASTER
 -- PRAGMA schema.journal_mode = WAL;
 
+-- TURN OFF FOREIGN KEY CHECKS TO DROP TABLES
+PRAGMA foreign_keys = OFF;
+
 -- DELETE ALL TABLES
--- start from scratch
-DROP TABLE IF EXISTS relationshipEnum;
-DROP TABLE IF EXISTS visibilityEnum;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS userPrivacy;
 DROP TABLE IF EXISTS userRelationship;
@@ -17,6 +14,11 @@ DROP TABLE IF EXISTS eventPrivacy;
 DROP TABLE IF EXISTS attendance;
 DROP TABLE IF EXISTS eventQuestion;
 DROP TABLE IF EXISTS eventTag;
+DROP TABLE IF EXISTS relationshipEnum;
+DROP TABLE IF EXISTS visibilityEnum;
+
+-- TURN OFF FOREIGN KEY CHECKS TO DROP TABLES
+PRAGMA foreign_keys = ON;
 
 -- CREATE TABLES
 -- NOTE: we need to create our own primary key because you have to explicitly declare it in
@@ -119,7 +121,7 @@ CREATE TABLE `eventQuestion`
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `rowid` INTEGER PRIMARY KEY,
   FOREIGN KEY (`eventID`) REFERENCES `event` (`ROWID`),
-  FOREIGN KEY (`userID`) REFERENCES `user1` (`ROWID`)
+  FOREIGN KEY (`userID`) REFERENCES `user` (`ROWID`)
 );
 
 CREATE TABLE `eventTag`
