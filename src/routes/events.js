@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
-const dbPromise = require('../lib/dbPromise')
+const dbPromise = require('../lib/dbLib')
 const SQL = require('sql-template-strings')
 
 // Add event
@@ -19,8 +19,8 @@ router.post('/add', async (req, res, next) => {
     const statement = SQL`
     INSERT
     INTO event
-    (userID, name, key, dateOf, address)
-    SELECT user.ROWID, ${reqValues.name}, ${reqValues.eventKey}, ${reqValues.dateOf}, ${reqValues.address}
+    (userId, name, key, dateOf, address)
+    SELECT user.ROWId, ${reqValues.name}, ${reqValues.eventKey}, ${reqValues.dateOf}, ${reqValues.address}
     FROM user WHERE user.key = ${reqValues.userKey}`
     db = await dbPromise()
     const results = await db.run(statement)
@@ -95,7 +95,7 @@ router.put('/privacy/update', async (req, res, next) => {
         .map(fieldName => SQL`
           UPDATE eventPrivacy
           SET `.append(fieldName).append(SQL` = ${req.body[fieldName]}
-          WHERE eventPrivacy.eventID = (
+          WHERE eventPrivacy.eventId = (
             SELECT (rowid) 
             FROM event 
             WHERE event.key = ${req.body.eventKey}

@@ -1,55 +1,24 @@
 const express = require('express')
 const router = express.Router()
-const crypto = require('crypto')
-const dbPromise = require('../lib/dbPromise')
+const dbLib = require('../lib/dbLib')
 const SQL = require('sql-template-strings')
 
 router.post('/add', async (req, res, next) => {
-  let db
   try {
-    const reqFieldNames = Object.keys(req.body)
-    const validFieldNames = ['username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'avatarUrl', 'bio']
-    if (reqFieldNames.length < 1 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
-    const userKey = crypto.randomBytes(6).toString('hex')
-    const reqValues = validFieldNames.reduce((result, fieldName) => {
-      result[fieldName] = req.body[fieldName] || null
-      return result
-    }, { userKey })
-    const statement = SQL`
-      INSERT
-      INTO    user
-              (username, password, email, key, displayName, phoneNumber, address, avatarUrl, bio)
-      VALUES  (${reqValues.username}, ${reqValues.password}, ${reqValues.email}, ${reqValues.userKey}, ${reqValues.displayName},
-                ${reqValues.phoneNumber}, ${reqValues.address}, ${reqValues.avatarUrl}, ${reqValues.bio})
-    `
-    db = await dbPromise()
-    const results = await db.run(statement)
-    await db.run('INSERT INTO userPrivacy (userID) VALUES (?)', results.lastID)
-    res.json({ success: true, userKey, message: 'Created new user successfully' })
+    await dbLib.insertUser(req.body, err => { throw err })
+    res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) db.close()
   }
 })
 
 router.delete('/delete', async (req, res, next) => {
-  let db
   try {
-    if (!req.body.userKey || Object.keys(req.body).length !== 1) throw Error('request fields are incorrect')
-    const statement = SQL`
-      DELETE
-      FROM user
-      WHERE user.key = ${req.body.userKey}
-    `
-    db = await dbPromise()
-    const results = await db.run(statement)
-    if (results.changes === 0) throw Error("User key doesn't exist")
-    res.json({ success: true, message: 'Deleted user successfully' })
+    // if (!req.body.userKey || Object.keys(req.body).length !== 1) throw Error('request fields are incorrect')
+    await dbLib.deleteUser(req.body, err => { throw err })
+    res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) db.close()
   }
 })
 
@@ -57,9 +26,9 @@ router.delete('/delete', async (req, res, next) => {
 router.put('/update', async (req, res, next) => {
   let db
   try {
-    const reqFieldNames = Object.keys(req.body)
-    const validFieldNames = ['userKey', 'username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'bio']
-    if (!reqFieldNames.includes('userKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
+    // const reqFieldNames = Object.keys(req.body)
+    // const validFieldNames = ['userKey', 'username', 'password', 'email', 'displayName', 'phoneNumber', 'address', 'bio']
+    // if (!reqFieldNames.includes('userKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
     db = await dbPromise()
     const dbUpdates =
       reqFieldNames
@@ -75,7 +44,7 @@ router.put('/update', async (req, res, next) => {
     results.forEach(result => {
       if (result.changes === 0) throw Error("User key doesn't exist")
     })
-    res.json({ success: true, message: 'Updated user successfully' })
+    res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
   } finally {
@@ -96,8 +65,8 @@ router.put('/privacy/update', async (req, res, next) => {
         .map(fieldName => SQL`
           UPDATE userPrivacy
           SET `.append(fieldName).append(SQL` = ${req.body[fieldName]}
-          WHERE userPrivacy.userID = (
-          SELECT (rowID)
+          WHERE userPrivacy.userId = (
+          SELECT (rowId)
           FROM user
           WHERE user.key = ${req.body.userKey})`)
         )
@@ -106,7 +75,7 @@ router.put('/privacy/update', async (req, res, next) => {
     results.forEach(result => {
       if (result.changes === 0) throw Error("User key doesn't exist")
     })
-    res.json({ success: true, message: 'Updated user privacy successfully' })
+    res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
   } finally {

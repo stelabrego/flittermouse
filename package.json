@@ -3,12 +3,6 @@
   "version": "0.0.1",
   "description": "dope evntz shit",
   "main": "y",
-  "scripts": {
-    "build": "babel --watch --out-dir build --copy-files ./src",
-    "start": "nodemon ./build/server.js",
-    "setup-db": "sqlite3 build/eventz.db < create_database.sql",
-    "lint": "eslint --fix src/"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stelabrego/eventz.git"
@@ -42,6 +36,7 @@
     "path": "^0.12.7",
     "pug": "^2.0.4",
     "sqlite": "^3.0.3",
-    "sqlite3": "^4.0.9"
+    "sqlite3": "^4.0.9",
+    "sqlstring": "^2.3.1"
   }
 }

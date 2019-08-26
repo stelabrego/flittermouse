@@ -15,7 +15,6 @@ describe('/events endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => {
               assert(res.body.success, JSON.stringify(res.body))
               assert(res.body.eventKey, JSON.stringify(res.body))
@@ -40,7 +39,6 @@ describe('/events endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => { assert(res.body.success, JSON.stringify(res.body)) })
             .catch(err => {
               throw err
@@ -63,7 +61,6 @@ describe('/events endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => { assert(res.body.success, JSON.stringify(res.body)) })
             .catch(err => {
               throw err
@@ -76,8 +73,8 @@ describe('/events endpoints', () => {
   describe('PUT events/privacy/update', () => {
     it('should accept good requests', () => {
       const goodPrivacyUpdateRequests = [
-        { eventKey: 'validEventKey', visibility: 'trusted' },
-        { eventKey: 'validEventKey', visibility: 'private' }
+        { eventKey: 'validEventKey', visibility: 'private' },
+        { eventKey: 'validEventKey', visibility: 'mutuals' }
       ]
       const tests =
         goodPrivacyUpdateRequests.map((reqBody) => {
@@ -86,7 +83,6 @@ describe('/events endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => { assert(res.body.success, JSON.stringify(res.body)) })
             .catch(err => {
               throw err

@@ -16,7 +16,6 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(400)
             .then((res) => {
               assert(!res.body.success, JSON.stringify(res.body))
             })
@@ -38,10 +37,8 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => {
               assert(res.body.success, JSON.stringify(res.body))
-              assert(res.body.userKey, JSON.stringify(res.body))
             })
             .catch((err) => {
               throw err
@@ -56,7 +53,7 @@ describe('/users endpoints', () => {
       const badUpdateRequests = [
         {},
         { username: 'hihihihihihi' },
-        { userKey: 'invalidUserKey', username: 'bigboi315' }
+        { id: 10000, username: 'bigboi315' }
       ]
       const tests =
         badUpdateRequests.map((reqBody) => {
@@ -65,7 +62,6 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(400)
             .then((res) => {
               assert(!res.body.success, JSON.stringify(res.body))
             })
@@ -77,9 +73,9 @@ describe('/users endpoints', () => {
     })
     it('should accept good requests', () => {
       const goodUpdateRequests = [
-        { userKey: 'validUserKey', username: 'CardiB' },
-        { userKey: 'validUserKey2', bio: 'I am also Cardi B' },
-        { userKey: 'validUserKey3', username: 'playboi carti', bio: 'hi there' }
+        { id: 1, username: 'CardiB' },
+        { id: 2, bio: 'I am also Cardi B' },
+        { id: 3, username: 'playboi carti', bio: 'hi there' }
       ]
       const tests =
         goodUpdateRequests.map((reqBody) => {
@@ -88,7 +84,6 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => {
               assert(res.body.success, JSON.stringify(res.body))
             })
@@ -100,8 +95,8 @@ describe('/users endpoints', () => {
     })
     it('should accept good requests with no material changes', () => {
       const goodUpdateRequests = [
-        { userKey: 'validUserKey', username: 'CardiB' },
-        { userKey: 'validUserKey2', bio: 'I am also Cardi B' }
+        { id: 1, username: 'CardiB' },
+        { id: 2, bio: 'I am also Cardi B' }
       ]
       const tests =
         goodUpdateRequests.map((reqBody) => {
@@ -110,7 +105,6 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => {
               assert(res.body.success, JSON.stringify(res.body))
             })
@@ -126,8 +120,8 @@ describe('/users endpoints', () => {
     it('should reject bad requests', () => {
       const badPrivacyUpdateRequests = [
         {},
-        { userKey: 'doesNotExist' },
-        { userKey: 'doesNotExist', subscribedEventsVisibility: 'trusted' }
+        { userId: 10000 },
+        { userId: 20000, subscribedEventsVisibility: 'listeners' }
       ]
       const tests =
         badPrivacyUpdateRequests.map((reqBody) => {
@@ -136,7 +130,6 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(400)
             .then((res) => {
               assert(!res.body.success, JSON.stringify(res.body))
             })
@@ -148,7 +141,7 @@ describe('/users endpoints', () => {
     })
     it('should accept good requests', () => {
       const goodPrivacyUpdateRequests = [
-        { userKey: 'validUserKey', subscribedEventsVisibility: 'trusted' }
+        { userId: 1, subscribedEventsVisibility: 'listeners' }
       ]
       const tests =
         goodPrivacyUpdateRequests.map((reqBody) => {
@@ -157,7 +150,6 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(200)
             .then((res) => {
               assert(res.body.success, JSON.stringify(res.body))
             })
@@ -173,7 +165,7 @@ describe('/users endpoints', () => {
     it('should reject bad requests', () => {
       const badDeleteRequests = [
         {},
-        { userKey: 'doesNotExist' }
+        { id: 10000 }
       ]
       const tests =
         badDeleteRequests.map((reqBody) => {
@@ -182,7 +174,6 @@ describe('/users endpoints', () => {
             .send(reqBody)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
-            .expect(400)
             .then((res) => {
               assert(!res.body.success, JSON.stringify(res.body))
             })
@@ -194,7 +185,7 @@ describe('/users endpoints', () => {
     })
     it('should accept good requests', () => {
       const goodDeleteRequests = [
-        { userKey: 'validUserKey2' }
+        { id: 1 }
       ]
       const tests =
         goodDeleteRequests.map((reqBody) => {
@@ -202,7 +193,6 @@ describe('/users endpoints', () => {
             .delete('/users/delete')
             .send(reqBody)
             .set('Accept', 'application/json')
-            .expect(200)
             .then((res) => {
               assert(res.body.success, JSON.stringify(res.body))
             })
