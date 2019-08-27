@@ -2,7 +2,7 @@ const sqlite = require('sqlite')
 const path = require('path')
 const crypto = require('crypto')
 const sql = require('sqlstring')
-
+const fs = require('fs').promises
 // sqlstring is WAY better then sqlite3 or sql-template-strings because it accepts an object param
 // with properties that don't need to be referenced in the sql string. this way, you don't have to write
 // out all the column names at all. So much simpler! Updates don't have to be multiple statements now.
@@ -20,6 +20,29 @@ const dbLib = {
     return db
   },
   dbPath: path.resolve(__dirname, '../../build/eventz.db'),
+  dbSetupPath: path.resolve(__dirname, '../../create_database.sql'),
+  dbRefresh: async (errHandler) => {
+    try {
+      const sqlFile = await fs.readFile(dbLib.dbSetupPath, 'utf8')
+      const uncommentedSql = sqlFile.split('\n').filter(line => !line.includes('--')).join('')
+      const db = await dbLib.dbPromise()
+      return db.exec(uncommentedSql)
+    } catch (err) {
+      errHandler(err)
+    }
+  },
+  dbPopulate: async (errHandler) => {
+    try {
+      await dbLib.dbRefresh(errHandler)
+      await dbLib.insertUser({ id: 1, username: 'stel', email: 'stel@gmail.com', password: 'akbhfsuhd' }, errHandler)
+      await dbLib.insertUser({ id: 2, username: 'alice', email: 'alice@gmail.com', password: 'h7d5kf4s' }, errHandler)
+      await dbLib.insertUser({ id: 3, username: 'ash', email: 'ash@gmail.com', password: 'shjkshkh3' }, errHandler)
+      await dbLib.insertEvent({ id: 1, userId: 1, name: 'stels big party' }, errHandler)
+      await dbLib.insertUserRelationship({ id: 1, initialUserId: 1, targetUserId: 2, relationship: 'listen' })
+    } catch (err) {
+      errHandler(err)
+    }
+  },
   insertUser: async (user, errHandler) => {
     let db
     try {
@@ -89,12 +112,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  insertEventPicture: async (eventPicture, errHandler) => {
+  insertEventImage: async (eventImage, errHandler) => {
     let db
     try {
       db = await dbLib.dbPromise()
-      const [columns, values] = dbLib.insertSql(eventPicture)
-      const statement = `INSERT INTO eventPicture ( ${columns} ) VALUES ( ${values} )`
+      const [columns, values] = dbLib.insertSql(eventImage)
+      const statement = `INSERT INTO eventImage ( ${columns} ) VALUES ( ${values} )`
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -180,12 +203,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteEventPictures: async (eventPicture, errHandler) => {
+  deleteEventImages: async (eventImage, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM eventPicture WHERE ?', eventPicture)
+      const statement = sql.format('DELETE FROM eventImage WHERE ?', eventImage)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -263,7 +286,7 @@ const dbLib = {
         .map(row => row.id)
         .forEach(async eventId => {
           dbLib.deleteAttendance({ eventId }, errHandler)
-          dbLib.deleteEventPictures({ eventId }, errHandler)
+          dbLib.deleteEventImages({ eventId }, errHandler)
           dbLib.deleteEventPrivacy({ eventId }, errHandler)
           dbLib.deleteEventTag({ eventId }, errHandler)
           const statement = sql.format('DELETE FROM event WHERE id = ?', eventId)
@@ -351,14 +374,14 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  updateEventPicture: async (eventPicture, errHandler) => {
+  updateEventImage: async (eventImage, errHandler) => {
     // must have id
     let db
     try {
       db = await dbLib.dbPromise()
-      const eventPictureId = eventPicture.id
-      delete eventPicture.id
-      const statement = sql.format('UPDATE eventPicture SET ? WHERE id = ?', [eventPicture, eventPictureId])
+      const eventImageId = eventImage.id
+      delete eventImage.id
+      const statement = sql.format('UPDATE eventImage SET ? WHERE id = ?', [eventImage, eventImageId])
       await db.run(statement)
     } catch (err) {
       errHandler(err)
