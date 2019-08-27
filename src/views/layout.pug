@@ -3,7 +3,9 @@ html
   head
     title= title
     link(rel='stylesheet', href='/css/layout.css')
-    block styleSheets
+    block stylesheets
+    script(src="/js/layout.js")
+    block scripts
   body
     nav.navbar(role="navigation" aria-label="main navigation")
       .navbar-brand
@@ -20,5 +22,28 @@ html
           .navbar-item
             .buttons
               a.button.is-primary Sign up
-              a.button.is-light Log in
+              a.button.is-light#login Log in
+    .modal#login-modal
+      .modal-background
+      .modal-content
+        .box
+          form
+            .field
+              label.label Username
+              .control
+                input.input(type='text', placeholder='', value='')
+            .field
+              label.label Email
+              .control
+                input.input(type='email', placeholder='', value='')
+            .field
+              label.label Password
+              .control
+                input.input(type='password', placeholder='', value='')
+            .field.is-grouped
+              .control
+                button.button.is-link Submit
+              .control
+                button.button.is-text#cancel Cancel
+      button.modal-close.is-large(aria-label='close')
     block content
