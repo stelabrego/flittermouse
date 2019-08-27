@@ -1,10 +1,15 @@
 const assert = require('assert')
 const request = require('supertest')
 const app = require('../src/app')
-const dbLib = require('../src/lib/dbLib')
+const dbPromise = require('../src/lib/dbPromise')
 
 describe('/users endpoints', () => {
-  beforeEach(async () => dbLib.dbPopulate(err => { throw err }))
+  beforeEach(async () => {
+    const db = await dbPromise(err => { throw err })
+    await db.refresh()
+    await db.populate()
+    await db.close()
+  })
   describe('POST /users/add', () => {
     it('should accept good requests', () => {
       const goodAddRequests = [

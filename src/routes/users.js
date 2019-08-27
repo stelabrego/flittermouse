@@ -1,40 +1,56 @@
 const express = require('express')
 const router = express.Router()
-const dbLib = require('../lib/dbLib')
+const dbPromise = require('../lib/dbPromise')
 
 router.post('/add', async (req, res, next) => {
+  let db
   try {
-    await dbLib.insertUser(req.body, err => { throw err })
+    const db = await dbPromise(err => { throw err })
+    await db.insertUser(req.body)
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
+  } finally {
+    if (db) await db.close()
   }
 })
 
 router.delete('/delete', async (req, res, next) => {
+  let db
   try {
-    await dbLib.deleteUser(req.body.id, err => { throw err })
+    const db = await dbPromise(err => { throw err })
+    await db.deleteUser(req.body.id)
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
+  } finally {
+    if (db) await db.close()
   }
 })
 
 router.put('/update', async (req, res, next) => {
+  let db
   try {
-    await dbLib.updateUser(req.body, err => { throw err })
+    const db = await dbPromise(err => { throw err })
+    await db.updateUser(req.body)
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
+  } finally {
+    if (db) await db.close()
   }
 })
 
 router.put('/privacy/update', async (req, res, next) => {
+  let db
   try {
-    await dbLib.updateUserPrivacy(req.body, err => { throw err })
+    const db = await dbPromise(err => { throw err })
+    await db.updateUserPrivacy(req.body)
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
+  } finally {
+    if (db) await db.close()
   }
 })
 
