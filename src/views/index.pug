@@ -1,42 +1,8 @@
 extends layout
 block styleSheets
-  link(rel='stylesheet', href='/stylesheets/index.css')
+  link(rel='stylesheet', href='/css/index.css')
 
 block content
-  h1= title
-  p Welcome to #{title}
-  h3 Add a user
-  div(class='main')
-    div(class='formContainer')
-      form(action='/users/add', method='POST', id='addUser')
-        p email
-          span(class='requiredField') *
-        input(type='text', name='email', value='', required)
-        p username
-          span(class='requiredField') *
-        input(type='text', name='username', required)
-        p password
-          span(class='requiredField') *
-        input(type='password', name='password', value='', required)
-        p display name
-        input(type='text', name='displayName', required)
-        p
-      button(type='submit' form='addUser' value='Add') Add User
-    
-    h3 Add an event
-    div(class='formContainer')
-      form(action='/events/add', method='POST', id='addEvent')
-        p User Key
-          span(class='requiredField') *
-        input(type='text', name='userKey', value='', required)
-        p Event Name
-          span(class='requiredField') *
-        input(type='text', name='eventName', value='', required)
-        p Date
-        input(type='date', name='date')
-        p Address
-        input(type='text', name='address', value='')
-        p
-      button(type='submit' form='addEvent' value='Add') Add Event
+  
 
       

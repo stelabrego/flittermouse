@@ -13,7 +13,7 @@ router.post('/add', async (req, res, next) => {
 
 router.delete('/delete', async (req, res, next) => {
   try {
-    await dbLib.deleteUser(req.body, err => { throw err })
+    await dbLib.deleteUser(req.body.id, err => { throw err })
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })

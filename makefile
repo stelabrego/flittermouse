@@ -1,23 +1,25 @@
-.PHONY: clean db build start lint test
+.PHONY: clean db start lint test server sass watch
 
 clean:
 	rm -rf ./build
 	mkdir build
 
-db:
+db: clean
 	sqlite3 build/eventz.db < create_database.sql
 
-build: clean db
-# we were using babel but i just realized we don't need it at all unless we want to transpile browser scripts
-#./node_modules/@babel/cli/bin/babel.js --watch -o ./build/server.js --copy-files ./src
+sass:
+	sass --watch --no-source-map src/public/sass:src/public/css
 
-start:
+server:
 	./node_modules/nodemon/bin/nodemon.js ./src/server.js
 
 lint:
 	./node_modules/eslint/bin/eslint.js --fix src/
 
 test:
-	# ./node_modules/mocha/bin/mocha ./test/api.users.test.js
-	# ./node_modules/mocha/bin/mocha ./test/api.events.js
-	./node_modules/mocha/bin/mocha ./test/dbLib.test.js
+	./node_modules/mocha/bin/mocha
+
+watch: db server sass
+
+start:
+	${MAKE} -j watch

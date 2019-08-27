@@ -2,7 +2,23 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/css/layout.css')
     block styleSheets
   body
+    nav.navbar(role="navigation" aria-label="main navigation")
+      .navbar-brand
+        a.navbar-item(href='http://localhost:3000')
+          img(src='https://bit.ly/2MH7qZG', height='28')
+        a.navbar-burger(role='button', aria-label='menu', aria-expanded='false')
+          span(aria-hidden='true')
+          span(aria-hidden='true')
+          span(aria-hidden='true')
+      .navbar-menu
+        .navbar-start
+          a.navbar-item Home
+        .navbar-end
+          .navbar-item
+            .buttons
+              a.button.is-primary Sign up
+              a.button.is-light Log in
     block content
