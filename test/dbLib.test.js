@@ -1,4 +1,3 @@
-const assert = require('assert')
 const dbLib = require('../src/lib/dbLib')
 
 describe('dbLib', () => {
@@ -66,32 +65,44 @@ describe('dbLib', () => {
       return Promise.all(tests)
     })
   })
-  describe('deleteUserRelationships', () => {
+  describe('deleteUserRelationship', () => {
     it('should accept good request', () => {
       const good = [
-        { id: 1 }
+        1
       ]
-      const tests = good.map(item => dbLib.deleteUserRelationships(item, err => { throw err }))
+      const tests = good.map(item => dbLib.deleteUserRelationship(item, err => { throw err }))
       return Promise.all(tests)
     })
   })
-  describe('deleteEventImages', () => {
+  describe('deleteEventImage', () => {
     it('should accept good request')
   })
-  describe('deleteAttendances', () => {
+  describe('deleteAttendance', () => {
     it('should accept good request')
   })
-  describe('deleteEventQuestions', () => {
+  describe('deleteEventQuestion', () => {
     it('should accept good request')
   })
-  describe('deleteEventTags', () => {
+  describe('deleteEventTag', () => {
     it('should accept good request')
   })
-  describe('deleteUsers', () => {
-    it('should accept good request')
+  describe('deleteUser', () => {
+    it('should accept good request', () => {
+      const good = [
+        1
+      ]
+      const tests = good.map(item => dbLib.deleteUser(item, err => { throw err }))
+      return Promise.all(tests)
+    })
   })
-  describe('deleteEvents', () => {
-    it('should accept good request')
+  describe('deleteEvent', () => {
+    it('should accept good request', () => {
+      const good = [
+        1
+      ]
+      const tests = good.map(item => dbLib.deleteEvent(item, err => { throw err }))
+      return Promise.all(tests)
+    })
   })
   describe('updateEventImages', () => {
     it('should accept good request')

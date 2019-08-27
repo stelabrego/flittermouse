@@ -164,12 +164,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteUserPrivacy: async (userPrivacy, errHandler) => {
+  deleteUserPrivacy: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM userPrivacy WHERE ?', userPrivacy)
+      const statement = sql.format('DELETE FROM userPrivacy WHERE id = ?', id)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -177,12 +177,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteEventPrivacy: async (eventPrivacy, errHandler) => {
+  deleteEventPrivacy: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM eventPrivacy WHERE ?', eventPrivacy)
+      const statement = sql.format('DELETE FROM eventPrivacy WHERE id = ?', id)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -190,12 +190,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteUserRelationships: async (userRelationship, errHandler) => {
+  deleteUserRelationship: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM userRelationship WHERE ?', userRelationship)
+      const statement = sql.format('DELETE FROM userRelationship WHERE id = ?', id)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -203,12 +203,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteEventImages: async (eventImage, errHandler) => {
+  deleteEventImage: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM eventImage WHERE ?', eventImage)
+      const statement = sql.format('DELETE FROM eventImage WHERE id = ?', id)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -216,12 +216,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteAttendances: async (attendance, errHandler) => {
+  deleteAttendance: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM attendance WHERE ?', attendance)
+      const statement = sql.format('DELETE FROM attendance WHERE id = ?', id)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -229,12 +229,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteEventQuestions: async (eventQuestion, errHandler) => {
+  deleteEventQuestion: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM eventQuestion WHERE ?', eventQuestion)
+      const statement = sql.format('DELETE FROM eventQuestion WHERE id = ?', id)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -242,12 +242,12 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteEventTags: async (eventTag, errHandler) => {
+  deleteEventTag: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      const statement = sql.format('DELETE FROM eventTag WHERE ?', eventTag)
+      const statement = sql.format('DELETE FROM eventTag WHERE id = ?', id)
       await db.run(statement)
     } catch (err) {
       errHandler(err)
@@ -255,43 +255,52 @@ const dbLib = {
       if (db) db.close()
     }
   },
-  deleteUsers: async (user, errHandler) => {
+  deleteUser: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      await db.all('SELECT id FROM user WHERE ?', user)
-        .map(row => row.id)
-        .forEach(async userId => {
-          dbLib.deleteAttendance({ userId }, errHandler)
-          dbLib.deleteUserPrivacy({ userId }, errHandler)
-          dbLib.deleteUserRelationships({ initialUserId: userId }, errHandler)
-          dbLib.deleteUserRelationships({ targetUserId: userId }, errHandler)
-          dbLib.deleteEvent({ userId }, errHandler)
-          const statement = sql.format('DELETE FROM user WHERE id = ?', userId)
-          await db.run(statement)
-        })
+      let statement = sql.format('SELECT id FROM userRelationship WHERE targetUserId = ? OR initialUserId = ?', [id, id])
+      let results = await db.all(statement)
+      let updates = results.map(row => dbLib.deleteUserRelationship(row.id, errHandler))
+      await Promise.all(updates)
+      statement = sql.format('SELECT id FROM userPrivacy WHERE userId = ?', id)
+      results = await db.get(statement)
+      await dbLib.deleteUserPrivacy(results.id, errHandler)
+      statement = sql.format('SELECT id FROM event WHERE userId = ?', id)
+      results = await db.all(statement)
+      updates = results.map(row => dbLib.deleteEvent(row.id, errHandler))
+      await Promise.all(updates)
+      statement = sql.format('DELETE FROM user WHERE id = ?', id)
+      await db.run(statement)
     } catch (err) {
       errHandler(err)
     } finally {
       if (db) db.close()
     }
   },
-  deleteEvents: async (event, errHandler) => {
+  deleteEvent: async (id, errHandler) => {
     // only one field accepted
     let db
     try {
       db = await dbLib.dbPromise()
-      await db.all('SELECT id FROM event WHERE ?', event)
-        .map(row => row.id)
-        .forEach(async eventId => {
-          dbLib.deleteAttendance({ eventId }, errHandler)
-          dbLib.deleteEventImages({ eventId }, errHandler)
-          dbLib.deleteEventPrivacy({ eventId }, errHandler)
-          dbLib.deleteEventTag({ eventId }, errHandler)
-          const statement = sql.format('DELETE FROM event WHERE id = ?', eventId)
-          await db.run(statement)
-        })
+      let statement = sql.format('SELECT id FROM attendance WHERE eventId = ?', id)
+      let results = await db.all(statement)
+      let updates = results.map(row => dbLib.deleteAttendance(row.id, errHandler))
+      await Promise.all(updates)
+      statement = sql.format('SELECT id FROM eventImage WHERE eventId = ?', id)
+      results = await db.all(statement)
+      updates = results.map(row => dbLib.deleteEventImage(row.id, errHandler))
+      await Promise.all(updates)
+      statement = sql.format('SELECT id FROM eventTag WHERE eventId = ?', id)
+      results = await db.all(statement)
+      updates = results.map(row => dbLib.deleteEventTag(row.id, errHandler))
+      await Promise.all(updates)
+      statement = sql.format('SELECT id FROM eventPrivacy WHERE eventId = ?', id)
+      results = await db.get(statement)
+      await dbLib.deleteEventPrivacy(results.id, errHandler)
+      statement = sql.format('DELETE FROM event WHERE id = ?', id)
+      await db.run(statement)
     } catch (err) {
       errHandler(err)
     } finally {

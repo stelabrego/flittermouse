@@ -1,116 +1,42 @@
 const express = require('express')
 const router = express.Router()
-const crypto = require('crypto')
-const dbPromise = require('../lib/dbLib')
-const SQL = require('sql-template-strings')
-
+const dbLib = require('../lib/dbLib')
 // Add event
 router.post('/add', async (req, res, next) => {
-  let db
   try {
-    const reqFieldNames = Object.keys(req.body)
-    const validFieldNames = ['userKey', 'name', 'dateOf', 'address']
-    if (reqFieldNames.length < 1 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
-    const eventKey = crypto.randomBytes(6).toString('hex')
-    const reqValues = validFieldNames.reduce((result, fieldName) => {
-      result[fieldName] = req.body[fieldName] || null
-      return result
-    }, { eventKey })
-    const statement = SQL`
-    INSERT
-    INTO event
-    (userId, name, key, dateOf, address)
-    SELECT user.ROWId, ${reqValues.name}, ${reqValues.eventKey}, ${reqValues.dateOf}, ${reqValues.address}
-    FROM user WHERE user.key = ${reqValues.userKey}`
-    db = await dbPromise()
-    const results = await db.run(statement)
-    if (results.changes === 0) throw Error('Invalid userKey')
-    res.json({ success: true, eventKey, message: 'Created event successfully' })
+    await dbLib.insertEvent(req.body, err => { throw err })
+    res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) db.close()
   }
 })
 
 router.delete('/delete', async (req, res, next) => {
-  let db
   try {
-    if (!req.body.eventKey || Object.keys(req.body).length !== 1) throw Error('request fields are incorrect')
-    const statement = SQL`
-      DELETE
-      FROM event
-      WHERE event.key = ${req.body.eventKey}
-    `
-    db = await dbPromise()
-    const results = await db.run(statement)
-    if (results.changes === 0) throw Error('Invalid eventKey')
-    res.json({ success: true, message: 'Deleted event successfully' })
+    await dbLib.deleteEvent(req.body, err => { throw err })
+    res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) db.close()
   }
 })
 
 // can only change one thing at a time
 router.put('/update', async (req, res, next) => {
-  let db
   try {
-    const reqFieldNames = Object.keys(req.body)
-    const validFieldNames = ['eventKey', 'name', 'location', 'dateOf']
-    if (!reqFieldNames.includes('eventKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
-    db = await dbPromise()
-    const dbUpdates =
-      reqFieldNames
-        .filter((fieldName) => fieldName !== 'eventKey')
-        .map((fieldName) => SQL`
-          UPDATE event
-          SET `.append(fieldName).append(SQL` = ${req.body[fieldName]}
-          WHERE event.key = ${req.body.eventKey}`))
-        .map((statement) => db.run(statement))
-    const results = await Promise.all(dbUpdates)
-    results.forEach(result => {
-      if (result.changes === 0) throw Error("Event key doesn't exist")
-    })
+    await dbLib.updateEvent(req.body, err => { throw err })
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) db.close()
   }
 })
 
 // can only change one thing at a time
 router.put('/privacy/update', async (req, res, next) => {
-  let db
   try {
-    const reqFieldNames = Object.keys(req.body)
-    const validFieldNames = ['eventKey', 'displayAddress', 'displayDate', 'visibility']
-    if (!reqFieldNames.includes('eventKey') || reqFieldNames.length < 2 || !reqFieldNames.every((field) => validFieldNames.includes(field))) { throw Error('Incorrect request fields') }
-    db = await dbPromise()
-    const dbUpdates =
-      reqFieldNames
-        .filter(fieldName => fieldName !== 'eventKey')
-        .map(fieldName => SQL`
-          UPDATE eventPrivacy
-          SET `.append(fieldName).append(SQL` = ${req.body[fieldName]}
-          WHERE eventPrivacy.eventId = (
-            SELECT (rowid) 
-            FROM event 
-            WHERE event.key = ${req.body.eventKey}
-          )`)
-        )
-        .map(statement => db.run(statement))
-    const results = await Promise.all(dbUpdates)
-    results.forEach(result => {
-      if (result.changes === 0) throw Error("Event key doesn't exist")
-    })
-    res.json({ success: true, message: 'Updated event privacy successfully' })
+    await dbLib.updateEventPrivacy(req.body, err => { throw err })
+    res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) db.close()
   }
 })
 

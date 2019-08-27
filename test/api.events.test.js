@@ -1,12 +1,14 @@
 // const assert = require('assert')
 // const request = require('supertest')
 // const app = require('../src/app')
+// const dbLib = require('../src/lib/dbLib')
 
 // describe('/events endpoints', () => {
+//   beforeEach(async () => dbLib.dbPopulate(err => { throw err }))
 //   describe('POST events/add', () => {
 //     it('should accept good requests', () => {
 //       const goodAddRequests = [
-//         { name: 'Stels Big Birthday Bash', userKey: 'validUserKey' }
+//         { name: 'Stels Big Birthday Bash', userId: 1 }
 //       ]
 //       const tests =
 //         goodAddRequests.map((reqBody) => {
@@ -17,7 +19,6 @@
 //             .expect('Content-Type', /json/)
 //             .then((res) => {
 //               assert(res.body.success, JSON.stringify(res.body))
-//               assert(res.body.eventKey, JSON.stringify(res.body))
 //             })
 //             .catch((err) => {
 //               throw err
@@ -30,7 +31,7 @@
 //   describe('DELETE events/delete', () => {
 //     it('should accept good requests', () => {
 //       const goodDeleteRequests = [
-//         { eventKey: 'validEventKey2' }
+//         { id: 1 }
 //       ]
 //       const tests =
 //         goodDeleteRequests.map((reqBody) => {

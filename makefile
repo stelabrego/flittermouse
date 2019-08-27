@@ -17,5 +17,7 @@ start:
 lint:
 	./node_modules/eslint/bin/eslint.js --fix src/
 
-test: db
-	./node_modules/mocha/bin/mocha
+test:
+	# ./node_modules/mocha/bin/mocha ./test/api.users.test.js
+	# ./node_modules/mocha/bin/mocha ./test/api.events.js
+	./node_modules/mocha/bin/mocha ./test/dbLib.test.js

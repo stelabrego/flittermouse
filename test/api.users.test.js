@@ -1,8 +1,10 @@
-const assert = require('assert')
-const request = require('supertest')
-const app = require('../src/app')
+// const assert = require('assert')
+// const request = require('supertest')
+// const app = require('../src/app')
+// const dbLib = require('../src/lib/dbLib')
 
 // describe('/users endpoints', () => {
+//   beforeEach(async () => dbLib.dbPopulate(err => { throw err }))
 //   describe('POST /users/add', () => {
 //     it('should reject bad requests', () => {
 //       const badAddRequests = [
@@ -52,8 +54,7 @@ const app = require('../src/app')
 //     it('should reject bad requests', () => {
 //       const badUpdateRequests = [
 //         {},
-//         { username: 'hihihihihihi' },
-//         { id: 10000, username: 'bigboi315' }
+//         { username: 'hihihihihihi' }
 //       ]
 //       const tests =
 //         badUpdateRequests.map((reqBody) => {
