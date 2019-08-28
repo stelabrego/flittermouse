@@ -1,18 +1,29 @@
 nav.navbar(role="navigation" aria-label="main navigation")
-  .navbar-brand
-    a.navbar-item(href='http://localhost:3000')
-      img(src='https://bit.ly/2MH7qZG', height='28')
-    a.navbar-burger(role='button', aria-label='menu', aria-expanded='false')
-      span(aria-hidden='true')
-      span(aria-hidden='true')
-      span(aria-hidden='true')
-  .navbar-menu
-    .navbar-start
-      a.navbar-item Home
-    .navbar-end
-      .navbar-item
-        .buttons
-          a.button.is-primary#signup Sign up
-          a.button.is-light#login Log in
+  .container
+    .navbar-brand
+      a.navbar-item(href='/')
+        img(src='https://bit.ly/2MH7qZG')
+      a.navbar-item.is-size-4.has-text-weight-bold(href='/') EVENTZ
+      a.navbar-burger(role='button', aria-label='menu', aria-expanded='false')
+        span(aria-hidden='true')
+        span(aria-hidden='true')
+        span(aria-hidden='true')
+    .navbar-menu
+      .navbar-start
+        
+      .navbar-end
+        if user
+          .is-size-4.navbar-item=user.username
+          .navbar-item.has-dropdown.is-hoverable
+            a.navbar-link.is-arrowless(href='/' + user.username)
+              img.avatar(src=user.avatarUrl)
+            .navbar-dropdown.is-right.is-boxed
+              a.navbar-item(href='/' + user.username) My Profile
+              a.navbar-item.logout Logout
+        if !user
+          .navbar-item
+            .buttons
+              a.button.is-primary#signup Sign up
+              a.button.is-light#login Log in
 include login-modal
 include signup-modal

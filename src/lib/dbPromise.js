@@ -330,11 +330,11 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.selectUser = async function (id) {
+  db.selectUserById = async function (id) {
     // only one field accepted
     try {
       const statement = sql.format('SELECT * FROM user WHERE id = ?', id)
-      return this.all(statement)
+      return this.get(statement)
     } catch (err) {
       errHandler(err)
     }

@@ -32,7 +32,7 @@ CREATE TABLE `user`
 `displayName` varchar(255),
 `phoneNumber` varchar(255),
 `address` varchar(255),
-`avatarUrl` varchar(255),
+`avatarUrl` varchar(255) DEFAULT 'https://res.cloudinary.com/deiup0tup/image/upload/v1566969522/generic-user_inzqg2.jpg',
 `bio` varchar(255),
 `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 `id` INTEGER PRIMARY KEY
