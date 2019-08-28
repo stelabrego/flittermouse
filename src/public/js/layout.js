@@ -24,9 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.querySelector('#login-modal form')
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault()
+    console.log(event)
+    const password = event.target.elements.password.value
+    const usernameEmail = event.target.elements['username-email'].value
     ajax.post('/login')
-      .send({ username: event.target. })
-      .then(res => console.log(res))
+      .send({ usernameEmail, password })
+      .then(res => {
+        console.log(res)
+        if (res.body.success) window.location.replace('/home')
+        else (alert(res.body.message))
+      })
   })
 
   const signup = document.querySelector('#signup')

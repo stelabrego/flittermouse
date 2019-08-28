@@ -4,12 +4,14 @@ const path = require('path')
 const logger = require('morgan')
 const fs = require('fs')
 const session = require('express-session')
+const dbPromise = require('./lib/dbPromise')
 
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 const eventsRouter = require('./routes/events')
 const loginRouter = require('./routes/login')
 const signupRouter = require('./routes/signup')
+const homeRouter = require('./routes/home')
 
 const TWO_WEEKS = 1000 * 60 * 60 * 24 * 14
 const {
@@ -18,6 +20,12 @@ const {
   SESSION_SECRET = 'devTestSecret',
   NODE_ENV = 'development'
 } = process.env
+
+if (NODE_ENV === 'development') {
+  dbPromise(console.log)
+    .then(db => db.populate())
+    .catch(console.log)
+}
 
 const app = express()
 // view engine setup
@@ -46,6 +54,7 @@ app.use('/login', loginRouter)
 app.use('/signup', signupRouter)
 app.use('/users', usersRouter)
 app.use('/events', eventsRouter)
+app.use('/home', homeRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
