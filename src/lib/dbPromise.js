@@ -338,6 +338,24 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
+  db.selectUserByEmail = async function (email) {
+    // only one field accepted
+    try {
+      const statement = sql.format('SELECT * FROM user WHERE email = ?', email)
+      await this.run(statement)
+    } catch (err) {
+      errHandler(err)
+    }
+  }
+  db.selectUserByUsername = async function (username) {
+    // only one field accepted
+    try {
+      const statement = sql.format('SELECT * FROM user WHERE username = ?', username)
+      await this.run(statement)
+    } catch (err) {
+      errHandler(err)
+    }
+  }
   db.selectEvent = async function (id) {
     // only one field accepted
     try {

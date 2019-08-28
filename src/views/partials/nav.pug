@@ -1,0 +1,18 @@
+nav.navbar(role="navigation" aria-label="main navigation")
+  .navbar-brand
+    a.navbar-item(href='http://localhost:3000')
+      img(src='https://bit.ly/2MH7qZG', height='28')
+    a.navbar-burger(role='button', aria-label='menu', aria-expanded='false')
+      span(aria-hidden='true')
+      span(aria-hidden='true')
+      span(aria-hidden='true')
+  .navbar-menu
+    .navbar-start
+      a.navbar-item Home
+    .navbar-end
+      .navbar-item
+        .buttons
+          a.button.is-primary#signup Sign up
+          a.button.is-light#login Log in
+include login-modal.pug
+include signup-modal.pug

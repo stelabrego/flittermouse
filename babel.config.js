@@ -1,12 +1,11 @@
 module.exports = function (api) {
   api.cache(true)
 
-  const presets = ['@babel/env']
+  const presets = []
   const plugins = []
 
   return {
     presets,
-    plugins,
-    sourceMaps: 'both'
+    plugins
   }
 }

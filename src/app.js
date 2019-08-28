@@ -25,10 +25,10 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, '../build/access.log'), { flags: 'a' })
-app.use(logger('combined', { stream: accessLogStream }))
+app.use(logger(':date :method :url', { stream: accessLogStream }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, '../build/public')))
 app.use(session({
   name: SESSION_NAME,
   resave: false,

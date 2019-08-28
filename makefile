@@ -1,4 +1,4 @@
-.PHONY: clean db start lint test server sass watch
+.PHONY: clean db start lint test nodemon sass watch webpack
 
 clean:
 	rm -rf ./build
@@ -8,10 +8,13 @@ db: clean
 	sqlite3 build/eventz.db < create_database.sql
 
 sass:
-	sass --watch --no-source-map src/public/sass:src/public/css
+	sass --watch --no-source-map src/public/sass:build/public/css
 
-server:
+nodemon:
 	./node_modules/nodemon/bin/nodemon.js ./src/server.js
+
+webpack:
+	npx webpack --watch
 
 lint:
 	./node_modules/eslint/bin/eslint.js --fix src/
@@ -19,7 +22,7 @@ lint:
 test:
 	./node_modules/mocha/bin/mocha
 
-watch: db server sass
+watch: db nodemon sass webpack
 
 start:
 	${MAKE} -j watch

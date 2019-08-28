@@ -1,0 +1,20 @@
+.modal#login-modal
+  .modal-background
+  .modal-content
+    .box
+      h2.title Login
+      form
+        .field
+          label.label Username/Email
+          .control
+            input.input(type='text' required)
+        .field
+          label.label Password
+          .control
+            input.input(type='password', required)
+        .field.is-grouped
+          .control
+            button.button.is-link Submit
+          .control
+            button.button.is-text#cancel Cancel
+  button.modal-close.is-large(aria-label='close')
