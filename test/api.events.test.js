@@ -57,8 +57,8 @@ describe('/events endpoints', () => {
   describe('PUT events/update', () => {
     it('should accept good requests', () => {
       const goodUpdateRequests = [
-        { id: 1, name: 'Updated name event', dateOf: '248792874' },
-        { id: 1, dateOf: '44244525' }
+        { id: 1, name: 'Updated name event', dateStart: '248792874' },
+        { id: 1, dateStart: '44244525' }
       ]
       const tests =
         goodUpdateRequests.map((reqBody) => {

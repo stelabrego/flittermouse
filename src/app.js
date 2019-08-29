@@ -4,6 +4,7 @@ const path = require('path')
 const logger = require('morgan')
 const fs = require('fs')
 const session = require('express-session')
+const moment = require('moment')
 const dbPromise = require('./lib/dbPromise')
 
 const indexRouter = require('./routes/index')
@@ -50,13 +51,15 @@ app.use(session({
   }
 }))
 
+app.locals.moment = moment
+
 // extract userId from session
 app.use(async (req, res, next) => {
   const { userId } = req.session
   if (userId) {
     const db = await dbPromise(console.log)
-    const user = await db.selectUserById(userId)
-    res.locals.user = user
+    const sessionUser = await db.selectUserById(userId)
+    res.locals.sessionUser = sessionUser
   }
   next()
 })
@@ -83,7 +86,7 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500)
   if (['POST', 'PUT', 'DELETE'].includes(req.method)) res.json({ success: false, message: '404 bad URL' })
-  else res.render('error', { user: res.locals.user })
+  else res.render('error', { user: res.locals.sessionUser })
 })
 
 module.exports = app

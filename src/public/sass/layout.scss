@@ -16,7 +16,11 @@ $navbar-breakpoint: $tablet;
 // Components
 @import "../../../node_modules/bulma/sass/components/navbar.sass";
 @import "../../../node_modules/bulma/sass/components/modal.sass";
+@import "../../../node_modules/bulma/sass/grid/columns.sass";
+@import "../../../node_modules/bulma/sass/components/card.sass";
 
-nav .avatar {border-radius: 100%}
 
+
+.avatar {border-radius: 100%}
+.big-avatar {margin: 0 auto}
 

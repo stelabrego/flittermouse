@@ -29,10 +29,10 @@ const dbPromise = async (errHandler) => {
   db.populate = async function () {
     try {
       await this.refresh()
-      await this.insertUser({ id: 1, username: 'stel', email: 'stel@gmail.com', password: '1' })
+      await this.insertUser({ id: 1, username: 'stel', email: 'stel@gmail.com', password: '1', displayName: 'Stel Abrego', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur, nisi sed venenatis hendrerit, erat justo condimentum arcu, id semper tellus erat vel magna.' })
       await this.insertUser({ id: 2, username: 'alice', email: 'alice@gmail.com', password: '1' })
       await this.insertUser({ id: 3, username: 'ash', email: 'ash@gmail.com', password: '1' })
-      await this.insertEvent({ id: 1, userId: 1, name: 'stels big party' })
+      await this.insertEvent({ id: 1, userId: 1, name: 'stels big party', dateStart: '2019-10-31 18:00', dateEnd: '2019-10-31 23:00' })
       await this.insertUserRelationship({ id: 1, initialUserId: 1, targetUserId: 2, relationship: 'listen' })
     } catch (err) {
       errHandler(err)
@@ -40,7 +40,7 @@ const dbPromise = async (errHandler) => {
   }
   db.insertUser = async function (user) {
     try {
-      user.inviteKey = crypto.randomBytes(6).toString('hex')
+      user.inviteKey = crypto.randomBytes(3).toString('hex')
       const [columns, values] = this.insertSql(user)
       const statement = `INSERT INTO user ( ${columns} ) VALUES ( ${values} )`
       const results = await this.run(statement)
@@ -69,7 +69,7 @@ const dbPromise = async (errHandler) => {
   }
   db.insertEvent = async function (event) {
     try {
-      event.urlKey = crypto.randomBytes(6).toString('hex')
+      event.urlKey = crypto.randomBytes(3).toString('hex')
       const [columns, values] = this.insertSql(event)
       const statement = `INSERT INTO event ( ${columns} ) VALUES ( ${values} )`
       const results = await this.run(statement)
@@ -343,7 +343,7 @@ const dbPromise = async (errHandler) => {
     // only one field accepted
     try {
       const statement = sql.format('SELECT * FROM user WHERE email = ?', email)
-      return this.all(statement)
+      return this.get(statement)
     } catch (err) {
       errHandler(err)
     }
@@ -352,7 +352,7 @@ const dbPromise = async (errHandler) => {
     // only one field accepted
     try {
       const statement = sql.format('SELECT * FROM user WHERE username = ?', username)
-      return this.all(statement)
+      return this.get(statement)
     } catch (err) {
       errHandler(err)
     }
@@ -366,7 +366,7 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.selectEventByUserId = async function (id) {
+  db.selectEventsByUserId = async function (id) {
     // only one field accepted
     try {
       const statement = sql.format('SELECT * FROM event WHERE userId = ?', id)

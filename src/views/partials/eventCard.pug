@@ -1,0 +1,9 @@
+.card
+  .card-content
+    p.title=event.name
+    if event.dateStart
+      p.subtitle=moment(event.dateStart).format('LT')
+        if event.dateEnd
+          =moment(event.dateEnd).format(' - LT')
+        if event.location
+    

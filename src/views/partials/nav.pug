@@ -12,15 +12,15 @@ nav.navbar(role="navigation" aria-label="main navigation")
       .navbar-start
         
       .navbar-end
-        if user
-          .is-size-4.navbar-item=user.username
+        if sessionUser
+          .is-size-4.navbar-item=sessionUser.username
           .navbar-item.has-dropdown.is-hoverable
-            a.navbar-link.is-arrowless(href='/' + user.username)
-              img.avatar(src=user.avatarUrl)
+            a.navbar-link.is-arrowless(href='/' + sessionUser.username)
+              img.avatar(src=sessionUser.avatarUrl)
             .navbar-dropdown.is-right.is-boxed
-              a.navbar-item(href='/' + user.username) My Profile
+              a.navbar-item(href='/' + sessionUser.username) My Profile
               a.navbar-item.logout Logout
-        if !user
+        if !sessionUser
           .navbar-item
             .buttons
               a.button.is-primary#signup Sign up

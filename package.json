@@ -14,9 +14,6 @@
   },
   "homepage": "https://github.com/stelabrego/eventz#readme",
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
     "@fortawesome/fontawesome-free": "^5.10.2",
     "bulma": "^0.7.5",
     "eslint": "^6.1.0",
@@ -33,10 +30,10 @@
     "webpack-cli": "^3.3.7"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "http-errors": "^1.7.3",
+    "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "path": "^0.12.7",
     "pug": "^2.0.4",
