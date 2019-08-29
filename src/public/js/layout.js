@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(event)
       const password = event.target.elements.password.value
       const usernameEmail = event.target.elements['username-email'].value
+      console.log({ usernameEmail, password })
       ajax.post('/login')
         .send({ usernameEmail, password })
         .then(res => {

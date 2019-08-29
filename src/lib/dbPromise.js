@@ -33,7 +33,9 @@ const dbPromise = async (errHandler) => {
       await this.insertUser({ id: 2, username: 'alice', email: 'alice@gmail.com', password: '1' })
       await this.insertUser({ id: 3, username: 'ash', email: 'ash@gmail.com', password: '1' })
       await this.insertEvent({ id: 1, userId: 1, name: 'stels big party', dateStart: '2019-10-31 18:00', dateEnd: '2019-10-31 23:00' })
+      await this.insertEvent({ id: 2, userId: 2, name: 'alices christmas party', dateStart: '2019-12-25 8:00', dateEnd: '2019-12-25 20:00' })
       await this.insertUserRelationship({ id: 1, initialUserId: 1, targetUserId: 2, relationship: 'listen' })
+      await this.insertAttendance({ id: 1, userId: 1, eventId: 2 })
     } catch (err) {
       errHandler(err)
     }
@@ -357,11 +359,11 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.selectEvent = async function (id) {
+  db.selectEventById = async function (id) {
     // only one field accepted
     try {
       const statement = sql.format('SELECT * FROM event WHERE id = ?', id)
-      return this.all(statement)
+      return this.get(statement)
     } catch (err) {
       errHandler(err)
     }

@@ -40,7 +40,7 @@ CREATE TABLE `user`
 
 CREATE TABLE `userPrivacy`
 (
-  `userID` int NOT NULL UNIQUE,
+  `userId` int NOT NULL UNIQUE,
   `subscribedEventsVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `addressVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `nameVisibility` varchar(255) NOT NULL DEFAULT 'private',
@@ -48,7 +48,7 @@ CREATE TABLE `userPrivacy`
   `phoneNumberVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`userID`) REFERENCES `user` (`ID`),
+  FOREIGN KEY (`userId`) REFERENCES `user` (`Id`),
   FOREIGN KEY (`subscribedEventsVisibility`) REFERENCES `visibilityEnum` (`title`),
   FOREIGN KEY (`addressVisibility`) REFERENCES `visibilityEnum` (`title`),
   FOREIGN KEY (`nameVisibility`) REFERENCES `visibilityEnum` (`title`),
@@ -63,76 +63,76 @@ CREATE TABLE `userRelationship`
   `relationship` varchar(255) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`initialUserId`) REFERENCES `user` (`ID`),
-  FOREIGN KEY (`targetUserId`) REFERENCES `user` (`ID`),
+  FOREIGN KEY (`initialUserId`) REFERENCES `user` (`Id`),
+  FOREIGN KEY (`targetUserId`) REFERENCES `user` (`Id`),
   FOREIGN KEY (`relationship`) REFERENCES `relationshipEnum` (`title`)
 );
 
 CREATE TABLE `event`
 (
-  `userID` int NOT NULL,
+  `userId` int NOT NULL,
   `name` varchar(255) NOT NULL,
-  `UrlKey` varchar(8) UNIQUE NOT NULL,
+  `urlKey` varchar(8) UNIQUE NOT NULL,
   `dateStart` datetime,
   `dateEnd` datetime,
   `address` varchar(255),
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`userID`) REFERENCES `user` (`ID`)
+  FOREIGN KEY (`userId`) REFERENCES `user` (`Id`)
 );
 
 CREATE TABLE `eventImage`
 (
-  `eventID` int NOT NULL,
+  `eventId` int NOT NULL,
   `url` varchar(255) NOT NULL,
   `order` INTEGER NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`eventID`) REFERENCES `event` (`ID`)
+  FOREIGN KEY (`eventId`) REFERENCES `event` (`Id`)
 );
 
 CREATE TABLE `eventPrivacy`
 (
-  `eventID` int NOT NULL UNIQUE,
+  `eventId` int NOT NULL UNIQUE,
   `displayAddress` datetime DEFAULT CURRENT_TIMESTAMP,
   `displayDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `visibility` varchar(255) NOT NULL DEFAULT 'private',
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`eventID`) REFERENCES `event` (`ID`),
+  FOREIGN KEY (`eventId`) REFERENCES `event` (`Id`),
   FOREIGN KEY (`visibility`) REFERENCES `visibilityEnum` (`title`)
 );
 
 CREATE TABLE `attendance`
 (
-  `eventID` int NOT NULL,
-  `userID` int NOT NULL,
+  `eventId` int NOT NULL,
+  `userId` int NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`eventID`) REFERENCES `event` (`ID`),
-  FOREIGN KEY (`userID`) REFERENCES `user` (`ID`)
+  FOREIGN KEY (`eventId`) REFERENCES `event` (`Id`),
+  FOREIGN KEY (`userId`) REFERENCES `user` (`Id`)
 );
 
 CREATE TABLE `eventQuestion`
 (
-  `eventID` int NOT NULL,
-  `userID` int NOT NULL,
+  `eventId` int NOT NULL,
+  `userId` int NOT NULL,
   `question` varchar(255) NOT NULL,
   `answer` varchar(255),
   `visible` boolean NOT NULL DEFAULT 0,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`eventID`) REFERENCES `event` (`ID`),
-  FOREIGN KEY (`userID`) REFERENCES `user` (`ID`)
+  FOREIGN KEY (`eventId`) REFERENCES `event` (`Id`),
+  FOREIGN KEY (`userId`) REFERENCES `user` (`Id`)
 );
 
 CREATE TABLE `eventTag`
 (
-  `eventID` int NOT NULL,
+  `eventId` int NOT NULL,
   `tagName` varchar(255) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
-  FOREIGN KEY (`eventID`) REFERENCES `event` (`ID`)
+  FOREIGN KEY (`eventId`) REFERENCES `event` (`Id`)
 );
 
 -- ENUM TABLES
@@ -142,30 +142,3 @@ CREATE TABLE `visibilityEnum`(`title` varchar(255) UNIQUE);
 -- FILL ENUM TABLES
 INSERT INTO visibilityEnum (title) VALUES ('public'), ('listeners'), ('mutuals'), ('private');
 INSERT INTO relationshipEnum (title) VALUES ('listen'), ('block');
-
--- FILL DATABASE WITH DUMMY DATA
--- USERS
--- INSERT INTO user (username, email, password, inviteKey) VALUES ('stelabrego', 'stelabrego@icloud.com', 'password123', 'validInviteKey');
--- INSERT INTO user (username, email, password, inviteKey) VALUES ('bobishere', 'bob@gmail.com', 'password123', 'validInviteKey2');
--- INSERT INTO user (username, email, password, inviteKey) VALUES ('indicasmoke', 'indicaabrego@gmail.com','password123', 'validInviteKey3');
--- USER PRIVACY
--- INSERT INTO userPrivacy (userID, subscribedEventsVisibility, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ID, 'public', 'private', 'listeners', 'listeners', 'private' FROM user WHERE user.username = 'stelabrego';
--- INSERT INTO userPrivacy (userID, subscribedEventsVisibility, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ID, 'public', 'public', 'public', 'listeners', 'listeners' FROM user WHERE user.username = 'bobishere';
--- INSERT INTO userPrivacy (userID, subscribedEventsVisibility, addressVisibility, nameVisibility, emailVisibility, phoneNumberVisibility) SELECT user.ID, 'public', 'public', 'public', 'public', 'public' FROM user WHERE user.username = 'indicasmoke';
--- USER RELATIONSHIP
--- INSERT INTO userRelationship (initialUserId, targetUserId, relationship) SELECT user.ID, (SELECT user.ID FROM user WHERE user.username = 'stelabrego'), 'listen' FROM user WHERE user.username = 'bobishere';
--- EVENTS
--- INSERT INTO event (userID, name, urlKey) SELECT user.ID, 'Stel Bday Party', 'validEventKey' FROM user WHERE user.username = 'stelabrego';
--- INSERT INTO event (userID, name, urlKey) SELECT user.ID, 'Solstice Party', 'validEventKey2' FROM user WHERE user.username = 'stelabrego';
--- EVENT PRIVACY
--- INSERT INTO eventPrivacy (eventID, displayAddress, displayDate, visibility) SELECT event.ID, '10/20/19', '10/15/19', 'listeners' FROM event WHERE event.key = 'validEventKey';
--- INSERT INTO eventPrivacy (eventID) SELECT event.ROWID FROM event WHERE event.key = 'validEventKey2';
--- EVENT PICTURE
--- INSERT INTO eventImage (eventID, url) SELECT event.id, 'https://cdn.pixabay.com/photo/2017/12/08/11/53/event-party-3005668_960_720.jpg' FROM event WHERE event.key = 'validEventKey';
--- ATTENDANCE
--- INSERT INTO attendance (eventID, userID) SELECT event.ROWID, (SELECT user.ROWID FROM user WHERE user.username = 'bobishere') FROM event WHERE event.key = 'validEventKey';
--- EVENT QUESTION
--- INSERT INTO eventQuestion (eventID, userID, question) SELECT event.ROWID, (SELECT user.ROWID FROM user WHERE user.username = 'indicasmoke'), "Will this event be rad?" FROM event WHERE event.key = 'validEventKey';
--- EVENT TAG
--- INSERT INTO eventTag (eventID, tagName) SELECT event.ROWID, "cool" FROM event WHERE event.key = 'validEventKey';
--- INSERT INTO eventTag (eventID, tagName) SELECT event.ROWID, "amazing" FROM event WHERE event.key = 'validEventKey';

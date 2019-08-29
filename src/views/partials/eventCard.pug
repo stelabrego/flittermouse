@@ -1,8 +1,11 @@
 .card
   .card-content
-    p.title=event.name
+    p.title.is-4=event.name
     if event.dateStart
-      p.subtitle=moment(event.dateStart).format('LT')
+      p.subtitle
+        =moment(event.dateStart).format('MMM Do')
+        br
+        =moment(event.dateStart).format('LT')
         if event.dateEnd
           =moment(event.dateEnd).format(' - LT')
         if event.location

@@ -10,16 +10,24 @@ block content
           if targetUser.displayName
             p.is-size-3=targetUser.displayName
           p.has-text-weight-bold.is-size-4='@'+targetUser.username
-          button.button Listen
+          button.button.is-primary Listen
       .columns.is-vcentered.is-centered
         .column.is-half
           if targetUser.bio
             p=targetUser.bio
-  if events
+  if hostingEvents.length > 0
     section.section
       .container
         h1.title Hosting
           .columns
-            each event in events
+            each event in hostingEvents
+              .column.is-3
+                include partials/eventCard
+  if attendingEvents.length > 0
+    section.section
+      .container
+        h1.title Attending
+          .columns
+            each event in attendingEvents
               .column.is-3
                 include partials/eventCard
