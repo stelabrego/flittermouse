@@ -1,0 +1,49 @@
+extends layout
+
+block scripts
+  if event.lat && event.lon
+    script(src="/js/map.js")
+
+block stylesheets
+  if event.lat && event.lon
+    link(rel='stylesheet', href='/css/map.css')
+
+block content
+  section.hero.is-primary
+    .hero-body
+      .columns.is-centered
+        .column.is-6
+          h1.title.is-1=event.name
+            if event.dateStart
+              // TODO add support for multi-day events
+              p.subtitle
+                =moment(event.dateStart).format('ddd MMM Do')
+                br
+                =moment(event.dateStart).format('LT')
+                if event.dateEnd
+                  =moment(event.dateEnd).format(' - LT')
+                if event.address
+                  br
+                  =event.address
+          each tag in eventTags
+            a.button.is-primary.is-inverted.is-outlined.is-rounded.event-tag=tag.name
+  if event.description
+    section.section
+      .columns.is-centered
+        .column.is-6
+          p.title.is-4='From the host, '
+            a(href='/' + eventUser.username)='@'+eventUser.username
+          p.is-size-5=event.description
+          if eventQuestions.length > 0
+            hr
+            each question in eventQuestions
+              if question.visible === 1
+                p.is-size-5 
+                  em=question.question
+                p.is-size-5 
+                  =question.answer
+  if event.lat && event.lon
+    section.section
+      .columns.is-centered
+        .column.is-8
+          #map(address=event.address lat=event.lat lon=event.lon)

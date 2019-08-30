@@ -73,9 +73,12 @@ CREATE TABLE `event`
   `userId` int NOT NULL,
   `name` varchar(255) NOT NULL,
   `urlKey` varchar(8) UNIQUE NOT NULL,
+  `description` varchar(255),
   `dateStart` datetime,
   `dateEnd` datetime,
   `address` varchar(255),
+  `lat` REAL,
+  `lon` REAL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
   FOREIGN KEY (`userId`) REFERENCES `user` (`Id`)
@@ -129,7 +132,7 @@ CREATE TABLE `eventQuestion`
 CREATE TABLE `eventTag`
 (
   `eventId` int NOT NULL,
-  `tagName` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
   FOREIGN KEY (`eventId`) REFERENCES `event` (`Id`)

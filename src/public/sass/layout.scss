@@ -1,6 +1,6 @@
 @charset "utf-8";
 // import predefined variables
-@import "../../../node_modules/bulma/sass/utilities/_all.sass";
+@import "../../../node_modules/bulma/sass/utilities/_all";
 
 // Override them if necessary
 $navbar-height: 5rem;
@@ -8,19 +8,20 @@ $navbar-item-img-max-height: 3rem;
 $navbar-breakpoint: $tablet;
 
 // import page elements
-@import "../../../node_modules/bulma/sass/base/_all.sass";
-@import "../../../node_modules/bulma/sass/layout/_all.sass";
-@import "../../../node_modules/bulma/sass/form/_all.sass";
-@import "../../../node_modules/bulma/sass/elements/_all.sass";
+@import "../../../node_modules/bulma/sass/base/_all";
+@import "../../../node_modules/bulma/sass/layout/_all";
+@import "../../../node_modules/bulma/sass/form/_all";
+@import "../../../node_modules/bulma/sass/elements/_all";
 
 // Components
-@import "../../../node_modules/bulma/sass/components/navbar.sass";
-@import "../../../node_modules/bulma/sass/components/modal.sass";
-@import "../../../node_modules/bulma/sass/grid/columns.sass";
-@import "../../../node_modules/bulma/sass/components/card.sass";
+@import "../../../node_modules/bulma/sass/components/navbar";
+@import "../../../node_modules/bulma/sass/components/modal";
+@import "../../../node_modules/bulma/sass/grid/columns";
+@import "../../../node_modules/bulma/sass/components/card";
 
 
 
 .avatar {border-radius: 100%}
 .big-avatar {margin: 0 auto}
+.event-tag {margin-right: 1rem;}
 

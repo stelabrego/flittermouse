@@ -64,7 +64,7 @@ describe('dbPromise', () => {
   describe('insertEventTag', () => {
     it('should accept good tag', () => {
       const good = [
-        { eventId: 1, tagName: 'party' }
+        { eventId: 1, name: 'party' }
       ]
       const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.insertEventTag(item)))
       return Promise.all(tests)

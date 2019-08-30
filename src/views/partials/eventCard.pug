@@ -1,12 +1,12 @@
-.card
+.card.event-card(url='events/' + event.urlKey)
   .card-content
-    p.title.is-4=event.name
+    .title.is-4=event.name
     if event.dateStart
+      // TODO add support for multi-day events
       p.subtitle
         =moment(event.dateStart).format('MMM Do')
         br
         =moment(event.dateStart).format('LT')
         if event.dateEnd
           =moment(event.dateEnd).format(' - LT')
-        if event.location
     

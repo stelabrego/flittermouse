@@ -32,10 +32,15 @@ const dbPromise = async (errHandler) => {
       await this.insertUser({ id: 1, username: 'stel', email: 'stel@gmail.com', password: '1', displayName: 'Stel Abrego', bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur, nisi sed venenatis hendrerit, erat justo condimentum arcu, id semper tellus erat vel magna.' })
       await this.insertUser({ id: 2, username: 'alice', email: 'alice@gmail.com', password: '1' })
       await this.insertUser({ id: 3, username: 'ash', email: 'ash@gmail.com', password: '1' })
-      await this.insertEvent({ id: 1, userId: 1, name: 'stels big party', dateStart: '2019-10-31 18:00', dateEnd: '2019-10-31 23:00' })
-      await this.insertEvent({ id: 2, userId: 2, name: 'alices christmas party', dateStart: '2019-12-25 8:00', dateEnd: '2019-12-25 20:00' })
-      await this.insertUserRelationship({ id: 1, initialUserId: 1, targetUserId: 2, relationship: 'listen' })
-      await this.insertAttendance({ id: 1, userId: 1, eventId: 2 })
+      await this.insertEvent({ id: 1, urlKey: 'test', userId: 1, name: 'stels big party', address: '306 N Adams St Ypsilanti', lat: 42.245083, lon: -83.615924, description: 'Were really just gonna smoke weed and compliment eachother', dateStart: '2019-10-31 18:00', dateEnd: '2019-10-31 23:00' })
+      await this.insertEvent({ id: 2, urlKey: 'test2', userId: 2, name: 'alices christmas party', description: 'Bring your best ugly sweaters', dateStart: '2019-12-25 08:00', dateEnd: '2019-12-25 20:00' })
+      await this.insertUserRelationship({ initialUserId: 1, targetUserId: 2, relationship: 'listen' })
+      await this.insertAttendance({ userId: 1, eventId: 2 })
+      await this.insertEventTag({ eventId: 1, name: 'party' })
+      await this.insertEventTag({ eventId: 1, name: 'christmas' })
+      await this.insertEventTag({ eventId: 2, name: 'party' })
+      await this.insertEventTag({ eventId: 2, name: 'BYOB' })
+      await this.insertEventQuestion({ eventId: 1, userId: 2, question: 'Can I bring Lucha?', answer: 'Yes, Indi would love that', visible: 1 })
     } catch (err) {
       errHandler(err)
     }
@@ -71,7 +76,7 @@ const dbPromise = async (errHandler) => {
   }
   db.insertEvent = async function (event) {
     try {
-      event.urlKey = crypto.randomBytes(3).toString('hex')
+      if (!event.urlKey) event.urlKey = crypto.randomBytes(3).toString('hex')
       const [columns, values] = this.insertSql(event)
       const statement = `INSERT INTO event ( ${columns} ) VALUES ( ${values} )`
       const results = await this.run(statement)
@@ -368,6 +373,15 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
+  db.selectEventByUrlKey = async function (urlKey) {
+    // only one field accepted
+    try {
+      const statement = sql.format('SELECT * FROM event WHERE urlKey = ?', urlKey)
+      return this.get(statement)
+    } catch (err) {
+      errHandler(err)
+    }
+  }
   db.selectEventsByUserId = async function (id) {
     // only one field accepted
     try {
@@ -440,7 +454,7 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.selectEventQuestionByEventId = async function (id) {
+  db.selectEventQuestionsByEventId = async function (id) {
     // only one field accepted
     try {
       const statement = sql.format('SELECT * FROM eventQuestion WHERE eventId = ?', id)
@@ -449,7 +463,7 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.selectEventTagByEventId = async function (id) {
+  db.selectEventTagsByEventId = async function (id) {
     // only one field accepted
     try {
       const statement = sql.format('SELECT * FROM eventTag WHERE eventId = ?', id)

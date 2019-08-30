@@ -16,19 +16,19 @@ router.get('/:username', async function (req, res, next) {
   const targetUsername = req.params.username
   if (['home', 'events', 'settings', 'blog', 'about'].includes(targetUsername)) {
     next()
-  }
-  if (sessionUser && sessionUser.username === targetUsername) {
+  } else if (sessionUser && sessionUser.username === targetUsername) {
     res.redirect('/home')
-    next()
+  } else {
+    // next function can handle errors
+    const db = await dbPromise(next)
+    const targetUser = await db.selectUserByUsername(targetUsername)
+    if (targetUser) {
+      const hostingEvents = await db.selectEventsByUserId(targetUser.id)
+      const attendance = await db.selectAttendanceByUserId(targetUser.id)
+      const attendingEvents = await Promise.all(attendance.map(attendance => db.selectEventById(attendance.eventId)))
+      res.render('user', { sessionUser, targetUser, hostingEvents, attendingEvents })
+    } else next()
   }
-  const db = await dbPromise(console.log)
-  const targetUser = await db.selectUserByUsername(targetUsername)
-  const hostingEvents = await db.selectEventsByUserId(targetUser.id)
-  const attendance = await db.selectAttendanceByUserId(targetUser.id)
-  const attendingEvents = await Promise.all(attendance.map(attendance => db.selectEventById(attendance.eventId)))
-  console.log(hostingEvents)
-  console.log(attendingEvents)
-  res.render('user', { sessionUser, targetUser, hostingEvents, attendingEvents })
 })
 
 module.exports = router

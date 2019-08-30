@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .send({ usernameEmail, password })
         .then(res => {
           console.log(res)
-          if (res.body.success) window.location.replace('/home')
+          if (res.body.success) window.location.reload()
         })
     })
   }
