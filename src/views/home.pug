@@ -1,4 +1,28 @@
 extends layout
 
+block scripts
+  script(src="/js/eventCard.js")
+
 block content
-  h1.title hello #{sessionUser.username}
+  if hostingEvents.length > 0
+    section.section
+      .container
+        .columns.is-centered
+          .column.is-8
+            h1.title.has-text-centered Hosting
+            hr
+            .columns
+              each event in hostingEvents
+                .column.is-4
+                  include partials/eventCard
+  if attendingEvents.length > 0
+    section.section
+      .container
+        .columns.is-centered
+          .column.is-8
+            h1.title.has-text-centered Attending
+            hr
+            .columns
+              each event in attendingEvents
+                .column.is-4
+                  include partials/eventCard

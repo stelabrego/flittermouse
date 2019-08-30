@@ -1,6 +1,6 @@
 @import "../../../node_modules/leaflet/dist/leaflet";
 
-#map{height: 200px}
+#map{height: 300px;z-index: 0;}
 .leaflet-default-icon-path {
   background-image: none;
 }

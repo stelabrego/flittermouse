@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const logout = document.querySelector('nav .logout')
-  console.log(logout)
   if (logout) {
     logout.addEventListener('click', (event) => {
       ajax.post('/logout')
@@ -72,6 +71,44 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log(res)
           if (res.body.success) window.location.replace('/')
         })
+    })
+  }
+
+  const updateAttendanceButton = document.querySelector('button.update-attendance')
+  if (updateAttendanceButton) {
+    const urlKey = updateAttendanceButton.getAttribute('urlKey')
+    updateAttendanceButton.addEventListener('click', event => {
+      updateAttendanceButton.classList.toggle('is-loading')
+      if (updateAttendanceButton.classList.contains('is-link')) {
+        ajax.post('/users/attend')
+          .send({ urlKey })
+          .then(res => {
+            console.log(res)
+            if (res.body.success) {
+              updateAttendanceButton.innerHTML = 'Remove RSVP'
+              updateAttendanceButton.classList.remove('is-link')
+              updateAttendanceButton.classList.add('is-warning')
+            } else if (res.body.needToLogin) {
+              toggleLoginModal()
+            }
+            updateAttendanceButton.classList.toggle('is-loading')
+          })
+      }
+      if (updateAttendanceButton.classList.contains('is-warning')) {
+        ajax.delete('/users/attend')
+          .send({ urlKey })
+          .then(res => {
+            console.log(res)
+            if (res.body.success) {
+              updateAttendanceButton.innerHTML = 'RSVP'
+              updateAttendanceButton.classList.add('is-link')
+              updateAttendanceButton.classList.remove('is-warning')
+            } else if (res.body.needToLogin) {
+              toggleLoginModal()
+            }
+            updateAttendanceButton.classList.toggle('is-loading')
+          })
+      }
     })
   }
 })

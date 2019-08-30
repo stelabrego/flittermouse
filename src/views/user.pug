@@ -7,30 +7,36 @@ block content
   section.section
     .container
       .columns.is-vcentered.is-centered
-        .column.is-one-quarter
+        .column.is-3
           img.avatar.big-avatar.is-block(src=targetUser.avatarUrl)
-        .column.is-one-quarter
+        .column.is-3
           if targetUser.displayName
             p.is-size-3=targetUser.displayName
           p.has-text-weight-bold.is-size-4='@'+targetUser.username
-          button.button.is-primary Listen
+          button.button.is-primary.is-medium.listen Listen
       .columns.is-vcentered.is-centered
-        .column.is-half
+        .column.is-5
           if targetUser.bio
             p=targetUser.bio
   if hostingEvents.length > 0
     section.section
       .container
-        h1.title Hosting
-          .columns
-            each event in hostingEvents
-              .column.is-3
-                include partials/eventCard
+        .columns.is-centered
+          .column.is-8
+            h1.title.has-text-centered Hosting
+            hr
+            .columns
+              each event in hostingEvents
+                .column.is-4
+                  include partials/eventCard
   if attendingEvents.length > 0
     section.section
       .container
-        h1.title Attending
-          .columns
-            each event in attendingEvents
-              .column.is-3
-                include partials/eventCard
+        .columns.is-centered
+          .column.is-8
+            h1.title.has-text-centered Attending
+            hr
+            .columns
+              each event in attendingEvents
+                .column.is-4
+                  include partials/eventCard

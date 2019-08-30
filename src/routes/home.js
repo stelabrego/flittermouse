@@ -7,9 +7,13 @@ const redirectIndex = (req, res, next) => {
   else next()
 }
 
-router.get('/', redirectIndex, function (req, res, next) {
+router.get('/', redirectIndex, async function (req, res, next) {
   const { sessionUser } = res.locals
-  res.render('home', { sessionUser })
+  const db = await dbPromise()
+  const hostingEvents = await db.selectEventsByUserId(sessionUser.id)
+  const attendance = await db.selectAttendanceByUserId(sessionUser.id)
+  const attendingEvents = await Promise.all(attendance.map(attendance => db.selectEventById(attendance.eventId)))
+  res.render('home', { sessionUser, hostingEvents, attendingEvents })
 })
 
 module.exports = router
