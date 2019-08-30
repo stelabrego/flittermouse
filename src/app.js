@@ -4,6 +4,7 @@ const path = require('path')
 const logger = require('morgan')
 const fs = require('fs')
 const session = require('express-session')
+const redis = require('redis')
 const moment = require('moment')
 const dbPromise = require('./lib/dbPromise')
 
@@ -14,6 +15,7 @@ const loginRouter = require('./routes/login')
 const signupRouter = require('./routes/signup')
 const homeRouter = require('./routes/home')
 const logoutRouter = require('./routes/logout')
+const settingsRouter = require('./routes/settings')
 
 const TWO_WEEKS = 1000 * 60 * 60 * 24 * 14
 const {
@@ -39,10 +41,15 @@ app.use(logger(':date :method :url', { stream: accessLogStream }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, '../build/public')))
+
+const RedisStore = require('connect-redis')(session)
+const client = redis.createClient()
+client.on('error', console.error)
 app.use(session({
   name: SESSION_NAME,
   resave: false,
   saveUninitialized: false,
+  store: new RedisStore({ client }),
   secret: SESSION_SECRET,
   cookie: {
     maxAge: SESSION_LIFETIME,
@@ -71,6 +78,7 @@ app.use('/users', usersRouter)
 app.use('/events', eventsRouter)
 app.use('/home', homeRouter)
 app.use('/logout', logoutRouter)
+app.use('/settings', settingsRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

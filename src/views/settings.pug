@@ -1,0 +1,66 @@
+extends layout
+
+block stylesheets
+  script(src="/js/settings.js")
+
+mixin privacySelect(label)
+  .field.is-horizontal
+    .field-label.privacy
+      label.label.is-size-5.privacy=label
+    .field-body.privacy
+      .field.is-narrow
+        .control
+          .select.is-fullwidth
+            select
+              option(value="private") Only Me (Private)
+              option(value="listening") Only Accounts I'm Listening To
+              option(value="public") Anyone (Public)
+
+
+block content
+  section.section.settings
+    .columns.is-centered
+      .column.is-6
+        h1.title.is-2 Account Settings
+        h2.title.is-3 My Profile
+        hr
+        form
+          .columns.is-vcentered.is-desktop
+            .column.is-12-mobile.is-12-tablet.is-5-desktop
+              img.avatar.is-block.margin-centered(src=sessionUser.avatarUrl, alt="")
+              .file
+                label.file-label
+                  input.file-input(type='file', name='avatar')
+                  span.file-cta
+                    span.file-icon
+                      i.fa.fa-upload
+                    span.file-label Choose a file&mldr;
+            .column
+              .field
+                label.label.is-size-5 Display Name
+                  .control
+                    input.input#displayNameInput(type='text' value=sessionUser.displayName)
+                p.help#displayNameHelp=sessionUser.displayName.length + '/40'
+              .field
+                label.label.is-size-5 Bio
+                  .control
+                    textarea.textarea#bioTextArea(type='textarea')=sessionUser.bio
+                p.help#bioHelp=sessionUser.bio.length + '/160'
+          button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save Save Changes
+        h2.title.is-3 Who Can See My Data?
+        hr
+        form
+          +privacySelect("Display Name")
+          +privacySelect("Profile Picture")
+          +privacySelect("Bio")
+          +privacySelect("Email")
+          +privacySelect("Events I'm Attending")
+          +privacySelect("Accounts I'm Listening To")
+          button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save Save Changes
+        
+
+
+          
+
+          
+

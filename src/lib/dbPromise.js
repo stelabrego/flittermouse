@@ -51,15 +51,15 @@ const dbPromise = async (errHandler) => {
       const [columns, values] = this.insertSql(user)
       const statement = `INSERT INTO user ( ${columns} ) VALUES ( ${values} )`
       const results = await this.run(statement)
-      return this.insertUserPrivacy({ userId: results.lastID })
+      return this.insertUserSetting({ userId: results.lastID })
     } catch (err) {
       errHandler(err)
     }
   }
-  db.insertUserPrivacy = async function (userPrivacy) {
+  db.insertUserSetting = async function (userSetting) {
     try {
-      const [columns, values] = this.insertSql(userPrivacy)
-      const statement = `INSERT INTO userPrivacy ( ${columns} ) VALUES ( ${values} )`
+      const [columns, values] = this.insertSql(userSetting)
+      const statement = `INSERT INTO userSetting ( ${columns} ) VALUES ( ${values} )`
       return this.run(statement)
     } catch (err) {
       errHandler(err)
@@ -80,15 +80,15 @@ const dbPromise = async (errHandler) => {
       const [columns, values] = this.insertSql(event)
       const statement = `INSERT INTO event ( ${columns} ) VALUES ( ${values} )`
       const results = await this.run(statement)
-      return this.insertEventPrivacy({ eventId: results.lastID })
+      return this.insertEventSetting({ eventId: results.lastID })
     } catch (err) {
       errHandler(err)
     }
   }
-  db.insertEventPrivacy = async function (eventPrivacy) {
+  db.insertEventSetting = async function (eventSetting) {
     try {
-      const [columns, values] = this.insertSql(eventPrivacy)
-      const statement = `INSERT INTO eventPrivacy ( ${columns} ) VALUES ( ${values} )`
+      const [columns, values] = this.insertSql(eventSetting)
+      const statement = `INSERT INTO eventSetting ( ${columns} ) VALUES ( ${values} )`
       return this.run(statement)
     } catch (err) {
       errHandler(err)
@@ -130,19 +130,19 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.deleteUserPrivacy = async function (id) {
+  db.deleteUserSetting = async function (id) {
     // only one field accepted
     try {
-      const statement = sql.format('DELETE FROM userPrivacy WHERE id = ?', id)
+      const statement = sql.format('DELETE FROM userSetting WHERE id = ?', id)
       return this.run(statement)
     } catch (err) {
       errHandler(err)
     }
   }
-  db.deleteEventPrivacy = async function (id) {
+  db.deleteEventSetting = async function (id) {
     // only one field accepted
     try {
-      const statement = sql.format('DELETE FROM eventPrivacy WHERE id = ?', id)
+      const statement = sql.format('DELETE FROM eventSetting WHERE id = ?', id)
       return this.run(statement)
     } catch (err) {
       errHandler(err)
@@ -200,9 +200,9 @@ const dbPromise = async (errHandler) => {
       let results = await this.all(statement)
       let updates = results.map(row => this.deleteUserRelationship(row.id))
       await Promise.all(updates)
-      statement = sql.format('SELECT id FROM userPrivacy WHERE userId = ?', id)
+      statement = sql.format('SELECT id FROM userSetting WHERE userId = ?', id)
       results = await this.get(statement)
-      await this.deleteUserPrivacy(results.id)
+      await this.deleteUserSetting(results.id)
       statement = sql.format('SELECT id FROM event WHERE userId = ?', id)
       results = await this.all(statement)
       updates = results.map(row => this.deleteEvent(row.id))
@@ -228,9 +228,9 @@ const dbPromise = async (errHandler) => {
       results = await this.all(statement)
       updates = results.map(row => this.deleteEventTag(row.id))
       await Promise.all(updates)
-      statement = sql.format('SELECT id FROM eventPrivacy WHERE eventId = ?', id)
+      statement = sql.format('SELECT id FROM eventSetting WHERE eventId = ?', id)
       results = await this.get(statement)
-      await this.deleteEventPrivacy(results.id)
+      await this.deleteEventSetting(results.id)
       statement = sql.format('DELETE FROM event WHERE id = ?', id)
       return this.run(statement)
     } catch (err) {
@@ -260,23 +260,23 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.updateEventPrivacy = async function (eventPrivacy) {
+  db.updateEventSetting = async function (eventSetting) {
     // must have id
     try {
-      const eventPrivacyId = eventPrivacy.id
-      delete eventPrivacy.id
-      const statement = sql.format('UPDATE eventPrivacy SET ? WHERE id = ?', [eventPrivacy, eventPrivacyId])
+      const eventSettingId = eventSetting.id
+      delete eventSetting.id
+      const statement = sql.format('UPDATE eventSetting SET ? WHERE id = ?', [eventSetting, eventSettingId])
       return this.run(statement)
     } catch (err) {
       errHandler(err)
     }
   }
-  db.updateUserPrivacy = async function (userPrivacy) {
+  db.updateUserSetting = async function (userSetting) {
     // must have id
     try {
-      const userPrivacyId = userPrivacy.id
-      delete userPrivacy.id
-      const statement = sql.format('UPDATE userPrivacy SET ? WHERE id = ?', [userPrivacy, userPrivacyId])
+      const userSettingId = userSetting.id
+      delete userSetting.id
+      const statement = sql.format('UPDATE userSetting SET ? WHERE id = ?', [userSetting, userSettingId])
       return this.run(statement)
     } catch (err) {
       errHandler(err)
@@ -391,19 +391,19 @@ const dbPromise = async (errHandler) => {
       errHandler(err)
     }
   }
-  db.selectUserPrivacyByUserId = async function (id) {
+  db.selectUserSettingByUserId = async function (id) {
     // only one field accepted
     try {
-      const statement = sql.format('SELECT * FROM userPrivacy WHERE userId = ?', id)
-      return this.all(statement)
+      const statement = sql.format('SELECT * FROM userSetting WHERE userId = ?', id)
+      return this.get(statement)
     } catch (err) {
       errHandler(err)
     }
   }
-  db.selectEventPrivacyByEventId = async function (id) {
+  db.selectEventSettingByEventId = async function (id) {
     // only one field accepted
     try {
-      const statement = sql.format('SELECT * FROM eventPrivacy WHERE eventId = ?', id)
+      const statement = sql.format('SELECT * FROM eventSetting WHERE eventId = ?', id)
       return this.all(statement)
     } catch (err) {
       errHandler(err)

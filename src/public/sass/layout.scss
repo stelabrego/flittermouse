@@ -1,4 +1,5 @@
 @charset "utf-8";
+
 // import predefined variables
 @import "../../../node_modules/bulma/sass/utilities/_all";
 
@@ -22,7 +23,13 @@ $navbar-breakpoint: $tablet;
 
 
 .avatar {border-radius: 100%}
-.big-avatar {margin: 0 auto}
+.margin-centered {margin: 0 auto}
 .event-tag {margin-right: 1rem;}
 button.listen {margin-top: 1rem;}
 button.attend { margin-top: 2rem;}
+.field-label.privacy{flex-grow: 4}
+label.privacy{text-align: left}
+.settings-save{margin: 2rem auto 5rem; max-width: 500px}
+.field-body.privacy{justify-content: flex-end;}
+.field.is-horizontal{max-width: 600px; margin: 1rem auto;}
+.settings .file {justify-content: center}

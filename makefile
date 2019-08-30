@@ -28,3 +28,5 @@ watch: db nodemon sass webpack
 
 start: clean
 	${MAKE} -j watch
+
+# must install redis and start redis too

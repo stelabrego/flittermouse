@@ -18,7 +18,8 @@ nav.navbar.has-shadow(role="navigation" aria-label="main navigation")
             a.navbar-link.is-arrowless(href='/' + sessionUser.username)
               img.avatar(src=sessionUser.avatarUrl)
             .navbar-dropdown.is-right.is-boxed
-              a.navbar-item(href='/' + sessionUser.username) My Profile
+              a.navbar-item(href='/home') Home
+              a.navbar-item(href='/settings') Settings
               a.navbar-item.logout Logout
         if !sessionUser
           .navbar-item

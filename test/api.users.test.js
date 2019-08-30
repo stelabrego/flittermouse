@@ -62,7 +62,7 @@ describe('/users endpoints', () => {
   describe('PUT /users/privacy', () => {
     it('should accept good requests', () => {
       const goodPrivacyUpdateRequests = [
-        { userId: 1, subscribedEventsVisibility: 'listeners' }
+        { userId: 1, attendingVisibility: 'listeners' }
       ]
       const tests =
         goodPrivacyUpdateRequests.map((reqBody) => {

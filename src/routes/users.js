@@ -79,7 +79,7 @@ router.put('/privacy/update', async (req, res, next) => {
   let db
   try {
     const db = await dbPromise(err => { throw err })
-    await db.updateUserPrivacy(req.body)
+    await db.updateUserSetting(req.body)
     res.json({ success: true })
   } catch (err) {
     res.status(400).json({ success: false, message: err.message })

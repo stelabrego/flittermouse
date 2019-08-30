@@ -6,11 +6,11 @@ PRAGMA foreign_keys = OFF;
 
 -- DELETE ALL TABLES
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS userPrivacy;
+DROP TABLE IF EXISTS userSetting;
 DROP TABLE IF EXISTS userRelationship;
 DROP TABLE IF EXISTS event;
 DROP TABLE IF EXISTS eventImage;
-DROP TABLE IF EXISTS eventPrivacy;
+DROP TABLE IF EXISTS eventSetting;
 DROP TABLE IF EXISTS attendance;
 DROP TABLE IF EXISTS eventQuestion;
 DROP TABLE IF EXISTS eventTag;
@@ -38,22 +38,28 @@ CREATE TABLE `user`
 `id` INTEGER PRIMARY KEY
 );
 
-CREATE TABLE `userPrivacy`
+CREATE TABLE `userSetting`
 (
   `userId` int NOT NULL UNIQUE,
-  `subscribedEventsVisibility` varchar(255) NOT NULL DEFAULT 'private',
-  `addressVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `attendingVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `listeningVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `listenersVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `avatarVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `bioVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `nameVisibility` varchar(255) NOT NULL DEFAULT 'private',
   `emailVisibility` varchar(255) NOT NULL  DEFAULT 'private',
-  `phoneNumberVisibility` varchar(255) NOT NULL DEFAULT 'private',
+  `displayNameVisbility` varchar(255) NOT NULL DEFAULT 'private',
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `id` INTEGER PRIMARY KEY,
   FOREIGN KEY (`userId`) REFERENCES `user` (`Id`),
-  FOREIGN KEY (`subscribedEventsVisibility`) REFERENCES `visibilityEnum` (`title`),
-  FOREIGN KEY (`addressVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`attendingVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`listeningVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`listenersVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`avatarVisibility`) REFERENCES `visibilityEnum` (`title`),
+  FOREIGN KEY (`bioVisibility`) REFERENCES `visibilityEnum` (`title`),
   FOREIGN KEY (`nameVisibility`) REFERENCES `visibilityEnum` (`title`),
   FOREIGN KEY (`emailVisibility`) REFERENCES `visibilityEnum` (`title`),
-  FOREIGN KEY (`phoneNumberVisibility`) REFERENCES `visibilityEnum` (`title`)
+  FOREIGN KEY (`displayNameVisbility`) REFERENCES `visibilityEnum` (`title`)
 );
 
 CREATE TABLE `userRelationship`
@@ -94,7 +100,7 @@ CREATE TABLE `eventImage`
   FOREIGN KEY (`eventId`) REFERENCES `event` (`Id`)
 );
 
-CREATE TABLE `eventPrivacy`
+CREATE TABLE `eventSetting`
 (
   `eventId` int NOT NULL UNIQUE,
   `displayAddress` datetime DEFAULT CURRENT_TIMESTAMP,
