@@ -88,4 +88,15 @@ router.put('/privacy/update', async (req, res, next) => {
   }
 })
 
+router.post('/avatar/update', async (req, res, next) => {
+  try {
+    const { sessionUser } = res.locals
+    console.log(req.body)
+    const db = await dbPromise()
+    res.json({ success: true })
+  } catch (err) {
+    res.json({ success: false, message: err.message })
+  }
+})
+
 module.exports = router

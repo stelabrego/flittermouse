@@ -1,7 +1,10 @@
 extends layout
 
-block stylesheets
+block scripts
   script(src="/js/settings.js")
+
+block stylesheets
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.css')
 
 mixin privacySelect(label)
   .field.is-horizontal
@@ -18,19 +21,28 @@ mixin privacySelect(label)
 
 
 block content
+  .modal#cropModal
+    .modal-background
+    .modal-content
+      .box
+        p.title Crop Image
+        #croppie
+        button.button.is-link.is-medium#acceptCrop Looks Good
+        button.button.is-medium#cancelCrop Cancel
+    button.modal-close.is-large#cropModalClose(aria-label='close')
   section.section.settings
     .columns.is-centered
       .column.is-6
         h1.title.is-2 Account Settings
         h2.title.is-3 My Profile
         hr
-        form
+        form#updateProfileForm
           .columns.is-vcentered.is-desktop
             .column.is-12-mobile.is-12-tablet.is-5-desktop
-              img.avatar.is-block.margin-centered(src=sessionUser.avatarUrl, alt="")
+              img.avatar.is-block.margin-centered#settingsAvatar(src=sessionUser.avatarUrl, alt="")
               .file
                 label.file-label
-                  input.file-input(type='file', name='avatar')
+                  input.file-input#fileInput(type='file', name='avatar')
                   span.file-cta
                     span.file-icon
                       i.fa.fa-upload
