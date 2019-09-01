@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const cancelCrop = document.getElementById('cancelCrop')
   const settingsAvatar = document.getElementById('settingsAvatar')
   const updateProfileForm = document.getElementById('updateProfileForm')
+  const updateProfileButton = document.getElementById('updateProfileButton')
+  const navAvatar = document.getElementById('navAvatar')
   let avatarBlob = null
 
   const closeCropModal = (event) => { cropModal.classList.remove('is-active') }
@@ -72,35 +74,62 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(image)
       avatarBlob = image
     })
-    cropModal.remove('is-active')
+    cropModal.classList.remove('is-active')
+  })
+
+  updateProfileForm.addEventListener('input', (event) => {
+    console.log('form input event')
+    updateProfileButton.removeAttribute('disabled')
   })
 
   updateProfileForm.addEventListener('submit', (event) => {
     event.preventDefault()
     console.log(avatarBlob)
+    const form = new FormData()
     if (avatarBlob) {
-      request
-        .post('/users/avatar/update')
-        .send({ avatar: avatarBlob })
-        .then(res => {
-          console.log(res)
-        })
-        .catch(console.error)
+      var mimeTypes = ['image/jpeg', 'image/png']
+      // Validate MIME type
+      if (mimeTypes.indexOf(avatarBlob.type) === -1) {
+        alert('Error : Incorrect file type')
+        return
+      }
+      // Max 2 Mb allowed
+      if (avatarBlob.size > 2 * 1024 * 1024) {
+        alert('Error : Exceeded size 2MB')
+        return
+      }
+      form.append('avatar', avatarBlob)
     }
+    form.append('displayName', event.target.elements.displayName.value)
+    form.append('bio', event.target.elements.bio.value)
+    form.forEach((value, key) => {
+      console.log(key, value)
+    })
+    updateProfileButton.classList.add('is-loading')
+    request
+      .post('/users/update')
+      .send(form)
+      .then(res => {
+        console.log(res)
+        updateProfileButton.classList.remove('is-loading')
+        updateProfileButton.setAttribute('disabled', true)
+        if (res.body.avatarUrl) navAvatar.setAttribute('src', res.body.avatarUrl)
+      })
+      .catch(console.error)
   })
-
-  // $('.actionUpload').on('click', function () {
-  //   basic.croppie('result', 'blob').then(function (blob) {
-  //     var formData = new FormData()
-  //     formData.append('filename', 'testFileName.png')
-  //     formData.append('blob', blob)
-  //     var MyAppUrlSettings = {
-  //       MyUsefulUrl: '@Url.Action("GetImage","Create")'
-  //     }
-
-  //     var request = new XMLHttpRequest()
-  //     request.open('POST', MyAppUrlSettings.MyUsefulUrl)
-  //     request.send(formData)
-  //   })
-  // })
 })
+
+// $('.actionUpload').on('click', function () {
+//   basic.croppie('result', 'blob').then(function (blob) {
+//     var formData = new FormData()
+//     formData.append('filename', 'testFileName.png')
+//     formData.append('blob', blob)
+//     var MyAppUrlSettings = {
+//       MyUsefulUrl: '@Url.Action("GetImage","Create")'
+//     }
+
+//     var request = new XMLHttpRequest()
+//     request.open('POST', MyAppUrlSettings.MyUsefulUrl)
+//     request.send(formData)
+//   })
+// })

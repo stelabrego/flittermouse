@@ -4,7 +4,7 @@ const dbPromise = require('../lib/dbPromise')
 
 router.post('/', async (req, res, next) => {
   try {
-    const db = await dbPromise(err => { throw err })
+    const db = await dbPromise()
     let user = await db.selectUserByUsername(req.body.usernameEmail)
     if (!user) user = await db.selectUserByEmail(req.body.usernameEmail)
     if (!user) throw Error('Incorrect username or password')

@@ -26,7 +26,7 @@ const {
 } = process.env
 
 if (NODE_ENV === 'development') {
-  dbPromise(console.log)
+  dbPromise()
     .then(db => db.populate())
     .catch(console.log)
 }
@@ -64,7 +64,7 @@ app.locals.moment = moment
 app.use(async (req, res, next) => {
   const { userId } = req.session
   if (userId) {
-    const db = await dbPromise(console.log)
+    const db = await dbPromise()
     const sessionUser = await db.selectUserById(userId)
     res.locals.sessionUser = sessionUser
   }

@@ -31,7 +31,7 @@ router.get('/:urlKey', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
   let db
   try {
-    const db = await dbPromise(err => { throw err })
+    const db = await dbPromise()
     await db.insertEvent(req.body)
     res.json({ success: true })
   } catch (err) {
@@ -44,7 +44,7 @@ router.post('/add', async (req, res, next) => {
 router.delete('/delete', async (req, res, next) => {
   let db
   try {
-    const db = await dbPromise(err => { throw err })
+    const db = await dbPromise()
     await db.deleteEvent(req.body.id)
     res.json({ success: true })
   } catch (err) {
@@ -58,7 +58,7 @@ router.delete('/delete', async (req, res, next) => {
 router.put('/update', async (req, res, next) => {
   let db
   try {
-    const db = await dbPromise(err => { throw err })
+    const db = await dbPromise()
     await db.updateEvent(req.body)
     res.json({ success: true })
   } catch (err) {
@@ -72,7 +72,7 @@ router.put('/update', async (req, res, next) => {
 router.put('/privacy/update', async (req, res, next) => {
   let db
   try {
-    const db = await dbPromise(err => { throw err })
+    const db = await dbPromise()
     await db.updateEventSetting(req.body)
     res.json({ success: true })
   } catch (err) {

@@ -5,7 +5,7 @@ const dbPromise = require('../src/lib/dbPromise')
 
 describe('/events endpoints', () => {
   beforeEach(async () => {
-    const db = await dbPromise(err => { throw err })
+    const db = await dbPromise()
     await db.refresh()
     await db.populate()
     await db.close()

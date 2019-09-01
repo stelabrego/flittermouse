@@ -2,7 +2,7 @@ const dbPromise = require('../src/lib/dbPromise')
 
 describe('dbPromise', () => {
   beforeEach(async () => {
-    const db = await dbPromise(err => { throw err })
+    const db = await dbPromise()
     await db.refresh()
     await db.populate()
     await db.close()
@@ -12,7 +12,7 @@ describe('dbPromise', () => {
       const good = [
         { username: 'pooppoop', email: 'email@poop.com', password: 'ajhdjfhuhfc', inviteKey: 'hkjshe3' }
       ]
-      const tests = good.map(user => dbPromise(err => { throw err }).then(db => db.insertUser(user)))
+      const tests = good.map(user => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -21,7 +21,7 @@ describe('dbPromise', () => {
       const good = [
         { userId: 1, name: 'Big Party' }
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.insertEvent(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -30,7 +30,7 @@ describe('dbPromise', () => {
       const good = [
         { initialUserId: 2, targetUserId: 3, relationship: 'listen' }
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.insertUserRelationship(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -39,7 +39,7 @@ describe('dbPromise', () => {
       const good = [
         { eventId: 1, url: 'google.com/photo.jpeg', order: 0 }
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.insertEventImage(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -48,7 +48,7 @@ describe('dbPromise', () => {
       const good = [
         { eventId: 1, userId: 1 }
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.insertAttendance(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -57,7 +57,7 @@ describe('dbPromise', () => {
       const good = [
         { eventId: 1, userId: 2, question: 'Will there be snacks?' }
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.insertEventQuestion(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -66,7 +66,7 @@ describe('dbPromise', () => {
       const good = [
         { eventId: 1, name: 'party' }
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.insertEventTag(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -75,7 +75,7 @@ describe('dbPromise', () => {
       const good = [
         1
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.deleteUserRelationship(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -96,7 +96,7 @@ describe('dbPromise', () => {
       const good = [
         1
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.deleteUser(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })
@@ -105,7 +105,7 @@ describe('dbPromise', () => {
       const good = [
         1
       ]
-      const tests = good.map(item => dbPromise(err => { throw err }).then(db => db.deleteEvent(item)))
+      const tests = good.map(item => dbPromise()
       return Promise.all(tests)
     })
   })

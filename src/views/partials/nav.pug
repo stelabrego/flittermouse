@@ -16,7 +16,7 @@ nav.navbar.has-shadow(role="navigation" aria-label="main navigation")
           .is-size-4.navbar-item=sessionUser.username
           .navbar-item.has-dropdown.is-hoverable
             a.navbar-link.is-arrowless(href='/' + sessionUser.username)
-              img.avatar(src=sessionUser.avatarUrl)
+              img.avatar#navAvatar(src=sessionUser.avatarUrl)
             .navbar-dropdown.is-right.is-boxed
               a.navbar-item(href='/home') Home
               a.navbar-item(href='/settings') Settings

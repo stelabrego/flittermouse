@@ -42,7 +42,7 @@ block content
               img.avatar.is-block.margin-centered#settingsAvatar(src=sessionUser.avatarUrl, alt="")
               .file
                 label.file-label
-                  input.file-input#fileInput(type='file', name='avatar')
+                  input.file-input#fileInput(type='file', name='avatar', accept="image/jpeg, image/png")
                   span.file-cta
                     span.file-icon
                       i.fa.fa-upload
@@ -51,14 +51,14 @@ block content
               .field
                 label.label.is-size-5 Display Name
                   .control
-                    input.input#displayNameInput(type='text' value=sessionUser.displayName)
+                    input.input#displayNameInput(type='text', name='displayName' value=sessionUser.displayName)
                 p.help#displayNameHelp=sessionUser.displayName.length + '/40'
               .field
                 label.label.is-size-5 Bio
                   .control
-                    textarea.textarea#bioTextArea(type='textarea')=sessionUser.bio
+                    textarea.textarea#bioTextArea(type='textarea' name='bio')=sessionUser.bio
                 p.help#bioHelp=sessionUser.bio.length + '/160'
-          button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save Save Changes
+          button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save#updateProfileButton(disabled) Save Changes
         h2.title.is-3 Who Can See My Data?
         hr
         form

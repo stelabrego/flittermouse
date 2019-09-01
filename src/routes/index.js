@@ -20,7 +20,7 @@ router.get('/:username', async function (req, res, next) {
     res.redirect('/home')
   } else {
     // next function can handle errors
-    const db = await dbPromise(next)
+    const db = await dbPromise()
     const targetUser = await db.selectUserByUsername(targetUsername)
     if (targetUser) {
       const hostingEvents = await db.selectEventsByUserId(targetUser.id)
