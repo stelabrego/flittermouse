@@ -2,23 +2,23 @@
 -- PRAGMA schema.journal_mode = WAL;
 
 -- TURN OFF FOREIGN KEY CHECKS TO DROP TABLES
-PRAGMA foreign_keys = OFF;
+-- PRAGMA foreign_keys = OFF;
 
 -- DELETE ALL TABLES
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS userSetting;
-DROP TABLE IF EXISTS userRelationship;
-DROP TABLE IF EXISTS event;
-DROP TABLE IF EXISTS eventImage;
-DROP TABLE IF EXISTS eventSetting;
-DROP TABLE IF EXISTS attendance;
-DROP TABLE IF EXISTS eventQuestion;
-DROP TABLE IF EXISTS eventTag;
-DROP TABLE IF EXISTS relationshipEnum;
-DROP TABLE IF EXISTS visibilityEnum;
+-- DROP TABLE IF EXISTS user;
+-- DROP TABLE IF EXISTS userSetting;
+-- DROP TABLE IF EXISTS userRelationship;
+-- DROP TABLE IF EXISTS event;
+-- DROP TABLE IF EXISTS eventImage;
+-- DROP TABLE IF EXISTS eventSetting;
+-- DROP TABLE IF EXISTS attendance;
+-- DROP TABLE IF EXISTS eventQuestion;
+-- DROP TABLE IF EXISTS eventTag;
+-- DROP TABLE IF EXISTS relationshipEnum;
+-- DROP TABLE IF EXISTS visibilityEnum;
 
 -- TURN OFF FOREIGN KEY CHECKS TO DROP TABLES
-PRAGMA foreign_keys = ON;
+-- PRAGMA foreign_keys = ON;
 
 -- CREATE TABLES
 -- NOTE: we need to create our own primary key because you have to explicitly declare it in

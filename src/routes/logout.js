@@ -1,11 +1,13 @@
-var express = require('express')
-var router = express.Router()
+const Router = require('express-promise-router')
+const router = new Router()
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
   req.session.destroy((err) => {
-    console.log(err)
+    if (err) {
+      console.error(err.stack)
+      res.json({ success: false })
+    } else res.json({ success: true })
   })
-  res.json({ success: true })
 })
 
 module.exports = router

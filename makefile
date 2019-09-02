@@ -7,7 +7,7 @@ clean:
 	cp -R ./src/public/images ./build/public
 
 db:
-	sqlite3 build/eventz.db < create_database.sql
+	docker stack deploy -c stack.yml postgres
 
 sass:
 	sass --watch --no-source-map src/public/sass:build/public/css

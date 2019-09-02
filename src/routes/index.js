@@ -1,34 +1,19 @@
-var express = require('express')
-var router = express.Router()
-const dbPromise = require('../lib/dbPromise')
+const root = require('./root')
+const events = require('./events')
+const home = require('./home')
+const login = require('./login')
+const logout = require('./logout')
+const settings = require('./settings')
+const signup = require('./signup')
+const users = require('./users')
 
-const redirectHome = (req, res, next) => {
-  if (req.session.userId) res.redirect('/home')
-  else next()
+module.exports = (app) => {
+  app.use('/', root)
+  app.use('/events', events)
+  app.use('/home', home)
+  app.use('/login', login)
+  app.use('/logout', logout)
+  app.use('/settings', settings)
+  app.use('/signup', signup)
+  app.use('/users', users)
 }
-
-router.get('/', redirectHome, function (req, res, next) {
-  res.render('index')
-})
-
-router.get('/:username', async function (req, res, next) {
-  const { sessionUser } = res.locals
-  const targetUsername = req.params.username
-  if (['home', 'events', 'settings', 'blog', 'about'].includes(targetUsername)) {
-    next()
-  } else if (sessionUser && sessionUser.username === targetUsername) {
-    res.redirect('/home')
-  } else {
-    // next function can handle errors
-    const db = await dbPromise()
-    const targetUser = await db.selectUserByUsername(targetUsername)
-    if (targetUser) {
-      const hostingEvents = await db.selectEventsByUserId(targetUser.id)
-      const attendance = await db.selectAttendanceByUserId(targetUser.id)
-      const attendingEvents = await Promise.all(attendance.map(attendance => db.selectEventById(attendance.eventId)))
-      res.render('user', { sessionUser, targetUser, hostingEvents, attendingEvents })
-    } else next()
-  }
-})
-
-module.exports = router

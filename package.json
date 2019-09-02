@@ -34,6 +34,7 @@
     "connect-redis": "^4.0.0",
     "croppie": "^2.6.4",
     "express": "^4.17.1",
+    "express-promise-router": "^3.0.3",
     "express-session": "^1.16.2",
     "http-errors": "^1.7.3",
     "leaflet": "^1.5.1",

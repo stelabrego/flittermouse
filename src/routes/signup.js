@@ -1,5 +1,6 @@
-var express = require('express')
-var router = express.Router()
+const Router = require('express-promise-router')
+const db = require('../db')
+const router = new Router()
 
 /* GET home page. */
 router.post('/', function (req, res, next) {

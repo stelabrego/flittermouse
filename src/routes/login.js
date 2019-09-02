@@ -1,14 +1,11 @@
-var express = require('express')
-var router = express.Router()
-const dbPromise = require('../lib/dbPromise')
+const Router = require('express-promise-router')
+const db = require('../db')
+const router = new Router()
 
 router.post('/', async (req, res, next) => {
   try {
-    const db = await dbPromise()
-    let user = await db.selectUserByUsername(req.body.usernameEmail)
-    if (!user) user = await db.selectUserByEmail(req.body.usernameEmail)
-    if (!user) throw Error('Incorrect username or password')
-    if (user.password !== req.body.password) throw Error('Incorrect username or password')
+    const result = await db.query('SELECT * FROM user WHERE id = $1 AND password = $2', [req.body.usernameEmail, req.body.password])
+    const user = result.rows[0]
     req.session.userId = user.id
     res.json({ success: true })
   } catch (err) {

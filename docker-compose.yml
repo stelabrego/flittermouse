@@ -1,0 +1,18 @@
+# docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+# docker-compose up
+version: '3.7'
+services:
+  db:
+    image: postgres
+    environment:
+      # default container superuser
+      POSTGRES_USER: postgres
+      # password for container superuser
+      POSTGRES_PASSWORD: example
+      # default db name
+      POSTGRES_DB: eventz
+      # default location is /var/lib/postgresql/data
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"

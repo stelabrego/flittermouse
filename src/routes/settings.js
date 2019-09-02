@@ -1,6 +1,6 @@
-var express = require('express')
-var router = express.Router()
-const dbPromise = require('../lib/dbPromise')
+const Router = require('express-promise-router')
+const db = require('../db')
+const router = new Router()
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
