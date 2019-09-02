@@ -1,15 +1,15 @@
 -- IF EXISTS is not necessary https://www.postgresql.org/docs/11/ddl-basics.html
-DROP TABLE users CASCADE;
-DROP TABLE events CASCADE;
-DROP TYPE RELATIONSHIP CASCADE;
-DROP TYPE VISIBILITY CASCADE;
-DROP TABLE userSettings CASCADE;
-DROP TABLE userRelationship CASCADE;
-DROP TABLE eventImages CASCADE;
-DROP TABLE eventSettings CASCADE;
-DROP TABLE attendance CASCADE;
-DROP TABLE eventQuestions CASCADE;
-DROP TABLE eventTags CASCADE;
+-- DROP TABLE users CASCADE;
+-- DROP TABLE events CASCADE;
+-- DROP TYPE RELATIONSHIP CASCADE;
+-- DROP TYPE VISIBILITY CASCADE;
+-- DROP TABLE userSettings CASCADE;
+-- DROP TABLE userRelationship CASCADE;
+-- DROP TABLE eventImages CASCADE;
+-- DROP TABLE eventSettings CASCADE;
+-- DROP TABLE attendance CASCADE;
+-- DROP TABLE eventQuestions CASCADE;
+-- DROP TABLE eventTags CASCADE;
 
 
 -- ENUM's (case sensitive names)
@@ -20,7 +20,7 @@ CREATE TYPE VISIBILITY AS ENUM ('public', 'listeningTo', 'private');
 -- NULLIF() for empty strings
 CREATE TABLE users (
   userId SERIAL PRIMARY KEY,
-  username TEXT UNIQUE NOT NULL CHECK (LENGTH(username) > 2),
+  username TEXT UNIQUE NOT NULL CHECK ((LENGTH(username) > 2) AND (LOWER(username) NOT IN ('home', 'setting', 'settings', 'event', 'events', 'about', 'blog', 'help', 'team', 'login', 'logout', 'register', 'index', 'signup', 'users', 'user'))),
   email TEXT UNIQUE NOT NULL CHECK (LENGTH(email) > 5),
   password TEXT NOT NULL CHECK (LENGTH(password) > 5),
   inviteKey TEXT UNIQUE NOT NULL,

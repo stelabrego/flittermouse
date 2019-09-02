@@ -1,18 +1,22 @@
-# docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
-# docker-compose up
+# make sure to stop postgres running directly in your OS
+# docker-compose up -d
+# docker-compose up -d --build
+# docker-compose logs
+# docker-compose stop
+# docker-compose rm
 version: '3.7'
 services:
   db:
-    image: postgres
-    environment:
-      # default container superuser
-      POSTGRES_USER: postgres
-      # password for container superuser
-      POSTGRES_PASSWORD: example
-      # default db name
-      POSTGRES_DB: eventz
-      # default location is /var/lib/postgresql/data
+    # image: postgres
+    build:
+      context: .
+      dockerfile: Dockerfile-pg
+    restart: always
+    ports:
+      - "5432:5432"
+    
   adminer:
     image: adminer
+    restart: always
     ports:
       - "8080:8080"

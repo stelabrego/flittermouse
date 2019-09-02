@@ -1,5 +1,11 @@
 const { Pool } = require('pg')
-const pool = new Pool()
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'eventz',
+  password: 'example',
+  port: 5432
+})
 module.exports = {
   query: (text, params) => {
     const start = Date.now()

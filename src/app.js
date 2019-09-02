@@ -6,16 +6,8 @@ const fs = require('fs')
 const session = require('express-session')
 const redis = require('redis')
 const moment = require('moment')
-const dbPromise = require('./lib/dbPromise')
-
-const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
-const eventsRouter = require('./routes/events')
-const loginRouter = require('./routes/login')
-const signupRouter = require('./routes/signup')
-const homeRouter = require('./routes/home')
-const logoutRouter = require('./routes/logout')
-const settingsRouter = require('./routes/settings')
+const db = require('./db')
+const mountRoutes = require('./routes')
 
 const TWO_WEEKS = 1000 * 60 * 60 * 24 * 14
 const {
@@ -24,12 +16,6 @@ const {
   SESSION_SECRET = 'devTestSecret',
   NODE_ENV = 'development'
 } = process.env
-
-if (NODE_ENV === 'development') {
-  dbPromise()
-    .then(db => db.populate())
-    .catch(console.log)
-}
 
 const app = express()
 // view engine setup
@@ -62,23 +48,21 @@ app.locals.moment = moment
 
 // extract userId from session
 app.use(async (req, res, next) => {
-  const { userId } = req.session
-  if (userId) {
-    const db = await dbPromise()
-    const sessionUser = await db.selectUserById(userId)
-    res.locals.sessionUser = sessionUser
+  try {
+    const { userId } = req.session
+    if (userId) {
+      const result = await db.query('SELECT * FROM users WHERE userId = $1', [userId])
+      res.locals.sessionUser = result.rows[0]
+    }
+  } catch (err) {
+    console.log('hello')
+    console.error(err.message, err.stack)
   }
+  console.log('hello again')
   next()
 })
 
-app.use('/', indexRouter)
-app.use('/login', loginRouter)
-app.use('/signup', signupRouter)
-app.use('/users', usersRouter)
-app.use('/events', eventsRouter)
-app.use('/home', homeRouter)
-app.use('/logout', logoutRouter)
-app.use('/settings', settingsRouter)
+mountRoutes(app)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

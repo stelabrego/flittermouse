@@ -6,20 +6,20 @@ router.get('/:urlKey', async (req, res, next) => {
   try {
     const { sessionUser } = res.locals
     const { urlKey } = req.params
-    let result = await db.query('SELECT * FROM event WHERE id = $1', [urlKey])
+    let result = await db.query('SELECT * FROM events WHERE eventId = $1', [urlKey])
     const event = result.rows[0]
-    result = await db.query('SELECT * FROM user WHERE id = $1', [event.userId])
+    result = await db.query('SELECT * FROM users WHERE userId = $1', [event.userId])
     const eventUser = result.rows[0]
-    result = await db.query('SELECT * FROM eventTag WHERE eventId = $1', [event.id])
+    result = await db.query('SELECT * FROM eventTags WHERE eventId = $1', [event.eventId])
     const eventTags = result.rows
-    result = await db.query('SELECT * FROM eventQuestion WHERE eventId = $1', [event.id])
+    result = await db.query('SELECT * FROM eventQuestions WHERE eventId = $1', [event.eventId])
     const eventQuestions = result.rows
     let userIsAttending = false
     let userOwnsEvent = false
     if (sessionUser) {
-      result = await db.query('SELECT * FROM attendance WHERE userId = $1 AND eventId = $2', [sessionUser.id, event.id])
+      result = await db.query('SELECT * FROM attendance WHERE userId = $1 AND eventId = $2', [sessionUser.userId, event.eventId])
       userIsAttending = result.rows.length > 0
-      userOwnsEvent = event.userId === sessionUser.id
+      userOwnsEvent = event.userId === sessionUser.userId
     }
     res.render('event', { sessionUser, event, eventTags, eventQuestions, eventUser, userIsAttending, userOwnsEvent })
   } catch (err) {

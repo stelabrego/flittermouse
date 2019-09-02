@@ -7,7 +7,7 @@ router.get('/', async function (req, res, next) {
   try {
     const { sessionUser } = res.locals
     const db = await dbPromise()
-    const userSetting = db.selectUserSettingByUserId(sessionUser.id)
+    const userSetting = db.selectUserSettingByUserId(sessionUser.userId)
     res.render('settings', { sessionUser, userSetting })
   } catch (err) {
     next(err)

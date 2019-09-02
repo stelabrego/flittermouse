@@ -8,15 +8,16 @@ const redirectIndex = async (req, res, next) => {
 }
 
 router.get('/', redirectIndex, async function (req, res, next) {
-  const { sessionUser } = res.locals
-  // const hostingEvents = await db.selectEventsByUserId(sessionUser.id)
-  // const attendance = await db.selectAttendanceByUserId(sessionUser.id)
-  // const attendingEvents = await Promise.all(attendance.map(attendance => db.selectEventById(attendance.eventId)))
-  let result = await db.query('SELECT * FROM event WHERE userId = $1', [sessionUser.id])
-  const hostingEvents = result.rows
-  result = await db.query('SELECT * FROM event WHERE id IN (SELECT eventId FROM attendance WHERE userId = $1)', [sessionUser.id])
-  const attendingEvents = result.rows
-  res.render('home', { sessionUser, hostingEvents, attendingEvents })
+  try {
+    const { sessionUser } = res.locals
+    let result = await db.query('SELECT * FROM events WHERE userId = $1', [sessionUser.userId])
+    const hostingEvents = result.rows
+    result = await db.query('SELECT * FROM events WHERE eventId IN (SELECT eventId FROM attendance WHERE userId = $1)', [sessionUser.userId])
+    const attendingEvents = result.rows
+    res.render('home', { sessionUser, hostingEvents, attendingEvents })
+  } catch (err) {
+    console.error(err.stack)
+    next(err)
+  }
 })
-
 module.exports = router

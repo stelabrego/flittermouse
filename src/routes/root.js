@@ -8,12 +8,25 @@ const redirectHome = (req, res, next) => {
 }
 
 router.get('/', redirectHome, function (req, res, next) {
-  res.render('index')
+  try {
+    const { sessionUser } = res.locals
+    res.render('index', sessionUser)
+  } catch (err) {
+    console.log(err.stack)
+    next(err)
+  }
 })
 
 router.get('/:username', async function (req, res, next) {
-  const { sessionUser } = res.locals
-  const targetUsername = req.params.username
+  try {
+    const { sessionUser } = res.locals
+    const targetUsername = req.params.username
+    
+  } catch (err) {
+    console.error(err.stack)
+    next(err)
+  }
+
   // if (['home', 'events', 'settings', 'blog', 'about'].includes(targetUsername)) {
   //   next()
   // } else if (sessionUser && sessionUser.username === targetUsername) {
@@ -29,7 +42,6 @@ router.get('/:username', async function (req, res, next) {
   //     res.render('user', { sessionUser, targetUser, hostingEvents, attendingEvents })
   //   } else next()
   // }
-  
 })
 
 module.exports = router

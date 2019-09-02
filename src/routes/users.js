@@ -17,7 +17,7 @@ router.post('/attend', async (req, res, next) => {
       const db = await dbPromise()
       const event = await db.selectEventByUrlKey(urlKey)
       console.log(event)
-      await db.insertAttendance({ userId: sessionUser.id, eventId: event.id })
+      await db.insertAttendance({ userId: sessionUser.userId, eventId: event.id })
       res.json({ success: true })
     }
   } catch (err) {
@@ -31,7 +31,7 @@ router.delete('/attend', async (req, res, next) => {
     const urlKey = req.body.urlKey
     const db = await dbPromise()
     const event = await db.selectEventByUrlKey(urlKey)
-    const allUserAttendance = await db.selectAttendanceByUserId(sessionUser.id)
+    const allUserAttendance = await db.selectAttendanceByUserId(sessionUser.userId)
     const targetAttendance = allUserAttendance.filter(attendance => attendance.eventId === event.id)[0]
     await db.deleteAttendance(targetAttendance.id)
     res.json({ success: true })
@@ -103,7 +103,7 @@ router.post('/update', async (req, res, next) => {
 
     upload(req, res, async (err) => {
       if (err) throw err
-      let dbUpdate = { id: sessionUser.id, ...req.body }
+      let dbUpdate = { id: sessionUser.userId, ...req.body }
       // I gues res.req.file is how you get the file info after it's processed? So weird. Not in the docs.
       let avatarUrl
       if (res.req.file) {
