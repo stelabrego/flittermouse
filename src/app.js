@@ -55,7 +55,6 @@ app.locals.moment = moment
 app.use(async (req, res, next) => {
   try {
     const userId = req.session.user_id
-    console.log('request.session:', JSON.stringify(req.session))
     if (userId) {
       const result = await db.query('SELECT * FROM users WHERE user_id = $1', [userId])
       res.locals.sessionUser = result.rows[0]

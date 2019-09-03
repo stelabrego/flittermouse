@@ -6,6 +6,7 @@ const logout = require('./logout')
 const settings = require('./settings')
 const signup = require('./signup')
 const users = require('./users')
+const username = require('./username')
 
 module.exports = (app) => {
   app.use('/', root)
@@ -16,4 +17,5 @@ module.exports = (app) => {
   app.use('/settings', settings)
   app.use('/signup', signup)
   app.use('/users', users)
+  app.use('/', username)
 }
