@@ -5,11 +5,12 @@
       h2.title Login
       form
         .field
-          label.label Username/Email
+          label.label Handle or Email
           .control.has-icons-left
             input.input#loginUsernameEmailInput(type='text' name='usernameEmail' required)
             span.icon.is-left
               i.fa.fa-user
+          p.help If handle, do not include the @ symbol
         .field
           label.label Password
           .control.has-icons-left
@@ -19,7 +20,7 @@
           p.help.is-danger#loginHelp
         .field.is-grouped
           .control
-            button.button.is-link Submit
+            button.button.is-link(type='submit') Submit
           .control
-            button.button.is-text.cancel Cancel
+            button.button.is-text.cancel(type='button') Cancel
   button.modal-close.is-large(aria-label='close')

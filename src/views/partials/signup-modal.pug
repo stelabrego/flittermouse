@@ -10,24 +10,27 @@
             input.input#signupUsernameInput(type='text' name='username' required)
             span.icon.is-left
               i.fa.fa-at
-          p.help#signupUsernameHelp Letters, numbers, and underscores allowed. 3 characters minimum. Can be changed later.
+          p.help.is-danger#signupUsernameError
+          p.help#signupUsernameHelp Letters, numbers, and underscores allowed. 3 characters minimum. You can change this later.
         .field
           label.label Email
           .control.has-icons-left
             input.input#signupEmailInput(type='email' name='email' required)
             span.icon.is-left
               i.fa.fa-envelope
-          p.help#signupEmailHelp For password recovery.
+          p.help.is-danger#signupEmailError
+          p.help#signupEmailHelp For password recovery and optional newsletter.
         .field
           label.label Password
           .control.has-icons-left
             input.input#signupPasswordInput(type='password' name='password' required)
             span.icon.is-left
               i.fa.fa-key
-          p.help#signupPasswordHelp 8 characters minimum. Securely stored.
+          p.help.is-danger#signupPasswordError
+          p.help#signupPasswordHelp 8 characters minimum. Securely stored using salted MD5 hash, never plaintext.
         .field.is-grouped
           .control
-            button.button.is-link#signupSubmit Submit
+            button.button.is-link#signupSubmit(type='submit') Submit
           .control
-            button.button.is-text.cancel Cancel
+            button.button.is-text.cancel(type='button') Cancel
   button.modal-close.is-large(aria-label='close')

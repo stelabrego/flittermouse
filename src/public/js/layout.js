@@ -70,11 +70,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const signupEmailInput = document.getElementById('signupEmailInput')
   const signupUsernameInput = document.getElementById('signupUsernameInput')
   const signupSubmit = document.getElementById('signupSubmit')
+  const signupUsernameError = document.getElementById('signupUsernameError')
+  const signupEmailError = document.getElementById('signupEmailError')
+  const signupPasswordError = document.getElementById('signupPasswordError')
   const toggleSignupModal = () => {
     signupModal.classList.toggle('is-active')
     signupPasswordInput.value = ''
     signupEmailInput.value = ''
     signupUsernameInput.value = ''
+    signupUsernameInput.classList.remove('is-danger')
+    signupEmailInput.classList.remove('is-danger')
+    signupPasswordInput.classList.remove('is-danger')
+    signupPasswordError.innerText = ''
+    signupEmailError.innerText = ''
+    signupUsernameError.innerText = ''
   }
 
   if (navSignupButton) {
@@ -83,9 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
     signupModalClose.addEventListener('click', toggleSignupModal)
     signupModalCancel.addEventListener('click', toggleSignupModal)
   }
-
+  
   const signupForm = document.querySelector('#signupModal form')
   if (signupForm) {
+    signupUsernameInput.oninput = (event) => {
+      signupUsernameInput.classList.remove('is-danger')
+      signupUsernameError.innerText = ''
+    }
+    signupEmailInput.oninput = (event) => {
+      signupEmailInput.classList.remove('is-danger')
+      signupEmailError.innerText = ''
+    }
+    signupPasswordInput.oninput = (event) => {
+      signupPasswordInput.classList.remove('is-danger')
+      signupPasswordError.innerText = ''
+    }
     signupForm.addEventListener('submit', (event) => {
       event.preventDefault()
       signupSubmit.classList.add('is-loading')
@@ -104,6 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
           if (res.body.success) {
             signupModal.classList.remove('is-active')
             window.location.assign('/home')
+          } else if (res.body.invalidInputFields) {
+            res.body.invalidInputFields.forEach(error => {
+              if (error.name === 'username') {
+                signupUsernameInput.classList.add('is-danger')
+                signupUsernameError.innerText = error.message
+              }
+              if (error.name === 'email') {
+                signupEmailInput.classList.add('is-danger')
+                signupEmailError.innerText = error.message
+              }
+              if (error.name === 'password') {
+                signupPasswordInput.classList.add('is-danger')
+                signupPasswordError.innerText = error.message
+              }
+            })
           }
           signupSubmit.classList.remove('is-loading')
         })
