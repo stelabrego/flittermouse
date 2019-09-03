@@ -14,7 +14,8 @@ router.post('/attend', async (req, res, next) => {
     } else {
       const { urlKey } = req.body
       console.log(urlKey)
-      await db.query('INSERT INTO attendance (user_id, event_id) SELECT $1, event_id FROM events WHERE url_key = $2', [sessionUser.user_id, urlKey])
+      const result = await db.query('INSERT INTO attendance (user_id, event_id) SELECT $1, event_id FROM events WHERE url_key = $2 RETURNING *', [sessionUser.user_id, urlKey])
+      if (result.rows.length === 0) throw Error('Did not insert row')
       res.json({ success: true })
     }
   } catch (err) {
@@ -28,8 +29,9 @@ router.delete('/attend', async (req, res, next) => {
     if (!sessionUser) {
       res.json({ success: false, needToLogin: true })
     } else {
-      const urlKey = req.body.url_key
-      await db.query('DELETE FROM attendance WHERE user_id = $1 AND event_id = (SELECT event_id FROM events WHERE url_key = $2)', [sessionUser.user_id, urlKey])
+      const { urlKey } = req.body
+      const result = await db.query('DELETE FROM attendance WHERE user_id = $1 AND event_id = (SELECT event_id FROM events WHERE url_key = $2) RETURNING *', [sessionUser.user_id, urlKey])
+      if (result.rows.length === 0) throw Error('Did not delete row')
       res.json({ success: true })
     }
   } catch (err) {

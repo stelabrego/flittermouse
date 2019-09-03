@@ -48,5 +48,5 @@ block content
             #map(location=event.location lat=event.lat lon=event.lon)
           button.button.is-link.is-medium.is-rounded.is-fullwidth.attend.see-attendees See Who Is Going
           if !userOwnsEvent
-            button.button.is-medium.is-rounded.is-fullwidth.attend.update-attendance(url_key=event.url_key class=userIsAttending ? 'is-warning' : 'is-link' )=userIsAttending ? 'Remove RSVP' : 'RSVP'
+            button.button.is-medium.is-rounded.is-fullwidth.attend.update-attendance(urlKey=event.url_key class=userIsAttending ? 'is-warning' : 'is-link' )=userIsAttending ? 'Remove RSVP' : 'RSVP'
 
