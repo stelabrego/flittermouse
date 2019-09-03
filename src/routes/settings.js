@@ -6,8 +6,8 @@ const router = new Router()
 router.get('/', async function (req, res, next) {
   try {
     const { sessionUser } = res.locals
-    const db = await dbPromise()
-    const userSetting = db.selectUserSettingByUserId(sessionUser.userId)
+    const result = await db.query('SELECT * FROM user_settings WHERE user_id = $1', [sessionUser.user_id])
+    const userSetting = result.rows[0]
     res.render('settings', { sessionUser, userSetting })
   } catch (err) {
     next(err)

@@ -12,10 +12,15 @@ const mountRoutes = require('./routes')
 const TWO_WEEKS = 1000 * 60 * 60 * 24 * 14
 const {
   SESSION_LIFETIME = TWO_WEEKS,
-  SESSION_NAME = 'sid',
+  SESSION_NAME = 'eventz_sid',
   SESSION_SECRET = 'devTestSecret',
   NODE_ENV = 'development'
 } = process.env
+
+if (NODE_ENV === 'development') {
+  const createMockData = require('./db/createMockData')
+  createMockData().then(created => { if (created) console.log('Test Data Created') })
+}
 
 const app = express()
 // view engine setup
@@ -46,19 +51,18 @@ app.use(session({
 
 app.locals.moment = moment
 
-// extract userId from session
+// extract user_id from session
 app.use(async (req, res, next) => {
   try {
-    const { userId } = req.session
+    const userId = req.session.user_id
+    console.log('request.session:', JSON.stringify(req.session))
     if (userId) {
-      const result = await db.query('SELECT * FROM users WHERE userId = $1', [userId])
+      const result = await db.query('SELECT * FROM users WHERE user_id = $1', [userId])
       res.locals.sessionUser = result.rows[0]
     }
   } catch (err) {
-    console.log('hello')
     console.error(err.message, err.stack)
   }
-  console.log('hello again')
   next()
 })
 

@@ -3,13 +3,13 @@
 -- DROP TABLE events CASCADE;
 -- DROP TYPE RELATIONSHIP CASCADE;
 -- DROP TYPE VISIBILITY CASCADE;
--- DROP TABLE userSettings CASCADE;
--- DROP TABLE userRelationship CASCADE;
--- DROP TABLE eventImages CASCADE;
--- DROP TABLE eventSettings CASCADE;
+-- DROP TABLE user_settings CASCADE;
+-- DROP TABLE user_relationship CASCADE;
+-- DROP TABLE event_images CASCADE;
+-- DROP TABLE event_settings CASCADE;
 -- DROP TABLE attendance CASCADE;
--- DROP TABLE eventQuestions CASCADE;
--- DROP TABLE eventTags CASCADE;
+-- DROP TABLE event_questions CASCADE;
+-- DROP TABLE event_tags CASCADE;
 
 
 -- ENUM's (case sensitive names)
@@ -19,85 +19,85 @@ CREATE TYPE VISIBILITY AS ENUM ('public', 'listeningTo', 'private');
 -- pg will retrieve 'timestamp with time zone' types as 1997-12-17 07:37:16-08 (ISO 8601)
 -- NULLIF() for empty strings
 CREATE TABLE users (
-  userId SERIAL PRIMARY KEY,
-  username TEXT UNIQUE NOT NULL CHECK ((LENGTH(username) > 2) AND (LOWER(username) NOT IN ('home', 'setting', 'settings', 'event', 'events', 'about', 'blog', 'help', 'team', 'login', 'logout', 'register', 'index', 'signup', 'users', 'user'))),
+  user_id SERIAL PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL CHECK (LENGTH(username) > 2) CHECK (username ~ '^[a-zA-Z0-9_]*$') CHECK (LOWER(username) NOT IN ('home', 'setting', 'settings', 'event', 'events', 'about', 'blog', 'help', 'team', 'login', 'logout', 'register', 'index', 'signup', 'users', 'user')),
   email TEXT UNIQUE NOT NULL CHECK (LENGTH(email) > 5),
   password TEXT NOT NULL CHECK (LENGTH(password) > 5),
-  inviteKey TEXT UNIQUE NOT NULL,
-  displayName TEXT, -- if '' set NULL
-  avatarUrl TEXT DEFAULT 'https://res.cloudinary.com/deiup0tup/image/upload/v1566969522/generic-user_inzqg2.jpg',
-  bio TEXT, -- if '' set NULL
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  invite_key TEXT UNIQUE NOT NULL,
+  display_name TEXT NOT NULL DEFAULT '',
+  avatar_url TEXT NOT NULL DEFAULT 'https://res.cloudinary.com/deiup0tup/image/upload/v1566969522/generic-user_inzqg2.jpg',
+  bio TEXT NOT NULL DEFAULT '', -- if '' set NULL
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE userSettings (
-  userId INTEGER PRIMARY KEY REFERENCES users ON DELETE CASCADE,
-  attendingVisibility VISIBILITY DEFAULT 'listeningTo',
-  listeningVisibility VISIBILITY DEFAULT 'listeningTo',
-  listenersVisibility VISIBILITY DEFAULT 'listeningTo',
-  avatarVisibility VISIBILITY DEFAULT 'listeningTo',
-  bioVisibility VISIBILITY DEFAULT 'listeningTo',
-  nameVisibility VISIBILITY DEFAULT 'listeningTo',
-  emailVisibility VISIBILITY DEFAULT 'listeningTo',
-  displayNameVisbility VISIBILITY DEFAULT 'listeningTo',
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE user_settings (
+  user_id INTEGER PRIMARY KEY REFERENCES users ON DELETE CASCADE,
+  attending_visibility VISIBILITY DEFAULT 'listeningTo',
+  listening_visibility VISIBILITY DEFAULT 'listeningTo',
+  listeners_visibility VISIBILITY DEFAULT 'listeningTo',
+  avatar_visibility VISIBILITY DEFAULT 'listeningTo',
+  bio_visibility VISIBILITY DEFAULT 'listeningTo',
+  name_visibility VISIBILITY DEFAULT 'listeningTo',
+  email_visibility VISIBILITY DEFAULT 'listeningTo',
+  display_name_visbility VISIBILITY DEFAULT 'listeningTo',
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE userRelationship (
-  initialUserId INTEGER REFERENCES users (userId) ON DELETE CASCADE,
-  targetUserId INTEGER REFERENCES users (userId) ON DELETE CASCADE,
+CREATE TABLE user_relationship (
+  initial_user_id INTEGER REFERENCES users (user_id) ON DELETE CASCADE,
+  target_user_id INTEGER REFERENCES users (user_id) ON DELETE CASCADE,
   relationship RELATIONSHIP,
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (initialUserId, targetUserId)
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (initial_user_id, target_user_id)
 );
 
 CREATE TABLE events (
-  eventId SERIAL PRIMARY KEY,
-  userId INTEGER REFERENCES users ON DELETE CASCADE,
+  event_id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users ON DELETE CASCADE,
   name TEXT NOT NULL CHECK (LENGTH(name) > 0), -- check not ''
-  urlKey TEXT UNIQUE NOT NULL,
-  description TEXT,
-  dateStart TIMESTAMP WITH TIME ZONE,
-  dateEnd TIMESTAMP WITH TIME ZONE,
-  location TEXT,
+  url_key TEXT UNIQUE NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  date_start TIMESTAMP WITH TIME ZONE,
+  date_end TIMESTAMP WITH TIME ZONE,
+  location TEXT NOT NULL DEFAULT '',
   lat NUMERIC,
   lon NUMERIC,
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE eventImages (
-  eventId INTEGER PRIMARY KEY REFERENCES events ON DELETE CASCADE,
+CREATE TABLE event_images (
+  event_id INTEGER PRIMARY KEY REFERENCES events ON DELETE CASCADE,
   url TEXT NOT NULL CHECK(LENGTH(url) > 0),
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 
-CREATE TABLE eventSettings (
-  eventId INTEGER PRIMARY KEY REFERENCES events ON DELETE CASCADE,
-  displayLocation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE event_settings (
+  event_id INTEGER PRIMARY KEY REFERENCES events ON DELETE CASCADE,
+  display_location TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   visibility VISIBILITY DEFAULT 'listeningTo',
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE attendance (
-  eventId INTEGER REFERENCES events ON DELETE CASCADE,
-  userId INTEGER REFERENCES users ON DELETE CASCADE,
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (eventId, userId)
+  event_id INTEGER REFERENCES events ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (event_id, user_id)
 );
 
-CREATE TABLE eventQuestions (
-  questionId SERIAL PRIMARY KEY,
-  eventId INTEGER REFERENCES events ON DELETE CASCADE,
-  userId INTEGER REFERENCES users ON DELETE CASCADE,
+CREATE TABLE event_questions (
+  question_id SERIAL PRIMARY KEY,
+  event_id INTEGER REFERENCES events ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users ON DELETE CASCADE,
   question TEXT NOT NULL,
-  answer TEXT,
+  answer TEXT NOT NULL DEFAULT '',
   visible BOOLEAN NOT NULL DEFAULT FALSE,
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE eventTags (
-  eventId INTEGER REFERENCES events ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (eventId, name)
+CREATE TABLE event_tags (
+  event_id INTEGER REFERENCES events ON DELETE CASCADE,
+  name TEXT NOT NULL CHECK (LENGTH(name) > 0),
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (event_id, name)
 );

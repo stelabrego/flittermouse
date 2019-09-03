@@ -111,9 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
       .send(form)
       .then(res => {
         console.log(res)
-        updateProfileButton.classList.remove('is-loading')
         updateProfileButton.setAttribute('disabled', true)
         if (res.body.avatarUrl) navAvatar.setAttribute('src', res.body.avatarUrl)
+        updateProfileButton.classList.remove('is-loading')
       })
       .catch(console.error)
   })

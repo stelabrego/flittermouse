@@ -10,9 +10,9 @@ const redirectIndex = async (req, res, next) => {
 router.get('/', redirectIndex, async function (req, res, next) {
   try {
     const { sessionUser } = res.locals
-    let result = await db.query('SELECT * FROM events WHERE userId = $1', [sessionUser.userId])
+    let result = await db.query('SELECT * FROM events WHERE user_id = $1', [sessionUser.user_id])
     const hostingEvents = result.rows
-    result = await db.query('SELECT * FROM events WHERE eventId IN (SELECT eventId FROM attendance WHERE userId = $1)', [sessionUser.userId])
+    result = await db.query('SELECT * FROM events WHERE event_id IN (SELECT event_id FROM attendance WHERE user_id = $1)', [sessionUser.user_id])
     const attendingEvents = result.rows
     res.render('home', { sessionUser, hostingEvents, attendingEvents })
   } catch (err) {

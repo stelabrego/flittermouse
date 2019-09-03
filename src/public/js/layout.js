@@ -76,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const updateAttendanceButton = document.querySelector('button.update-attendance')
   if (updateAttendanceButton) {
-    const urlKey = updateAttendanceButton.getAttribute('urlKey')
+    const url_key = updateAttendanceButton.getAttribute('url_key')
     updateAttendanceButton.addEventListener('click', event => {
       updateAttendanceButton.classList.toggle('is-loading')
       if (updateAttendanceButton.classList.contains('is-link')) {
         ajax.post('/users/attend')
-          .send({ urlKey })
+          .send({ url_key })
           .then(res => {
             console.log(res)
             if (res.body.success) {
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (updateAttendanceButton.classList.contains('is-warning')) {
         ajax.delete('/users/attend')
-          .send({ urlKey })
+          .send({ url_key })
           .then(res => {
             console.log(res)
             if (res.body.success) {

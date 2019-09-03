@@ -14,17 +14,17 @@ block content
       .columns.is-centered
         .column.is-6
           h1.title.is-1=event.name
-            if event.dateStart
+            if event.date_start
               // TODO add support for multi-day events
               p.subtitle
-                =moment(event.dateStart).format('ddd MMM Do')
+                =moment(event.date_start).format('ddd MMM Do')
                 br
-                =moment(event.dateStart).format('LT')
-                if event.dateEnd
-                  =moment(event.dateEnd).format(' - LT')
-                if event.address
+                =moment(event.date_start).format('LT')
+                if event.date_end
+                  =moment(event.date_end).format(' - LT')
+                if event.location
                   br
-                  =event.address
+                  =event.location
           each tag in eventTags
             a.button.is-primary.is-inverted.is-outlined.is-rounded.event-tag=tag.name
           
@@ -45,8 +45,8 @@ block content
                   =question.answer
           if event.lat && event.lon
             hr
-            #map(address=event.address lat=event.lat lon=event.lon)
+            #map(location=event.location lat=event.lat lon=event.lon)
           button.button.is-link.is-medium.is-rounded.is-fullwidth.attend.see-attendees See Who Is Going
           if !userOwnsEvent
-            button.button.is-medium.is-rounded.is-fullwidth.attend.update-attendance(urlKey=event.urlKey class=userIsAttending ? 'is-warning' : 'is-link' )=userIsAttending ? 'Remove RSVP' : 'RSVP'
+            button.button.is-medium.is-rounded.is-fullwidth.attend.update-attendance(url_key=event.url_key class=userIsAttending ? 'is-warning' : 'is-link' )=userIsAttending ? 'Remove RSVP' : 'RSVP'
 

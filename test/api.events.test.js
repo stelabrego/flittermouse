@@ -13,7 +13,7 @@ describe('/events endpoints', () => {
   describe('POST events/add', () => {
     it('should accept good requests', () => {
       const goodAddRequests = [
-        { name: 'Stels Big Birthday Bash', userId: 1 }
+        { name: 'Stels Big Birthday Bash', user_id: 1 }
       ]
       const tests =
         goodAddRequests.map((reqBody) => {
@@ -57,8 +57,8 @@ describe('/events endpoints', () => {
   describe('PUT events/update', () => {
     it('should accept good requests', () => {
       const goodUpdateRequests = [
-        { id: 1, name: 'Updated name event', dateStart: '248792874' },
-        { id: 1, dateStart: '44244525' }
+        { id: 1, name: 'Updated name event', date_start: '248792874' },
+        { id: 1, date_start: '44244525' }
       ]
       const tests =
         goodUpdateRequests.map((reqBody) => {

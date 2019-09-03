@@ -19,7 +19,6 @@ mixin privacySelect(label)
               option(value="listening") Only Accounts I'm Listening To
               option(value="public") Anyone (Public)
 
-
 block content
   .modal#cropModal
     .modal-background
@@ -39,7 +38,7 @@ block content
         form#updateProfileForm
           .columns.is-vcentered.is-desktop
             .column.is-12-mobile.is-12-tablet.is-5-desktop
-              img.avatar.is-block.margin-centered#settingsAvatar(src=sessionUser.avatarUrl, alt="")
+              img.avatar.is-block.margin-centered#settingsAvatar(src=sessionUser.avatar_url, alt="")
               .file
                 label.file-label
                   input.file-input#fileInput(type='file', name='avatar', accept="image/jpeg, image/png")
@@ -51,13 +50,13 @@ block content
               .field
                 label.label.is-size-5 Display Name
                   .control
-                    input.input#displayNameInput(type='text', name='displayName' value=sessionUser.displayName)
-                p.help#displayNameHelp=sessionUser.displayName.length + '/40'
+                    input.input#displayNameInput(type='text', name='displayName' value=sessionUser.display_name)
+                p.help#displayNameHelp=(sessionUser.display_name.length) + '/40'
               .field
                 label.label.is-size-5 Bio
                   .control
                     textarea.textarea#bioTextArea(type='textarea' name='bio')=sessionUser.bio
-                p.help#bioHelp=sessionUser.bio.length + '/160'
+                p.help#bioHelp=(sessionUser.bio.length) + '/160'
           button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save#updateProfileButton(disabled) Save Changes
         h2.title.is-3 Who Can See My Data?
         hr

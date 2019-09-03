@@ -1,9 +1,14 @@
 # make sure to stop postgres running directly in your OS
-# docker-compose up -d
 # docker-compose up -d --build
 # docker-compose logs
 # docker-compose stop
 # docker-compose rm
+# fish:
+# function dcrb
+#     docker-compose stop && docker-compose rm -f && docker-compose up -d --build
+#     sleep 3
+#     docker-compose logs
+# end
 version: '3.7'
 services:
   db:

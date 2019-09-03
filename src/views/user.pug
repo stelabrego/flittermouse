@@ -8,10 +8,10 @@ block content
     .container
       .columns.is-vcentered.is-centered
         .column.is-3
-          img.avatar.margin-centered.is-block(src=targetUser.avatarUrl)
+          img.avatar.margin-centered.is-block(src=targetUser.avatar_url)
         .column.is-3
-          if targetUser.displayName
-            p.is-size-3=targetUser.displayName
+          if targetUser.display_name
+            p.is-size-3=targetUser.display_name
           p.has-text-weight-bold.is-size-4='@'+targetUser.username
           button.button.is-primary.is-medium.listen Listen
       .columns.is-vcentered.is-centered

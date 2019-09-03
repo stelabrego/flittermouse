@@ -20,8 +20,8 @@ database
 - look up invite link tutorial find best practices
 - add the feature of accessing users by eventz.com/username
 - what if we used camelcase for everything including the database?
-- we need a userKey and inviteKey field for the user table.
+- we need a userKey and invite_key field for the user table.
     - userKey is for url
-    - inviteKey is more secret, for invites only
+    - invite_key is more secret, for invites only
 
 -http://expressjs.com/en/advanced/best-practice-security.html#overview

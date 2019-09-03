@@ -14,10 +14,7 @@ router.post('/attend', async (req, res, next) => {
     } else {
       const { urlKey } = req.body
       console.log(urlKey)
-      const db = await dbPromise()
-      const event = await db.selectEventByUrlKey(urlKey)
-      console.log(event)
-      await db.insertAttendance({ userId: sessionUser.userId, eventId: event.id })
+      await db.query('INSERT INTO attendance (user_id, event_id) SELECT $1, event_id FROM events WHERE url_key = $2', [sessionUser.user_id, urlKey])
       res.json({ success: true })
     }
   } catch (err) {
@@ -28,41 +25,15 @@ router.post('/attend', async (req, res, next) => {
 router.delete('/attend', async (req, res, next) => {
   try {
     const { sessionUser } = res.locals
-    const urlKey = req.body.urlKey
-    const db = await dbPromise()
-    const event = await db.selectEventByUrlKey(urlKey)
-    const allUserAttendance = await db.selectAttendanceByUserId(sessionUser.userId)
-    const targetAttendance = allUserAttendance.filter(attendance => attendance.eventId === event.id)[0]
-    await db.deleteAttendance(targetAttendance.id)
-    res.json({ success: true })
+    if (!sessionUser) {
+      res.json({ success: false, needToLogin: true })
+    } else {
+      const urlKey = req.body.url_key
+      await db.query('DELETE FROM attendance WHERE user_id = $1 AND event_id = (SELECT event_id FROM events WHERE url_key = $2)', [sessionUser.user_id, urlKey])
+      res.json({ success: true })
+    }
   } catch (err) {
     res.json({ success: false, message: err.message })
-  }
-})
-
-router.post('/add', async (req, res, next) => {
-  let db
-  try {
-    const db = await dbPromise()
-    await db.insertUser(req.body)
-    res.json({ success: true })
-  } catch (err) {
-    res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) await db.close()
-  }
-})
-
-router.delete('/delete', async (req, res, next) => {
-  let db
-  try {
-    const db = await dbPromise()
-    await db.deleteUser(req.body.id)
-    res.json({ success: true })
-  } catch (err) {
-    res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) await db.close()
   }
 })
 
@@ -103,35 +74,39 @@ router.post('/update', async (req, res, next) => {
 
     upload(req, res, async (err) => {
       if (err) throw err
-      let dbUpdate = { id: sessionUser.userId, ...req.body }
       // I gues res.req.file is how you get the file info after it's processed? So weird. Not in the docs.
-      let avatarUrl
+      let avatarUrl = null
       if (res.req.file) {
         const avatarFilename = res.req.file.key
         avatarUrl = `https://${BUCKET_NAME}.${REGION}.cdn.${STORAGE_ENDPOINT}/${avatarFilename}`
-        dbUpdate = { avatarUrl, ...dbUpdate }
       }
-      const db = await dbPromise()
-      console.log(dbUpdate)
-      await db.updateUser(dbUpdate)
-      if (avatarUrl) res.json({ success: true, avatarUrl })
-      else res.json({ success: true })
+      // COALESCE function will set avatar_url to it's current value (so basically ignore it) if the passed in avatarUrl === null
+      await db.query('UPDATE users SET avatar_url = COALESCE($1, avatar_url), display_name = $2, bio = $3 WHERE user_id = $4', [avatarUrl, req.body.displayName, req.body.bio, sessionUser.user_id])
+      res.json({ success: true, avatarUrl })
     })
   } catch (err) {
     res.json({ success: false, message: err.message })
   }
 })
 
-router.put('/privacy/update', async (req, res, next) => {
-  let db
+router.get('/:username', async function (req, res, next) {
   try {
-    const db = await dbPromise()
-    await db.updateUserSetting(req.body)
-    res.json({ success: true })
+    const { sessionUser } = res.locals
+    const targetUsername = req.params.username
+    if (sessionUser && sessionUser.username === targetUsername) {
+      res.redirect('/home')
+    } else {
+      let result = await db.query('SELECT * FROM users WHERE username = $1', [targetUsername])
+      const targetUser = result.rows[0]
+      result = await db.query('SELECT * FROM events WHERE user_id = $1', [targetUser.user_id])
+      const hostingEvents = result.rows
+      result = await db.query('SELECT * FROM events WHERE event_id IN (SELECT event_id FROM attendance WHERE user_id = $1)', [targetUser.user_id])
+      const attendingEvents = result.rows
+      res.render('user', { sessionUser, targetUser, hostingEvents, attendingEvents })
+    }
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message })
-  } finally {
-    if (db) await db.close()
+    console.error(err.stack)
+    next(err)
   }
 })
 
