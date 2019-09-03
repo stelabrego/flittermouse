@@ -6,7 +6,7 @@ block scripts
 block stylesheets
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.css')
 
-mixin privacySelect(label)
+mixin privacySelect(label, name, currentValue)
   .field.is-horizontal
     .field-label.privacy
       label.label.is-size-5.privacy=label
@@ -14,10 +14,10 @@ mixin privacySelect(label)
       .field.is-narrow
         .control
           .select.is-fullwidth
-            select
-              option(value="private") Only Me (Private)
-              option(value="listening") Only Accounts I'm Listening To
-              option(value="public") Anyone (Public)
+            select(name=name)
+              option(value="private" selected=(currentValue === 'private')) Only Me (Private)
+              option(value="listening_to" selected=(currentValue === 'listening_to')) Only Accounts I'm Listening To
+              option(value="public" selected=(currentValue === 'public')) Anyone (Public)
 
 block content
   .modal#cropModal
@@ -60,14 +60,14 @@ block content
           button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save#updateProfileButton(disabled) Save Changes
         h2.title.is-3 Who Can See My Data?
         hr
-        form
-          +privacySelect("Display Name")
-          +privacySelect("Profile Picture")
-          +privacySelect("Bio")
-          +privacySelect("Email")
-          +privacySelect("Events I'm Attending")
-          +privacySelect("Accounts I'm Listening To")
-          button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save Save Changes
+        form#updatePrivacyForm
+          +privacySelect("Display Name", 'displayNameVisibility', userSetting.display_name_visibility)
+          +privacySelect("Profile Picture", 'avatarVisibility', userSetting.avatar_visibility)
+          +privacySelect("Bio", 'bioVisibility', userSetting.bio_visibility)
+          +privacySelect("Email", 'emailVisibility', userSetting.email_visibility)
+          +privacySelect("Events I'm Attending", 'attendingVisibility', userSetting.attending_visibility)
+          +privacySelect("Accounts I'm Listening To", 'listeningToVisibility', userSetting.listening_to_visibility)
+          button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save#updatePrivacyButton(disabled) Save Changes
         
 
 

@@ -58,6 +58,7 @@ router.post('/update', async (req, res, next) => {
         s3: s3,
         bucket: BUCKET_NAME,
         acl: 'public-read',
+        contentType: multerS3.AUTO_CONTENT_TYPE,
         key: function (req, file, cb) {
           let key = crypto.randomBytes(6).toString('hex')
           key += file.mimetype === 'image/jpeg' ? '.jpeg' : '.png'

@@ -117,19 +117,32 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(console.error)
   })
+
+  const updatePrivacyForm = document.getElementById('updatePrivacyForm')
+  const updatePrivacyButton = document.getElementById('updatePrivacyButton')
+  updatePrivacyForm.addEventListener('input', (event) => {
+    updatePrivacyButton.removeAttribute('disabled')
+  })
+  updatePrivacyForm.addEventListener('submit', (event) => {
+    event.preventDefault()
+    updatePrivacyButton.classList.add('is-loading')
+    const formElems = event.target.elements
+    const requestBody = {
+      displayNameVisibility: formElems.displayNameVisibility.value,
+      avatarVisibility: formElems.avatarVisibility.value,
+      bioVisibility: formElems.bioVisibility.value,
+      emailVisibility: formElems.emailVisibility.value,
+      attendingVisibility: formElems.attendingVisibility.value,
+      listeningToVisibility: formElems.listeningToVisibility.value
+    }
+    console.log(requestBody)
+    request
+      .post('/settings/privacy')
+      .send(requestBody)
+      .then(res => {
+        console.log(res)
+        updatePrivacyButton.classList.remove('is-loading')
+        updatePrivacyButton.setAttribute('disabled', true)
+      })
+  })
 })
-
-// $('.actionUpload').on('click', function () {
-//   basic.croppie('result', 'blob').then(function (blob) {
-//     var formData = new FormData()
-//     formData.append('filename', 'testFileName.png')
-//     formData.append('blob', blob)
-//     var MyAppUrlSettings = {
-//       MyUsefulUrl: '@Url.Action("GetImage","Create")'
-//     }
-
-//     var request = new XMLHttpRequest()
-//     request.open('POST', MyAppUrlSettings.MyUsefulUrl)
-//     request.send(formData)
-//   })
-// })

@@ -23,5 +23,7 @@ services:
   adminer:
     image: adminer
     restart: always
+    environment:
+      ADMINER_DESIGN: mvt
     ports:
       - "8080:8080"

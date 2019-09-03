@@ -14,7 +14,7 @@
 
 -- ENUM's (case sensitive names)
 CREATE TYPE RELATIONSHIP AS ENUM ('listen', 'block');
-CREATE TYPE VISIBILITY AS ENUM ('public', 'listeningTo', 'private');
+CREATE TYPE VISIBILITY AS ENUM ('public', 'listening_to', 'private');
 
 -- pg will retrieve 'timestamp with time zone' types as 1997-12-17 07:37:16-08 (ISO 8601)
 -- NULLIF() for empty strings
@@ -32,14 +32,13 @@ CREATE TABLE users (
 
 CREATE TABLE user_settings (
   user_id INTEGER PRIMARY KEY REFERENCES users ON DELETE CASCADE,
-  attending_visibility VISIBILITY DEFAULT 'listeningTo',
-  listening_visibility VISIBILITY DEFAULT 'listeningTo',
-  listeners_visibility VISIBILITY DEFAULT 'listeningTo',
-  avatar_visibility VISIBILITY DEFAULT 'listeningTo',
-  bio_visibility VISIBILITY DEFAULT 'listeningTo',
-  name_visibility VISIBILITY DEFAULT 'listeningTo',
-  email_visibility VISIBILITY DEFAULT 'listeningTo',
-  display_name_visbility VISIBILITY DEFAULT 'listeningTo',
+  attending_visibility VISIBILITY DEFAULT 'listening_to',
+  listening_to_visibility VISIBILITY DEFAULT 'listening_to',
+  avatar_visibility VISIBILITY DEFAULT 'listening_to',
+  bio_visibility VISIBILITY DEFAULT 'listening_to',
+  name_visibility VISIBILITY DEFAULT 'listening_to',
+  email_visibility VISIBILITY DEFAULT 'listening_to',
+  display_name_visibility VISIBILITY DEFAULT 'listening_to',
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -74,7 +73,7 @@ CREATE TABLE event_images (
 CREATE TABLE event_settings (
   event_id INTEGER PRIMARY KEY REFERENCES events ON DELETE CASCADE,
   display_location TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  visibility VISIBILITY DEFAULT 'listeningTo',
+  visibility VISIBILITY DEFAULT 'listening_to',
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
