@@ -6,12 +6,17 @@
       form
         .field
           label.label Username/Email
-          .control
-            input.input#username-email(type='text' required)
+          .control.has-icons-left
+            input.input#loginUsernameEmailInput(type='text' name='usernameEmail' required)
+            span.icon.is-left
+              i.fa.fa-user
         .field
           label.label Password
-          .control
-            input.input#password(type='password', required)
+          .control.has-icons-left
+            input.input#loginPasswordInput(type='password' name='password' required)
+            span.icon.is-left
+              i.fa.fa-key
+          p.help.is-danger#loginHelp
         .field.is-grouped
           .control
             button.button.is-link Submit

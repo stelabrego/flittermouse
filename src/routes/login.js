@@ -4,9 +4,9 @@ const router = new Router()
 
 router.post('/', async (req, res, next) => {
   try {
-    const result = await db.query('SELECT * FROM users WHERE (username = $1 AND password = $2) OR (email = $1 AND password = $2)', [req.body.usernameEmail, req.body.password])
+    const result = await db.query('SELECT * FROM users WHERE (username = $1 AND (password_hash = crypt($2, password_hash))) OR (email = $1 AND (password_hash = crypt($2, password_hash))) LIMIT 1', [req.body.usernameEmail, req.body.password])
     const user = result.rows[0]
-    req.session.user_id = user.user_id
+    req.session.userId = user.user_id
     console.log('Added user_id to session for user: ', JSON.stringify(user))
     res.json({ success: true })
   } catch (err) {

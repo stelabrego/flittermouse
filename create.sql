@@ -11,7 +11,7 @@
 -- DROP TABLE event_questions CASCADE;
 -- DROP TABLE event_tags CASCADE;
 
-
+CREATE EXTENSION pgcrypto;
 -- ENUM's (case sensitive names)
 CREATE TYPE RELATIONSHIP AS ENUM ('listen', 'block');
 CREATE TYPE VISIBILITY AS ENUM ('public', 'listening_to', 'private');
@@ -22,7 +22,7 @@ CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
   username TEXT UNIQUE NOT NULL CHECK (LENGTH(username) > 2) CHECK (username ~ '^[a-zA-Z0-9_]*$') CHECK (LOWER(username) NOT IN ('home', 'setting', 'settings', 'event', 'events', 'about', 'blog', 'help', 'team', 'login', 'logout', 'register', 'index', 'signup', 'users', 'user')),
   email TEXT UNIQUE NOT NULL CHECK (LENGTH(email) > 5),
-  password TEXT NOT NULL CHECK (LENGTH(password) > 5),
+  password_hash TEXT NOT NULL,
   invite_key TEXT UNIQUE NOT NULL,
   display_name TEXT NOT NULL DEFAULT '',
   avatar_url TEXT NOT NULL DEFAULT 'https://res.cloudinary.com/deiup0tup/image/upload/v1566969522/generic-user_inzqg2.jpg',
@@ -100,3 +100,66 @@ CREATE TABLE event_tags (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (event_id, name)
 );
+
+-- INSERT settings when user or event is created
+
+CREATE FUNCTION insert_user_setting() RETURNS TRIGGER AS $$
+  BEGIN
+    INSERT INTO user_settings (user_id) VALUES (new.user_id);
+    RETURN new;
+  END
+  $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_create_user
+  AFTER INSERT ON users
+  FOR EACH ROW
+  EXECUTE FUNCTION insert_user_setting();
+
+CREATE FUNCTION insert_event_setting() RETURNS TRIGGER AS $$
+  BEGIN
+    INSERT INTO event_settings (event_id) VALUES (new.event_id);
+    RETURN new;
+  END
+  $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_create_event
+  AFTER INSERT ON events
+  FOR EACH ROW
+  EXECUTE FUNCTION insert_event_setting();
+
+-- DELETE dependencies when user or event is deleted
+
+CREATE FUNCTION delete_user_dependencies() RETURNS TRIGGER AS $$
+  BEGIN
+    DELETE FROM events WHERE user_id = new.user_id;
+    DELETE FROM user_settings WHERE user_id = new.user_id;
+    DELETE FROM users WHERE user_id = new.user_id;
+    RETURN new;
+  END
+  $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_delete_user
+  AFTER DELETE ON users
+  FOR EACH ROW
+  EXECUTE FUNCTION delete_user_dependencies();
+
+CREATE FUNCTION delete_event_dependencies() RETURNS TRIGGER AS $$
+  BEGIN
+    DELETE FROM event_tags WHERE event_id = new.event_id;
+    DELETE FROM event_images WHERE event_id = new.event_id;
+    DELETE FROM event_questions WHERE event_id = new.event_id;
+    DELETE FROM event_settings WHERE event_id = new.event_id;
+    DELETE FROM attendance WHERE event_id = new.event_id;
+    DELETE FROM events WHERE event_id = new.event_id;
+    RETURN new;
+  END
+  $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_delete_event
+  AFTER DELETE ON events
+  FOR EACH ROW
+  EXECUTE FUNCTION delete_event_dependencies();
+
+
+
+

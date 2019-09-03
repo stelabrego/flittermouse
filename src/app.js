@@ -54,7 +54,7 @@ app.locals.moment = moment
 // extract user_id from session
 app.use(async (req, res, next) => {
   try {
-    const userId = req.session.user_id
+    const userId = req.session.userId
     if (userId) {
       const result = await db.query('SELECT * FROM users WHERE user_id = $1', [userId])
       res.locals.sessionUser = result.rows[0]

@@ -24,17 +24,15 @@ module.exports = async () => {
   try {
     const result = await db.query('SELECT * FROM users')
     if (result.rows.length === 0) {
-      await db.query(`INSERT INTO users (user_id, username, email, password, invite_key, display_name, bio) VALUES
-        (1, 'stel', 'stel@gmail.com', '123456', 'invite_key1', 'Stel Abrego', 'I''m here and I''m queer'),
-        (2, 'alice', 'alice@gmail.com', '123456', 'invite_key2', 'sexyalice666', 'I like movies'),
-        (3, 'ash', 'ash@gmail.com', '123456', 'invite_key3', 'ashthisblunt', 'smoke')
+      await db.query(`INSERT INTO users (user_id, username, email, password_hash, invite_key, display_name, bio) VALUES
+        (1, 'stel', 'stel@gmail.com', crypt('123456', gen_salt('md5')), 'invite_key1', 'Stel Abrego', 'I''m here and I''m queer'),
+        (2, 'alice', 'alice@gmail.com', crypt('123456', gen_salt('md5')), 'invite_key2', 'sexyalice666', 'I like movies'),
+        (3, 'ash', 'ash@gmail.com', crypt('123456', gen_salt('md5')), 'invite_key3', 'ashthisblunt', 'smoke')
       `)
-      await db.query(`INSERT INTO user_settings (user_id) VALUES (1), (2), (3)`)
       await db.query(`INSERT INTO events (event_id, user_id, url_key, name, location, lat, lon, description, date_start, date_end) VALUES
         (1, 1, 'test', 'stels big party', '306 N Adams St Ypsilanti', 42.245083, -83.615924, 'We''re really just gonna smoke weed and compliment eachother', '2019-10-31 18:00', '2019-10-31 23:00'),
         (2, 2, 'test2', 'alices christmas party', DEFAULT, NULL, NULL, 'Bring your best ugly sweaters', '2019-12-25 08:00', '2019-12-25 20:00')
       `)
-      await db.query(`INSERT INTO event_settings (event_id) VALUES (1), (2)`)
       return true
     }
   } catch (err) {

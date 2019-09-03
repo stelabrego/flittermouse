@@ -3,7 +3,7 @@ const db = require('../db')
 const router = new Router()
 
 const redirectHome = (req, res, next) => {
-  if (req.session.user_id) res.redirect('/home')
+  if (res.locals.sessionUser) res.redirect('/home')
   else next()
 }
 

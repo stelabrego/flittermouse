@@ -14,7 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginModalBackground = document.querySelector('#login-modal .modal-background')
   const loginModalClose = document.querySelector('#login-modal .modal-close')
   const loginModalCancel = document.querySelector('#login-modal .cancel')
-  const toggleLoginModal = () => { loginModal.classList.toggle('is-active') }
+  const toggleLoginModal = () => {
+    loginModal.classList.toggle('is-active')
+    loginUsernameEmailInput.value = ''
+    loginPasswordInput.value = ''
+    loginPasswordInput.classList.remove('is-danger')
+    loginUsernameEmailInput.classList.remove('is-danger')
+    loginHelp.innerText = ''
+  }
 
   if (login) {
     login.addEventListener('click', toggleLoginModal)
@@ -24,41 +31,83 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const loginForm = document.querySelector('#login-modal form')
+  const loginPasswordInput = document.getElementById('loginPasswordInput')
+  const loginUsernameEmailInput = document.getElementById('loginUsernameEmailInput')
+  const loginHelp = document.getElementById('loginHelp')
   if (loginForm) {
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault()
       console.log(event)
       const password = event.target.elements.password.value
-      const usernameEmail = event.target.elements['username-email'].value
+      const usernameEmail = event.target.elements.usernameEmail.value
       console.log({ usernameEmail, password })
       ajax.post('/login')
         .send({ usernameEmail, password })
         .then(res => {
           console.log(res)
           if (res.body.success) window.location.reload()
+          else {
+            loginPasswordInput.classList.add('is-danger')
+            loginUsernameEmailInput.classList.add('is-danger')
+            loginHelp.innerText = 'No accounts found with that username/email and password combination'
+          }
         })
+    })
+
+    loginForm.addEventListener('input', (event) => {
+      loginPasswordInput.classList.remove('is-danger')
+      loginUsernameEmailInput.classList.remove('is-danger')
+      loginHelp.innerText = ''
     })
   }
 
-  const signup = document.querySelector('#signup')
-  const signupModal = document.querySelector('#signup-modal')
-  const signupModalBackground = document.querySelector('#signup-modal .modal-background')
-  const signupModalClose = document.querySelector('#signup-modal .modal-close')
-  const signupModalCancel = document.querySelector('#signup-modal .cancel')
-  const toggleSignupModal = () => { signupModal.classList.toggle('is-active') }
+  const navSignupButton = document.getElementById('navSignupButton')
+  const signupModal = document.getElementById('signupModal')
+  const signupModalBackground = document.querySelector('#signupModal .modal-background')
+  const signupModalClose = document.querySelector('#signupModal .modal-close')
+  const signupModalCancel = document.querySelector('#signupModal .cancel')
+  const signupPasswordInput = document.getElementById('signupPasswordInput')
+  const signupEmailInput = document.getElementById('signupEmailInput')
+  const signupUsernameInput = document.getElementById('signupUsernameInput')
+  const signupSubmit = document.getElementById('signupSubmit')
+  const toggleSignupModal = () => {
+    signupModal.classList.toggle('is-active')
+    signupPasswordInput.value = ''
+    signupEmailInput.value = ''
+    signupUsernameInput.value = ''
+  }
 
-  if (signup) {
-    signup.addEventListener('click', toggleSignupModal)
+  if (navSignupButton) {
+    navSignupButton.addEventListener('click', toggleSignupModal)
     signupModalBackground.addEventListener('click', toggleSignupModal)
     signupModalClose.addEventListener('click', toggleSignupModal)
     signupModalCancel.addEventListener('click', toggleSignupModal)
   }
 
-  const signupForm = document.querySelector('#signup-modal form')
+  const signupForm = document.querySelector('#signupModal form')
   if (signupForm) {
     signupForm.addEventListener('submit', (event) => {
       event.preventDefault()
+      signupSubmit.classList.add('is-loading')
       console.log(event)
+      const formElems = event.target.elements
+      const requestBody = {
+        username: formElems.username.value,
+        email: formElems.email.value,
+        password: formElems.password.value
+      }
+      ajax
+        .post('/signup')
+        .send(requestBody)
+        .then(res => {
+          console.log(res)
+          if (res.body.success) {
+            signupModal.classList.remove('is-active')
+            window.location.assign('/home')
+          }
+          signupSubmit.classList.remove('is-loading')
+        })
+      console.log(requestBody)
     })
   }
 
@@ -111,4 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
   }
+
+
+
 })
