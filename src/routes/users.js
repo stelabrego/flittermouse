@@ -92,19 +92,24 @@ router.post('/update', async (req, res, next) => {
   }
 })
 
-router.post('/listen', async (req, res, next) => {
+router.post('/follow', async (req, res, next) => {
+  let needToLogin
   try {
     const { sessionUser } = res.locals
+    if (!sessionUser) {
+      needToLogin = true
+      throw Error('Needs to login')
+    }
     const { targetUserId } = req.body
-    const result = await db.query("INSERT INTO user_relationships (initial_user_id, target_user_id, relationship) VALUES ($1, $2, 'listen') ON CONFLICT ON CONSTRAINT user_relationships_pkey DO UPDATE SET relationship = 'listen' WHERE user_relationships.initial_user_id = $1 AND user_relationships.target_user_id = $2 RETURNING *", [sessionUser.user_id, targetUserId])
+    const result = await db.query("INSERT INTO user_relationships (initial_user_id, target_user_id, relationship) VALUES ($1, $2, 'follow') ON CONFLICT ON CONSTRAINT user_relationships_pkey DO UPDATE SET relationship = 'follow' WHERE user_relationships.initial_user_id = $1 AND user_relationships.target_user_id = $2 RETURNING *", [sessionUser.user_id, targetUserId])
     if (result.rows.length === 0) throw Error('Could not insert or update')
     res.json({ success: true })
   } catch (err) {
-    res.json({ success: false, message: err.message })
+    res.json({ success: false, message: err.message, needToLogin })
   }
 })
 
-router.delete('/listen', async (req, res, next) => {
+router.delete('/follow', async (req, res, next) => {
   try {
     const { sessionUser } = res.locals
     const { targetUserId } = req.body

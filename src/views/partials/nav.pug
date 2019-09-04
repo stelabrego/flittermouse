@@ -18,9 +18,9 @@ nav.navbar.has-shadow(role="navigation" aria-label="main navigation")
             a.navbar-link.is-arrowless(href='/' + sessionUser.username)
               img.avatar#navAvatar(src=sessionUser.avatar_url)
             .navbar-dropdown.is-right.is-boxed
-              a.navbar-item(href='/home') Home
-              a.navbar-item(href='/settings') Settings
-              a.navbar-item.logout Logout
+              a.navbar-item.is-size-6(href='/home') Home
+              a.navbar-item.is-size-6(href='/settings') Settings
+              a.navbar-item.is-size-6.logout Logout
         if !sessionUser
           .navbar-item
             .buttons

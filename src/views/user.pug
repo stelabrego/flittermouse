@@ -1,24 +1,19 @@
 extends layout
 
-block scripts
-  script(src="/js/eventCard.js")
-  script(src='/js/users.js')
-
 block content
   section.section
     .container
-      .columns.is-vcentered.is-centered
-        .column.is-3
-          img.avatar.margin-centered.is-block(src=targetUser.avatar_url)
-        .column.is-3
+      .columns.is-vcentered.is-centered.is-mobile
+        .column.is-offset-0-mobile.is-6-mobile.is-offset-3-tablet.is-3-tablet.is-offset-3-desktop.is-3-desktop
+          img.avatar.is-inline-block.is-pulled-right(src=targetUser.avatar_url)
+        .column
           if targetUser.display_name
             p.is-size-3=targetUser.display_name
           p.has-text-weight-bold.is-size-4='@'+targetUser.username
-          button.button.is-primary.is-medium.listen#userListenButton(targetUserId=targetUser.user_id isListening=isListening class=isListening ? 'is-outlined' : '')=isListening ? 'Listening' : 'Listen'
-      .columns.is-vcentered.is-centered
-        .column.is-5
           if targetUser.bio
-            p=targetUser.bio
+            p.is-size-5=targetUser.bio
+          button.button.is-primary.is-medium.follow#userFollowButton(targetUserId=targetUser.user_id isFollowing=isFollowing class=isFollowing ? 'is-outlined' : '')=isFollowing ? 'Following' : 'Follow'
+          
   if hostingEvents.length > 0
     section.section
       .container

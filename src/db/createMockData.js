@@ -8,7 +8,7 @@
 // await this.insertUser({ id: 3, username: 'ash', email: 'ash@gmail.com', password: '1' })
 // await this.insertEvent({ id: 1, url_key: 'test', user_id: 1, name: 'stels big party', address: '306 N Adams St Ypsilanti', lat: 42.245083, lon: -83.615924, description: 'Were really just gonna smoke weed and compliment eachother', date_start: '2019-10-31 18:00', date_end: '2019-10-31 23:00' })
 // await this.insertEvent({ id: 2, url_key: 'test2', user_id: 2, name: 'alices christmas party', description: 'Bring your best ugly sweaters', date_start: '2019-12-25 08:00', date_end: '2019-12-25 20:00' })
-// await this.insertUserRelationship({ initial_user_id: 1, target_user_id: 2, relationship: 'listen' })
+// await this.insertUserRelationship({ initial_user_id: 1, target_user_id: 2, relationship: 'follow' })
 // await this.insertAttendance({ user_id: 1, event_id: 2 })
 // await this.insertEventTag({ event_id: 1, name: 'party' })
 // await this.insertEventTag({ event_id: 1, name: 'christmas' })

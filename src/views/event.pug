@@ -1,9 +1,5 @@
 extends layout
 
-block scripts
-  if event.lat && event.lon
-    script(src="/js/map.js")
-
 block stylesheets
   if event.lat && event.lon
     link(rel='stylesheet', href='/css/map.css')

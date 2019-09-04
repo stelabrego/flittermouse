@@ -1,8 +1,5 @@
 extends layout
 
-block scripts
-  script(src="/js/settings.js")
-
 block stylesheets
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.css')
 
@@ -16,7 +13,7 @@ mixin privacySelect(label, name, currentValue)
           .select.is-fullwidth
             select(name=name)
               option(value="private" selected=(currentValue === 'private')) Only Me (Private)
-              option(value="listening_to" selected=(currentValue === 'listening_to')) Only Accounts I'm Listening To
+              option(value="following" selected=(currentValue === 'following')) Only Accounts I Follow
               option(value="public" selected=(currentValue === 'public')) Anyone (Public)
 
 block content
@@ -66,7 +63,7 @@ block content
           +privacySelect("Bio", 'bioVisibility', userSetting.bio_visibility)
           +privacySelect("Email", 'emailVisibility', userSetting.email_visibility)
           +privacySelect("Events I'm Attending", 'attendingVisibility', userSetting.attending_visibility)
-          +privacySelect("Accounts I'm Listening To", 'listeningToVisibility', userSetting.listening_to_visibility)
+          +privacySelect("Accounts I Follow", 'followingVisibility', userSetting.following_visibility)
           button.button.is-link.is-medium.is-fullwidth.is-rounded.is-block.settings-save#updatePrivacyButton(disabled) Save Changes
         
 

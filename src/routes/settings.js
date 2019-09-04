@@ -28,11 +28,11 @@ router.post('/privacy', async (req, res, next) => {
       req.body.bioVisibility,
       req.body.emailVisibility,
       req.body.attendingVisibility,
-      req.body.listeningToVisibility,
+      req.body.followingVisibility,
       sessionUser.user_id
     ]
     console.log(queryValues)
-    const result = await db.query('UPDATE user_settings SET display_name_visibility = $1, avatar_visibility = $2, bio_visibility = $3, email_visibility = $4, attending_visibility = $5, listening_to_visibility = $6 WHERE user_id = $7 RETURNING *', queryValues)
+    const result = await db.query('UPDATE user_settings SET display_name_visibility = $1, avatar_visibility = $2, bio_visibility = $3, email_visibility = $4, attending_visibility = $5, following_visibility = $6 WHERE user_id = $7 RETURNING *', queryValues)
     if (result.rows.length === 0) throw Error('Updated zero rows')
     res.json({ success: true })
   } catch (err) {
