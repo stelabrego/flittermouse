@@ -25,7 +25,7 @@ CREATE TABLE users (
   password_hash TEXT NOT NULL,
   invite_key TEXT UNIQUE NOT NULL,
   display_name TEXT NOT NULL DEFAULT '',
-  avatar_url TEXT NOT NULL DEFAULT 'https://res.cloudinary.com/deiup0tup/image/upload/v1566969522/generic-user_inzqg2.jpg',
+  avatar_url TEXT NOT NULL DEFAULT 'https://eventz.nyc3.cdn.digitaloceanspaces.com/generic-user_inzqg2.jpg',
   bio TEXT NOT NULL DEFAULT '', -- if '' set NULL
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
