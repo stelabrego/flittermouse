@@ -4,7 +4,7 @@
 -- DROP TYPE RELATIONSHIP CASCADE;
 -- DROP TYPE VISIBILITY CASCADE;
 -- DROP TABLE user_settings CASCADE;
--- DROP TABLE user_relationship CASCADE;
+-- DROP TABLE user_relationships CASCADE;
 -- DROP TABLE event_images CASCADE;
 -- DROP TABLE event_settings CASCADE;
 -- DROP TABLE attendance CASCADE;
@@ -42,7 +42,7 @@ CREATE TABLE user_settings (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE user_relationship (
+CREATE TABLE user_relationships (
   initial_user_id INTEGER REFERENCES users (user_id) ON DELETE CASCADE,
   target_user_id INTEGER REFERENCES users (user_id) ON DELETE CASCADE,
   relationship RELATIONSHIP,

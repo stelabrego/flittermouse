@@ -17,7 +17,9 @@ router.get('/:username', async function (req, res, next) {
         const hostingEvents = result.rows
         result = await db.query('SELECT * FROM events WHERE event_id IN (SELECT event_id FROM attendance WHERE user_id = $1)', [targetUser.user_id])
         const attendingEvents = result.rows
-        res.render('user', { sessionUser, targetUser, hostingEvents, attendingEvents })
+        result = await db.query('SELECT * FROM user_relationships WHERE initial_user_id = $1 AND target_user_id = $2', [sessionUser.user_id, targetUser.user_id])
+        const isListening = (result.rows.length > 0 && result.rows[0].relationship === 'listen')
+        res.render('user', { sessionUser, targetUser, hostingEvents, attendingEvents, isListening })
       }
     }
   } catch (err) {

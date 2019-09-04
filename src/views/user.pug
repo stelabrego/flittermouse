@@ -2,6 +2,7 @@ extends layout
 
 block scripts
   script(src="/js/eventCard.js")
+  script(src='/js/users.js')
 
 block content
   section.section
@@ -13,7 +14,7 @@ block content
           if targetUser.display_name
             p.is-size-3=targetUser.display_name
           p.has-text-weight-bold.is-size-4='@'+targetUser.username
-          button.button.is-primary.is-medium.listen Listen
+          button.button.is-primary.is-medium.listen#userListenButton(targetUserId=targetUser.user_id isListening=isListening class=isListening ? 'is-outlined' : '')=isListening ? 'Listening' : 'Listen'
       .columns.is-vcentered.is-centered
         .column.is-5
           if targetUser.bio
