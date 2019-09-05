@@ -13,7 +13,7 @@ module.exports = async () => {
       `)
       await db.query(`INSERT INTO events (user_id, url_key, name, location, lat, lon, description, date_start, date_end) VALUES
         (1, 'test', 'stels big party', '306 N Adams St Ypsilanti', 42.245083, -83.615924, 'We''re really just gonna smoke weed and compliment eachother', '2019-10-31 18:00', '2019-10-31 23:00'),
-        (2, 'test2', 'alices christmas party', DEFAULT, NULL, NULL, 'Bring your best ugly sweaters', '2019-12-25 08:00', '2019-12-25 20:00')
+        (2, 'test2', 'alices christmas party', DEFAULT, NULL, NULL, 'Bring your best ugly sweaters', '2019-12-25T08:00:00-5', '2019-12-25T20:00:00-5')
       `)
       return true
     }

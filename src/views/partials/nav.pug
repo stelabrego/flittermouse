@@ -10,7 +10,9 @@ nav.navbar.has-shadow(role="navigation" aria-label="main navigation")
         span(aria-hidden='true')
     .navbar-menu
       .navbar-start
-        
+        .navbar-item
+          form#navSearchForm(method='get' action='/search')
+            input.input.is-medium.is-rounded#navSearchInput(name='query' placeholder='Search for events...')
       .navbar-end
         if sessionUser
           .is-size-4.navbar-item=sessionUser.username

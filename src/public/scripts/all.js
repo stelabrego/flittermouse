@@ -430,4 +430,13 @@ document.addEventListener('DOMContentLoaded', () => {
     L.marker([lat, lon]).addTo(map)
     map.setView(new L.LatLng(lat, lon), 17)
   }
+
+  // SEARCH
+  const searchResults = document.querySelectorAll('.searchResult')
+  searchResults.forEach(searchResult => {
+    searchResult.addEventListener('click', event => {
+      console.log(searchResult.attributes)
+      window.location.assign(searchResult.attributes.url.value)
+    })
+  })
 })

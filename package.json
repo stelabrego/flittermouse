@@ -26,9 +26,7 @@
     "mocha": "^6.2.0",
     "nodemon": "^1.19.1",
     "sass": "^1.23.0-module.beta.1",
-    "supertest": "^4.0.2",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7"
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "aws-sdk": "^2.521.0",
@@ -49,9 +47,8 @@
     "path": "^0.12.7",
     "pg": "^7.12.1",
     "pug": "^2.0.4",
+    "query-string": "^6.8.3",
     "redis": "^2.8.0",
-    "sqlite": "^3.0.3",
-    "sqlite3": "^4.0.9",
     "sqlstring": "^2.3.1",
     "superagent": "^5.1.0"
   }

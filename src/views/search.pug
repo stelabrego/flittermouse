@@ -1,0 +1,38 @@
+extends layout
+
+mixin userResult(user)
+  .box.searchResult(url='/' + user.username)
+    .columns.is-mobile
+      .column.is-3-mobile.is-3-tablet.is-2-desktop.search-avatar-container
+        img.avatar(src=user.avatar_url)
+      .column
+        span.tag.is-rounded.is-size-6.is-pulled-right.is-hidden-mobile user
+        p.is-size-3.is-size-4-mobile.is-ellipsis=user.display_name
+        p.has-text-weight-bold.is-size-4.is-inline-block='@'+user.username
+
+mixin eventResult(event)
+  .box.searchResult(url='/events/' + event.url_key)
+    span.tag.is-rounded.is-size-6.is-pulled-right.is-hidden-mobile event
+    p.is-size-3.is-size-4-mobile=event.name
+    if event.date_start
+      // TODO add support for multi-day events
+      p.subtitle
+        =moment(event.date_start).format('ddd MMM Do')
+        br
+        =moment(event.date_start).format('LT')
+        if event.date_end
+          =moment(event.date_end).format(' - LT')
+        if event.location
+          br
+          =event.location
+
+block content
+  .container
+    section.section
+      .columns.is-centered
+        .column.is-8
+          h1.title.is-1 Search Results
+          each user in matchedUsers
+            +userResult(user)
+          each event in matchedEvents
+            +eventResult(event)
