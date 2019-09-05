@@ -25,6 +25,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "mocha": "^6.2.0",
     "nodemon": "^1.19.1",
+    "sass": "^1.23.0-module.beta.1",
     "supertest": "^4.0.2",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
@@ -44,6 +45,7 @@
     "multer-s3": "^2.9.0",
     "nanoid": "^2.1.0",
     "nanoid-dictionary": "^2.0.0",
+    "parcel": "^1.12.3",
     "path": "^0.12.7",
     "pg": "^7.12.1",
     "pug": "^2.0.4",

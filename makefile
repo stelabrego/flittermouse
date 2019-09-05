@@ -1,32 +1,22 @@
-.PHONY: clean db start lint test nodemon sass watch webpack
+SHELL=/usr/local/bin/fish
 
-clean:
-	rm -rf ./build
-	mkdir build
-	mkdir build/public
-	cp -R ./src/public/images ./build/public
-
-db:
-	docker stack deploy -c stack.yml postgres
-
-sass:
-	sass --watch --no-source-map src/public/sass:build/public/css
+.PHONY: clean db start lint test nodemon watch parcel
 
 nodemon:
-	npx nodemon ./src/server.js
+	npx nodemon src/server.js
 
-webpack:
-	npx webpack --watch
+parcel:
+	npx parcel watch src/public/**
 
 lint:
 	npx eslint --fix src/
 
 test:
-	npmx mocha
+	npx mocha
 
-watch: db nodemon sass webpack
+watch: nodemon parcel
 
-start: clean
+start:
 	${MAKE} -j watch
 
 # must install redis and start redis too

@@ -31,7 +31,7 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, '../build/acce
 app.use(logger(':date :method :url', { stream: accessLogStream }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname, '../build/public')))
+app.use(express.static(path.join(__dirname, '../dist')))
 
 const RedisStore = require('connect-redis')(session)
 const client = redis.createClient()
