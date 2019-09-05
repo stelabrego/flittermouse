@@ -3,7 +3,7 @@ SHELL=/usr/local/bin/fish
 .PHONY: clean db start lint test nodemon watch parcel
 
 nodemon:
-	npx nodemon src/server.js
+	npx nodemon --ignore src/public/ --ignore dist/ src/server.js
 
 parcel:
 	npx parcel watch src/public/**
