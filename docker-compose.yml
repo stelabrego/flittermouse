@@ -22,6 +22,8 @@ services:
       - POSTGRES_DB=eventz
     expose:
       - 5432
+    ports:
+      - '5432:5432' # remove for production
     
   adminer:
     image: adminer
@@ -40,6 +42,7 @@ services:
       - redis
     environment:
       - REDIS_URL=redis://cache
+      - NODE_ENV=production
       # - PGHOST=db
       # - PGUSER=postgres
       # - PGPASSWORD=example
@@ -59,7 +62,7 @@ services:
       # - PGID=1000
       - TZ=EST
     volumes:
-      - /path/to/appdata/config:/config
+      - ./docker/nginx/:/config
     ports:
       - '80:80'
       - '443:443'

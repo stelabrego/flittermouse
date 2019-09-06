@@ -8,13 +8,14 @@ const moment = require('moment')
 const db = require('./db')
 const mountRoutes = require('./routes')
 
+console.log(process.env)
 const TWO_WEEKS = 1000 * 60 * 60 * 24 * 14
 const {
   SESSION_LIFETIME = TWO_WEEKS,
   SESSION_NAME = 'eventz_sid',
   SESSION_SECRET = 'devTestSecret',
   NODE_ENV = 'development',
-  REDIS_URL = 'redis://cache'
+  REDIS_URL = 'redis://127.0.0.1:6379'
 } = process.env
 
 const app = express()
@@ -39,19 +40,17 @@ app.use(session({
   cookie: {
     maxAge: SESSION_LIFETIME,
     sameSite: true,
-    secure: NODE_ENV === 'production'
+    secure: false // TODO: NODE_ENV === 'production'
   }
 }))
 
 app.locals.moment = moment
 
-if (NODE_ENV === 'development') {
-  const createMockData = require('./db/createMockData')
-  app.use((req, res, next) => {
-    createMockData().then(created => { if (created) console.log('Test Data Created'); else console.log('Test Data Not Created') })
-    next()
-  })
-}
+const createMockData = require('./db/createMockData')
+const retry = (fn, retries = 3) => fn().catch(e => retries <= 0 ? Promise.reject(e) : retry(fn, retries - 1))
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+const delayError = (fn, ms) => () => fn().catch(e => delay(ms).then(y => Promise.reject(e)))
+retry(delayError(createMockData, 1000))
 
 // extract user_id from session
 app.use(async (req, res, next) => {
