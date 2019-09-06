@@ -29,6 +29,8 @@
     "supertest": "^4.0.2"
   },
   "dependencies": {
+    "a": "^2.1.2",
+    "animate.css": "^3.7.2",
     "aws-sdk": "^2.521.0",
     "connect-redis": "^4.0.0",
     "croppie": "^2.6.4",

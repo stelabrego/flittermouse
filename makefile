@@ -1,12 +1,10 @@
-SHELL=/usr/local/bin/fish
-
 .PHONY: clean db start lint test nodemon watch parcel
 
 nodemon:
 	npx nodemon --ignore src/public/ --ignore dist/ src/server.js
 
 parcel:
-	npx parcel watch src/public/**
+	npx parcel watch src/public/stylesheets/* src/public/scripts/* src/public/images/*
 
 lint:
 	npx eslint --fix src/
@@ -18,6 +16,11 @@ watch: nodemon parcel
 
 start:
 	${MAKE} -j watch
+
+prod-build:
+	npm install
+	npx parcel build src/public/stylesheets/* src/public/scripts/* src/public/images/*
+	node src/server.js
 
 # must install redis and start redis too
 # chrome does a weird asset reload when it notices it got changed on the server

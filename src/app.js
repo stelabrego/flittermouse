@@ -13,13 +13,9 @@ const {
   SESSION_LIFETIME = TWO_WEEKS,
   SESSION_NAME = 'eventz_sid',
   SESSION_SECRET = 'devTestSecret',
-  NODE_ENV = 'development'
+  NODE_ENV = 'development',
+  REDIS_URL = 'redis://cache'
 } = process.env
-
-if (NODE_ENV === 'development') {
-  const createMockData = require('./db/createMockData')
-  createMockData().then(created => { if (created) console.log('Test Data Created') })
-}
 
 const app = express()
 // view engine setup
@@ -32,7 +28,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, '../dist')))
 
 const RedisStore = require('connect-redis')(session)
-const client = redis.createClient()
+const client = redis.createClient(REDIS_URL)
 client.on('error', console.error)
 app.use(session({
   name: SESSION_NAME,
@@ -48,6 +44,14 @@ app.use(session({
 }))
 
 app.locals.moment = moment
+
+if (NODE_ENV === 'development') {
+  const createMockData = require('./db/createMockData')
+  app.use((req, res, next) => {
+    createMockData().then(created => { if (created) console.log('Test Data Created'); else console.log('Test Data Not Created') })
+    next()
+  })
+}
 
 // extract user_id from session
 app.use(async (req, res, next) => {

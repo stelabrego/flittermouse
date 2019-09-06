@@ -2,22 +2,21 @@ nav.navbar.has-shadow(role="navigation" aria-label="main navigation")
   .container
     .navbar-brand
       a.navbar-item(href='/')
-        img(src='https://bit.ly/2MH7qZG')
-      a.navbar-item.is-size-4.has-text-weight-bold(href='/') EVENTZ
+        img(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/nav-brand.png')
       a.navbar-burger(role='button', aria-label='menu', aria-expanded='false')
         span(aria-hidden='true')
         span(aria-hidden='true')
         span(aria-hidden='true')
     .navbar-menu
-      .navbar-start
+      .navbar-start#navSearchContainer
         .navbar-item
           form#navSearchForm(method='get' action='/search')
             input.input.is-medium.is-rounded#navSearchInput(name='query' placeholder='Search for events...')
       .navbar-end
         if sessionUser
-          .is-size-4.navbar-item=sessionUser.username
+          .is-size-4.navbar-item.is-hidden-mobile=sessionUser.username
           .navbar-item.has-dropdown.is-hoverable
-            a.navbar-link.is-arrowless(href='/' + sessionUser.username)
+            a.navbar-link.is-arrowless.is-hidden-mobile(href='/' + sessionUser.username)
               img.avatar#navAvatar(src=sessionUser.avatar_url)
             .navbar-dropdown.is-right.is-boxed
               a.navbar-item.is-size-6(href='/home') Home
@@ -26,7 +25,7 @@ nav.navbar.has-shadow(role="navigation" aria-label="main navigation")
         if !sessionUser
           .navbar-item
             .buttons
-              a.button.is-primary.is-medium#navSignupButton Sign up
-              a.button.is-light.is-medium#login Log in
+              a.button.is-primary.is-medium.is-rounded#navSignupButton Sign up
+              a.button.is-light.is-medium.is-rounded#login Log in
 include login-modal
 include signup-modal

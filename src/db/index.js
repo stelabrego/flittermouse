@@ -1,10 +1,7 @@
 const { Pool } = require('pg')
+const connectionString = `postgresql://postgres:example@db/eventz`
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'eventz',
-  password: 'example',
-  port: 5432
+  connectionString
 })
 module.exports = {
   query: (text, params) => {

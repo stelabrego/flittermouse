@@ -1,9 +1,0 @@
-# https://stackoverflow.com/questions/54192089/start-postgres-in-dockerfile
-FROM postgres
-# container superuser
-ENV POSTGRES_USER postgres
-# password for container superuser
-ENV POSTGRES_PASSWORD example
-# default db name
-ENV POSTGRES_DB eventz
-COPY create.sql /docker-entrypoint-initdb.d/

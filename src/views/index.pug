@@ -1,10 +1,21 @@
 extends layout
 
+block stylesheets
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css')
+  link(href='https://fonts.googleapis.com/css?family=Farro|Heebo|Palanquin|Philosopher|Proza+Libre&display=swap', rel='stylesheet')
+
 block content
-  section.hero.is-primary.is-bold.is-medium
+  section.hero.is-primary.is-bold
     .hero-body
       .container
-        h1.title Find cool events
+        .columns.is-centered.is-vcentered
+          .column.is-5
+            h1.title.is-2!='Find leftist '
+              span#landingHeroFadeTextContainer
+                span.is-text#landingHeroFadeText.animated.fadeOutUp.delay-2s="events"
+            p.subtitle 
+          .column.is-5
+            img.animated.fadeOut.delay-2s#landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/1.jpg')
   p=message
 
       
