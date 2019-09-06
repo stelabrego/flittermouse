@@ -27,9 +27,8 @@ start: db
 	${MAKE} -j watch
 
 prod:
-	docker-compose stop db app adminer nginx cache
-	docker-compose rm --force db app adminer nginx cache
-	docker-compose up -d db app adminer nginx cache
+	docker-compose down --remove-orphans
+	docker-compose up -d --build
 
 # must install redis and start redis too
 # chrome does a weird asset reload when it notices it got changed on the server
