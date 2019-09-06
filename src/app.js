@@ -51,7 +51,7 @@ const createMockData = require('./db/createMockData')
 const retry = (fn, retries = 3) => fn().catch(e => retries <= 0 ? Promise.reject(e) : retry(fn, retries - 1))
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const delayError = (fn, ms) => () => fn().catch(e => delay(ms).then(y => Promise.reject(e)))
-retry(delayError(createMockData, 1000))
+retry(delayError(createMockData, 3000))
 
 // extract user_id from session
 app.use(async (req, res, next) => {

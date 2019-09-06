@@ -23,7 +23,7 @@ rm-containers:
 
 watch: nodemon parcel
 
-start:
+start: db
 	${MAKE} -j watch
 
 prod:
