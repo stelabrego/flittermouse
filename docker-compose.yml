@@ -54,6 +54,8 @@ services:
       - PGUSER=postgres
       - PGPASSWORD=thecatsatonthestoolandplayedthepiano
       - PGDATABASE=flittermouse
+      - AWS_ACCESS_KEY_ID=K4KAQ7LZ2N4G7K6P5CLL
+      - AWS_SECRET_ACCESS_KEY=C3jV0RyujJ0TI/leLzyn2Rt3NmNTdFfXy4+2slKoEk4
 
   cache:
     image: redis

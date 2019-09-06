@@ -18,8 +18,7 @@ db:
 	docker-compose up -d db adminer
 
 rm-containers:
-	docker-compose stop
-	docker-compose rm --force
+	docker-compose down --remove-orphans
 
 watch: nodemon parcel
 
