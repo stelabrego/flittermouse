@@ -256,12 +256,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // SETTINGS - PROFILE INFO FORM
-  const displayNameInput = document.querySelector('#displayNameInput')
-  const displayNameHelp = document.querySelector('#displayNameHelp')
-  const bioTextArea = document.querySelector('#bioTextArea')
-  const bioHelp = document.querySelector('#bioHelp')
-  if (displayNameInput && displayNameHelp && bioTextArea && bioHelp) {
+  const displayNameInput = document.getElementById('displayNameInput')
+  const displayNameHelp = document.getElementById('displayNameHelp')
+  const bioTextArea = document.getElementById('bioTextArea')
+  const bioHelp = document.getElementById('bioHelp')
+  const fileInput = document.getElementById('fileInput')
+  const cropContainer = document.getElementById('croppie')
+  const cropModal = document.getElementById('cropModal')
+  const cropModalClose = document.getElementById('cropModalClose')
+  const acceptCrop = document.getElementById('acceptCrop')
+  const cancelCrop = document.getElementById('cancelCrop')
+  const settingsAvatar = document.getElementById('settingsAvatar')
+  const updateProfileForm = document.getElementById('updateProfileForm')
+  const updateProfileButton = document.getElementById('updateProfileButton')
+  const navAvatar = document.getElementById('navAvatar')
+  let avatarBlob = null
+
+  if (displayNameInput) {
+    const enableProfileSaveButton = () => {
+      updateProfileButton.removeAttribute('disabled')
+    }
+
     displayNameInput.addEventListener('input', (event) => {
+      enableProfileSaveButton()
       const inputLength = event.target.value.length
       displayNameHelp.textContent = inputLength + '/40'
       if (inputLength > 40) {
@@ -273,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
     bioTextArea.addEventListener('input', (event) => {
+      enableProfileSaveButton()
       const inputLength = event.target.value.length
       bioHelp.textContent = inputLength + '/160'
       if (inputLength > 160) {
@@ -283,18 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bioHelp.classList.remove('is-danger')
       }
     })
-
-    const fileInput = document.getElementById('fileInput')
-    const cropContainer = document.getElementById('croppie')
-    const cropModal = document.getElementById('cropModal')
-    const cropModalClose = document.getElementById('cropModalClose')
-    const acceptCrop = document.getElementById('acceptCrop')
-    const cancelCrop = document.getElementById('cancelCrop')
-    const settingsAvatar = document.getElementById('settingsAvatar')
-    const updateProfileForm = document.getElementById('updateProfileForm')
-    const updateProfileButton = document.getElementById('updateProfileButton')
-    const navAvatar = document.getElementById('navAvatar')
-    let avatarBlob = null
 
     const closeCropModal = (event) => { cropModal.classList.remove('is-active') }
     cropModalClose.addEventListener('click', closeCropModal)
@@ -320,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     acceptCrop.addEventListener('click', () => {
+      enableProfileSaveButton()
       crop.result({ type: 'base64', size: { width: 200, height: 200 } }).then(image => {
         settingsAvatar.setAttribute('src', image)
       })
@@ -328,11 +335,6 @@ document.addEventListener('DOMContentLoaded', () => {
         avatarBlob = image
       })
       cropModal.classList.remove('is-active')
-    })
-
-    updateProfileForm.addEventListener('input', (event) => {
-      console.log('form input event')
-      updateProfileButton.removeAttribute('disabled')
     })
 
     updateProfileForm.addEventListener('submit', (event) => {
