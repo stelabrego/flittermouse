@@ -12,15 +12,24 @@ lint:
 test:
 	npx mocha
 
+db:
+	docker-compose stop db adminer
+	docker-compose rm --force db adminer
+	docker-compose up -d db adminer
+
+rm-containers:
+	docker-compose stop
+	docker-compose rm --force
+
 watch: nodemon parcel
 
 start:
 	${MAKE} -j watch
 
-prod-build:
-	npm install
-	npx parcel build src/public/stylesheets/* src/public/scripts/* src/public/images/*
-	node src/server.js
+prod:
+	docker-compose stop db app adminer nginx cache
+	docker-compose rm --force db app adminer nginx cache
+	docker-compose up -d db app adminer nginx cache
 
 # must install redis and start redis too
 # chrome does a weird asset reload when it notices it got changed on the server

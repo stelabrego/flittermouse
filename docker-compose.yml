@@ -11,21 +11,25 @@
 # end
 version: '3.7'
 services:
+ 
   db:
+    container_name: db
     image: postgres
     restart: always
     volumes:
       - './docker/postgres:/docker-entrypoint-initdb.d'
     environment:
-      - POSTGRES_PASSWORD=example
+      - POSTGRES_PASSWORD=thecatsatonthestoolandplayedthepiano
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=eventz
+      - POSTGRES_DB=flittermouse
     expose:
       - 5432
     ports:
-      - '5432:5432' # remove for production
-    
+      - '5432:5432' # only here for adminer
+  
+        
   adminer:
+    container_name: adminer
     image: adminer
     restart: always
     environment:
@@ -34,38 +38,39 @@ services:
       - "8080:8080"
 
   app:
+    container_name: app
     build:
       context: .
-    ports:
-      - "3000:3000"
+      dockerfile: app.Dockerfile
+    expose:
+      - 3000
     links:
-      - redis
+      - db
+      - cache
     environment:
       - REDIS_URL=redis://cache
       - NODE_ENV=production
-      # - PGHOST=db
-      # - PGUSER=postgres
-      # - PGPASSWORD=example
-      # - PGDATABASE=eventz
+      - VIRTUAL_HOST=flittermouse.io,www.flittermouse.io
+      - PGUSER=postgres
+      - PGPASSWORD=thecatsatonthestoolandplayedthepiano
+      - PGDATABASE=flittermouse
 
-  redis:
+  cache:
     image: redis
     container_name: cache
     expose:
       - 6379
+    environment:
+      - NETWORK_ACCESS=internal
   
   nginx:
-    image: linuxserver/nginx
+    image: jwilder/nginx-proxy
     container_name: nginx
     environment:
-      # - PUID=1000
-      # - PGID=1000
-      - TZ=EST
-    volumes:
-      - ./docker/nginx/:/config
+      - DEFAULT_HOST=flittermouse.io
     ports:
-      - '80:80'
-      - '443:443'
-    restart: unless-stopped
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
   
       
