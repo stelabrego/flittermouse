@@ -4,8 +4,8 @@ const {
   NODE_ENV = 'development',
   PGHOST = 'localhost',
   PGUSER = 'postgres',
-  PGDATABASE = 'eventz',
-  PGPASSWORD = 'example',
+  PGDATABASE = 'flittermouse',
+  PGPASSWORD = 'thecatsatonthestoolandplayedthepiano',
   PGPORT = 5432
 } = process.env
 
