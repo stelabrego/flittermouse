@@ -92,3 +92,4 @@ build/
 .vscode
 *.icloud
 dist/
+secrets/
