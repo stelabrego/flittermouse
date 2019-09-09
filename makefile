@@ -26,8 +26,8 @@ start: db
 	${MAKE} -j watch
 
 prod:
-	docker-compose down --remove-orphans
-	docker-compose up -d --build
+	docker-compose down app --remove-orphans
+	docker-compose up app -d --build
 
 # must install redis and start redis too
 # chrome does a weird asset reload when it notices it got changed on the server
