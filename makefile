@@ -26,8 +26,9 @@ start:
 	${MAKE} -j watch
 
 prod:
-	docker-compose down app --remove-orphans
-	docker-compose up app -d --build
+	docker-compose stop app
+	docker-compose rm --force app
+	docker-compose up -d --build app 
 
 # must install redis and start redis too
 # chrome does a weird asset reload when it notices it got changed on the server
