@@ -16,13 +16,12 @@ module.exports = async () => {
         ('mutual_aid', 'vidhya@gmail.com', crypt('123456', gen_salt('md5')), 'invite_key7', 'vidhya', 'liberation is cool i guess'),
         ('doubletrans', 'renee@gmail.com', crypt('123456', gen_salt('md5')), 'invite_key8', 'renée', 'it''s time for tea')
       `)
-    await db.query(`INSERT INTO events (user_id, url_key, name, location, lat, lon, description, date_start, date_end) VALUES
-        (1, 'test', 'stels big party', '306 N Adams St Ypsilanti', 42.245083, -83.615924, 'We''re really just gonna smoke weed and compliment eachother', '2019-10-31 18:00', '2019-10-31 23:00'),
-        (2, 'test2', 'alices christmas party', DEFAULT, NULL, NULL, 'Bring your best ugly sweaters', '2019-12-25T08:00:00-5', '2019-12-25T20:00:00-5')
+    await db.query(`INSERT INTO events (user_id, url_key, name, location, lat, lon, description, date_start, date_end, timezone) VALUES
+        (1, 'test', 'stels big party', '306 N Adams St Ypsilanti', 42.245083, -83.615924, 'We''re really just gonna watch scary movies and compliment eachother', '2019-10-31 18:00', '2019-10-31 23:00', 'Eastern'),
+        (2, 'test2', 'alices christmas party', DEFAULT, NULL, NULL, 'Bring your best ugly sweaters', '2019-12-25T08:00:00', '2019-12-25T20:00:00', 'Eastern')
       `)
     return Promise.resolve()
   } catch (err) {
-    console.error(err.stack)
     return Promise.reject(err)
   }
 }

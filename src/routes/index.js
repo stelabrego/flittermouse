@@ -8,6 +8,7 @@ const signup = require('./signup')
 const users = require('./users')
 const username = require('./username')
 const search = require('./search')
+const create = require('./create')
 
 module.exports = (app) => {
   app.use('/', root)
@@ -19,5 +20,6 @@ module.exports = (app) => {
   app.use('/signup', signup)
   app.use('/users', users)
   app.use('/search', search)
+  app.use('/create', create)
   app.use('/', username)
 }

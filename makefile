@@ -4,7 +4,7 @@ nodemon:
 	npx nodemon --ignore src/public/ --ignore dist/ src/server.js
 
 parcel:
-	npx parcel watch src/public/stylesheets/* src/public/scripts/* src/public/images/*
+	npx parcel watch --no-source-maps --target browser src/public/stylesheets/* src/public/scripts/* src/public/images/*
 
 lint:
 	npx eslint --fix src/
@@ -15,14 +15,14 @@ test:
 db:
 	docker-compose stop db adminer
 	docker-compose rm --force db adminer
-	docker-compose up -d db adminer
+	docker-compose up -d --build db adminer
 
 rm-containers:
 	docker-compose down --remove-orphans
 
 watch: nodemon parcel
 
-start: db
+start:
 	${MAKE} -j watch
 
 prod:

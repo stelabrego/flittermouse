@@ -8,14 +8,13 @@ const moment = require('moment')
 const db = require('./db')
 const mountRoutes = require('./routes')
 
-console.log(process.env)
 const TWO_WEEKS = 1000 * 60 * 60 * 24 * 14
 const {
   SESSION_LIFETIME = TWO_WEEKS,
   SESSION_NAME = 'eventz_sid',
   SESSION_SECRET = 'devTestSecret',
   NODE_ENV = 'development',
-  REDIS_URL = 'redis://127.0.0.1:6379'
+  REDIS_URL
 } = process.env
 
 const app = express()
@@ -30,7 +29,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, '../dist')))
 
 const RedisStore = require('connect-redis')(session)
-const client = redis.createClient(REDIS_URL)
+let client
+if (REDIS_URL) client = redis.createClient(REDIS_URL)
+else client = redis.createClient()
 client.on('error', console.error)
 app.use(session({
   name: SESSION_NAME,
@@ -51,11 +52,12 @@ const createMockData = require('./db/createMockData')
 const retry = (fn, retries = 3) => fn().catch(e => retries <= 0 ? Promise.reject(e) : retry(fn, retries - 1))
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const delayError = (fn, ms) => () => fn().catch(e => delay(ms).then(y => Promise.reject(e)))
-retry(delayError(createMockData, 3000))
+retry(delayError(createMockData, 3000)).catch(err => { console.log('Could not create test data', err.detail) })
 
 // extract user_id from session
 app.use(async (req, res, next) => {
   try {
+    console.log(req.session.userId)
     const userId = req.session.userId
     if (userId) {
       const result = await db.query('SELECT * FROM users WHERE user_id = $1', [userId])

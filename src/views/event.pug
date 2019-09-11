@@ -18,6 +18,8 @@ block content
                 =moment(event.date_start).format('LT')
                 if event.date_end
                   =moment(event.date_end).format(' - LT')
+                  if event.timezone
+                    =' ' + event.timezone + ' Time'
                 if event.location
                   br
                   =event.location

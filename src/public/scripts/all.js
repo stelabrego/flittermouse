@@ -1,6 +1,4 @@
 const ajax = require('superagent')
-const Croppie = require('croppie')
-const L = require('leaflet')
 
 // const baseUrl = 'http:localhost:3000'
 
@@ -151,15 +149,17 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  const logout = document.querySelector('nav .logout')
-  if (logout) {
-    logout.addEventListener('click', (event) => {
-      ajax.post('/logout')
-        .send({ })
-        .then(res => {
-          console.log(res)
-          if (res.body.success) window.location.replace('/')
-        })
+  const logoutButtons = document.querySelectorAll('nav .logout')
+  if (logoutButtons) {
+    logoutButtons.forEach(elem => {
+      elem.addEventListener('click', (event) => {
+        ajax.post('/logout')
+          .send({ })
+          .then(res => {
+            console.log(res)
+            if (res.body.success) window.location.replace('/')
+          })
+      })
     })
   }
 
@@ -273,6 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let avatarBlob = null
 
   if (displayNameInput) {
+    const Croppie = require('croppie')
+
     const enableProfileSaveButton = () => {
       updateProfileButton.removeAttribute('disabled')
     }
@@ -417,6 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // MAP
   const mapElem = document.getElementById('map')
   if (mapElem) {
+    const L = require('leaflet')
     // set up the map
     const lat = mapElem.attributes.lat.value
     const lon = mapElem.attributes.lon.value
@@ -487,5 +490,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000)
       }
     })
+  }
+
+  // CREATE EVENT
+  const dateStartPicker = document.getElementById('dateStartPicker')
+  if (dateStartPicker) {
+    const dateEndPicker = document.getElementById('dateEndPicker')
+    const flatpickr = require('flatpickr')
+    const ConfirmDate = require('flatpickr/dist/plugins/confirmDate/confirmDate')
+    const config = {
+      enableTime: true,
+      altInput: true,
+      plugins: [new ConfirmDate()]
+    }
+    flatpickr(dateStartPicker, { ...config, altInputClass: 'dateStartVisible input' })
+    flatpickr(dateEndPicker, { ...config, altInputClass: 'dateEndVisible input' })
+    const LocationSuggest = require('../../views/components/LocationSuggest')
+    console.log(LocationSuggest)
+    ReactDOM.render(
+      <LocationSuggest />,
+      document.getElementById('locationSuggest')
+    )
+    const createEventForm = document.getElementById('createEventForm')
+    const formElems = createEventForm.elements
+    const formElemsArray = [...createEventForm.elements]
+    formElemsArray.forEach(elem => {
+      elem.oninput = (event) => elem.classList.remove('is-danger')
+    })
+    formElems.dateStart.onchange = (event) => {
+      document.querySelector('.dateStartVisible').classList.remove('is-danger')
+    }
+    formElems.dateEnd.onchange = (event) => {
+      document.querySelector('.dateEndVisible').classList.remove('is-danger')
+    }
+    createEventForm.onsubmit = (event) => {
+      event.preventDefault()
+      const formElems = createEventForm.elements
+      console.log(formElems)
+      const reqBody = {
+        name: formElems.name.value,
+        description: formElems.description.value,
+        dateStart: formElems.dateStart.value,
+        dateEnd: formElems.dateEnd.value,
+        timezone: formElems.timezone.value,
+        location: formElems.location.value
+      }
+      console.log(reqBody, JSON.stringify(reqBody))
+      fetch('/events/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reqBody)
+      })
+        .then(res => res.json())
+        .then(res => {
+          console.log(res)
+          if (res.invalidFields && res.invalidFields.length > 0) {
+            res.invalidFields.forEach(item => {
+              if (item === 'dateStart' || item === 'dateEnd') {
+                className = item + 'Visible'
+                const el = document.querySelector(`.${className}`)
+                el.classList.add('is-danger')
+              } else formElems[item].classList.add('is-danger')
+            })
+          } else {
+            window.location.assign('/home')
+          }
+        })
+      
+    }
   }
 })

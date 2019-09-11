@@ -2,10 +2,10 @@ extends layout
 
 block stylesheets
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css')
-  link(href='https://fonts.googleapis.com/css?family=Farro|Heebo|Palanquin|Philosopher|Proza+Libre&display=swap', rel='stylesheet')
+  link(href='https://fonts.googleapis.com/css?family=Proza+Libre&display=swap', rel='stylesheet')
 
 block content
-  section.hero.is-primary.is-bold
+  section.hero.is-primary.is-bold.is-medium
     .hero-body
       .container
         .columns.is-centered.is-vcentered
@@ -16,6 +16,57 @@ block content
             p.subtitle 
           .column.is-5
             img.animated.fadeOut.delay-2s.fast#landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/1.jpg')
-  p=message
+  section.hero.is-medium#definition
+    .hero-body
+      .container
+        p.is-size-3.has-text-centered
+          b='flittermouse:'
+          em=' (noun) '
+          ='a cute name for bats 🦇💖'
+  section.hero.is-link.is-large.is-bold
+    .hero-body
+      .container
+        .columns.is-variable.is-8
+          .column.is-4#ourMission
+            p.title.is-hidden-tablet Our Mission 🌎
+            p.title.has-text-right.is-hidden-mobile Our
+              br
+              ='Mission'
+              br
+              ='🌎'
+          .column.is-6
+            p.title flittermouse.io is a website where anticapitalists, antifascists, communists, anarchists, and others can easily and privately share events with one another without relying on exploitative capitalist organizations like Facebook, Google, Microsoft, and Amazon
+  section.section#whyFlittermouse
+    .container
+      h1.title.is-2.has-text-centered Why flittermouse? 🤔
+      .columns.is-centered
+        .column.is-3
+          h2.title.has-text-centered Anti-Capitalist
+          .box
+            .content
+              ul
+                li No Data Brokering
+                li No Venture Capital
+                li No Profiteering
+        .column.is-3.is-offset-1
+          h2.title.has-text-centered Private
+          .box
+            .content
+              ul
+                li Customize Your Privacy with Granular Controls
+                li Easily Update Settings
+                li Easily Hide Profile from Public Searches
+        .column.is-3.is-offset-1
+          h2.title.has-text-centered Ethically Hosted
+          .box
+            .content
+              ul
+                li No Amazon/AWS services
+                li No Microsoft services
+                li No Google services
+                li No Facebook services
+  
+
+        
 
       

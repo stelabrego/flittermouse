@@ -1,6 +1,7 @@
 @charset "utf-8";
-$primary: #7c007c;
-$link: #419ab1;
+$primary: #882088;
+$link: #4188b1;
+$warning: #fdeb87;
 // $family-primary: 'Farro', sans-serif;
 // $family-primary: 'Philosopher', sans-serif;
 // $family-primary: 'Heebo', sans-serif;
@@ -29,6 +30,9 @@ $footer-background-color: $white-ter;
 @import "../../../node_modules/bulma/sass/grid/columns";
 @import "../../../node_modules/bulma/sass/components/card";
 
+#definition {background-color: #fbf9ff}
+#ourMission {border-right: 1px solid white}
+#ourMission p {font-size: 3rem; line-height: 5rem;}
 nav {padding-left: 1rem; padding-right: 1rem;}
 .navbar-start {flex-grow: 4;}
 .navbar-start .navbar-item {width: 100%;}

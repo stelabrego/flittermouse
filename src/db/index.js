@@ -3,9 +3,9 @@ const { Pool } = require('pg')
 const {
   NODE_ENV = 'development',
   POSTGRES_HOST = 'localhost',
-  POSTGRES_USER = 'postgres',
-  POSTGRES_DB = 'flittermouse',
-  POSTGRES_PASSWORD = 'thecatsatonthestoolandplayedthepiano',
+  POSTGRES_USER,
+  POSTGRES_DB,
+  POSTGRES_PASSWORD,
   POSTGRES_PORT = 5432
 } = process.env
 

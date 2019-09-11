@@ -8,9 +8,9 @@ block content
           .column.is-8
             h1.title.has-text-centered Hosting
             hr
-            .columns
+            .columns.is-multiline.is-centered.is-vcentered
               each event in hostingEvents
-                .column.is-4
+                .column.is-6
                   include partials/eventCard
   if attendingEvents.length > 0
     section.section
@@ -19,7 +19,7 @@ block content
           .column.is-8
             h1.title.has-text-centered Attending
             hr
-            .columns
+            .columns.is-multiline.is-centered.is-vcentered
               each event in attendingEvents
-                .column.is-4
+                .column.is-6
                   include partials/eventCard

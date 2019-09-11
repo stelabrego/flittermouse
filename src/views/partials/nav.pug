@@ -14,14 +14,17 @@ nav.navbar.has-shadow(role="navigation" aria-label="main navigation")
             input.input.is-medium.is-rounded#navSearchInput(name='query' placeholder='Search for events...')
       .navbar-end
         if sessionUser
-          .is-size-4.navbar-item.is-hidden-mobile=sessionUser.username
-          .navbar-item.has-dropdown.is-hoverable
-            a.navbar-link.is-arrowless.is-hidden-mobile(href='/' + sessionUser.username)
+          a.navbar-item.is-size-5(href='/create') Create Event 🧛🏼‍♀️
+          a.navbar-item.is-size-5.is-hidden-tablet(href='/home') Home 🏰
+          a.navbar-item.is-size-5.is-hidden-tablet(href='/settings') Settings 🧪
+          a.navbar-item.is-size-5.logout.is-hidden-tablet Logout ⚰️
+          .navbar-item.has-dropdown.is-hoverable.is-hidden-mobile
+            a.navbar-link.is-arrowless(href='/' + sessionUser.username)
               img.avatar#navAvatar(src=sessionUser.avatar_url)
             .navbar-dropdown.is-right.is-boxed
-              a.navbar-item.is-size-6(href='/home') Home
-              a.navbar-item.is-size-6(href='/settings') Settings
-              a.navbar-item.is-size-6.logout Logout
+              a.navbar-item.is-size-6(href='/home') Home 🏰
+              a.navbar-item.is-size-6(href='/settings') Settings 🧪
+              a.navbar-item.is-size-6.logout Logout ⚰️
         if !sessionUser
           .navbar-item
             .buttons

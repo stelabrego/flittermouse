@@ -32,12 +32,12 @@ CREATE TABLE users (
 
 CREATE TABLE user_settings (
   user_id INTEGER PRIMARY KEY REFERENCES users ON DELETE CASCADE,
-  attending_visibility VISIBILITY DEFAULT 'following',
-  following_visibility VISIBILITY DEFAULT 'following',
+  attending_visibility VISIBILITY DEFAULT 'private',
+  following_visibility VISIBILITY DEFAULT 'private',
   avatar_visibility VISIBILITY DEFAULT 'following',
   bio_visibility VISIBILITY DEFAULT 'following',
   name_visibility VISIBILITY DEFAULT 'following',
-  email_visibility VISIBILITY DEFAULT 'following',
+  email_visibility VISIBILITY DEFAULT 'private',
   display_name_visibility VISIBILITY DEFAULT 'following',
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -56,8 +56,9 @@ CREATE TABLE events (
   name TEXT NOT NULL CHECK (LENGTH(name) > 0), -- check not ''
   url_key TEXT UNIQUE NOT NULL,
   description TEXT NOT NULL DEFAULT '',
-  date_start TIMESTAMP WITH TIME ZONE,
-  date_end TIMESTAMP WITH TIME ZONE,
+  date_start TIMESTAMP,
+  date_end TIMESTAMP,
+  timezone TEXT,
   location TEXT NOT NULL DEFAULT '',
   lat NUMERIC,
   lon NUMERIC,

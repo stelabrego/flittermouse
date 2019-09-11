@@ -1,0 +1,57 @@
+extends layout
+
+block stylesheets
+  link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.2/plugins/confirmDate/confirmDate.css', integrity='sha256-WcAI0bCUFw5J3lXNkoQRlLI4WoUQhAhP5uMnmFZo2fE=', crossorigin='anonymous')
+
+block scripts
+  script(src='https://cdn.jsdelivr.net/npm/flatpickr')
+  script(src='https://unpkg.com/react@16/umd/react.production.min.js', crossorigin='')
+  script(src='https://unpkg.com/react-dom@16/umd/react-dom.production.min.js', crossorigin='')
+
+block content
+  section.section
+    .container
+      .columns.is-centered
+        .column.is-6
+          h1.title.is-1 Create a New Event
+          form.form#createEventForm(action="")
+            .field
+              label.label.is-size-5 Name
+                .control
+                  input.input(type='text', name='name' required)
+              p.help Only required field. Max 40 characters.
+            .field
+              label.label.is-size-5 Description
+                .control
+                  textarea.textarea(name='description')
+              p.help Max 160 characters.
+            .field
+              label.label.is-size-5 Date Start
+                .control
+                  input.input#dateStartPicker(type='datetime', name='dateStart')
+            .field
+              label.label.is-size-5 Date End
+                .control
+                  input.input#dateEndPicker(type='datetime', name='dateEnd')
+              p.help Must be after Date Start
+            .field
+              label.label.is-size-5 Timezone
+                .control
+                  .select
+                    select(name='timezone')
+                      option(value="Atlantic") San Juan (Atlantic Time)
+                      option(value="Eastern" selected) New York (Eastern Time)
+                      option(value="Central") Chicago (Central Time)
+                      option(value="Mountain") Denver (Mountain Time)
+                      option(value="Pacific") Los Angeles (Pacific Time)
+                      option(value="Alaska") Anchorage (Alaska Time)
+                      option(value="Hawaii") Honolulu (Hawaii Time)
+            .field
+              label.label.is-size-5 Location
+                .control
+                  #locationSuggest
+            .field
+              .control
+                button.button.is-link(type='submit') Submit
+
