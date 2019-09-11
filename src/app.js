@@ -52,7 +52,7 @@ const createMockData = require('./db/createMockData')
 const retry = (fn, retries = 3) => fn().catch(e => retries <= 0 ? Promise.reject(e) : retry(fn, retries - 1))
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const delayError = (fn, ms) => () => fn().catch(e => delay(ms).then(y => Promise.reject(e)))
-retry(delayError(createMockData, 3000)).catch(err => { console.log('Could not create test data', err.detail) })
+retry(delayError(createMockData, 3000)).catch(err => { console.log('Could not create test data', err.message) })
 
 // extract user_id from session
 app.use(async (req, res, next) => {
