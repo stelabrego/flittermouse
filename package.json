@@ -16,20 +16,12 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "eslint": "^6.1.0",
-    "eslint-config-standard": "^13.0.1",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.14.3",
-    "eslint-plugin-standard": "^4.0.0",
     "mocha": "^6.2.0",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2"
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
-    "animate.css": "^3.7.2",
     "aws-sdk": "^2.521.0",
     "bulma": "^0.7.5",
     "connect-redis": "^4.0.0",
@@ -37,8 +29,6 @@
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
     "express-session": "^1.16.2",
-    "f": "^1.4.0",
-    "fl": "^0.1.1",
     "flatpickr": "^4.6.2",
     "http-errors": "^1.7.3",
     "leaflet": "^1.5.1",
@@ -58,6 +48,7 @@
     "react-autosuggest": "^9.4.3",
     "redis": "^2.8.0",
     "sass": "^1.23.0-module.beta.1",
+    "standard": "^14.3.1",
     "superagent": "^5.1.0"
   }
 }

@@ -31,8 +31,9 @@ $footer-background-color: $white-ter;
 @import "../../../node_modules/bulma/sass/components/card";
 
 #definition {background-color: #fbf9ff}
-#ourMission {border-right: 1px solid white}
-#ourMission p {font-size: 3rem; line-height: 5rem;}
+#ourMissionText {border-left: 1px solid white; padding-left: 3rem;}
+#ourMissionTitle p {font-size: 3rem; line-height: 5rem;}
+#ourMissionTitle {margin-right: 2rem;}
 nav {padding-left: 1rem; padding-right: 1rem;}
 .navbar-start {flex-grow: 4;}
 .navbar-start .navbar-item {width: 100%;}
@@ -53,7 +54,50 @@ label.privacy{text-align: left}
 .body-content {min-height: 70vh;}
 #map{height: 300px;z-index: 0;}
 .search-avatar-container {display: flex; justify-content: center; align-items: center}
-#landingHeroImage{border-radius: 20px;}
-#landingHeroFadeText{display: inline-block; width: 180px; padding-bottom: 5px;}
+.landingHeroImage{border-radius: 20px;}
+.landingHeroFadeText{display: inline-block; width: 180px; padding-bottom: 5px;}
 #landingHeroFadeTextContainer{border-bottom: 1px solid white; margin-left: .5rem;}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+.landingHeroFadeText:first-of-type, .landingHeroImage:first-of-type {
+  animation-name: fadeOutUp;
+  animation-duration: 500ms;
+  animation-delay: 2s;
+}
+
+.landingHeroFadeText:not(:first-of-type):not(:last-of-type), .landingHeroImage:not(:first-of-type):not(:last-of-type) {
+  animation-name: fadeInDown, fadeOutUp;
+  animation-duration: 500ms, 500ms;
+  animation-delay: 0s, 2s;
+}
+
+.landingHeroFadeText:last-of-type, .landingHeroImage:last-of-type {
+  animation-name: fadeInDown;
+  animation-duration: 500ms;
+  animation-delay: 0s;
+}
+
+
 // .user-search-result .avatar {max-width: 150px;}

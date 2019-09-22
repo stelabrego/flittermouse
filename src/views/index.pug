@@ -1,9 +1,5 @@
 extends layout
 
-block stylesheets
-  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css')
-  link(href='https://fonts.googleapis.com/css?family=Proza+Libre&display=swap', rel='stylesheet')
-
 block content
   section.hero.is-primary.is-bold.is-medium
     .hero-body
@@ -12,10 +8,18 @@ block content
           .column.is-5
             h1.title.is-2!='Find leftist '
               span#landingHeroFadeTextContainer
-                span.is-text#landingHeroFadeText.animated.fadeOutUp.delay-2s.fast="events"
+                span.is-text.landingHeroFadeText="events"
+                span.is-text.landingHeroFadeText.is-hidden="action"
+                span.is-text.landingHeroFadeText.is-hidden="support"
+                span.is-text.landingHeroFadeText.is-hidden="power"
+                span.is-text.landingHeroFadeText.is-hidden="events"
             p.subtitle 
           .column.is-5
-            img.animated.fadeOut.delay-2s.fast#landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/1.jpg')
+            img.landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/1.jpg')
+            img.is-hidden.landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/3.jpg')
+            img.is-hidden.landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/2.jpg')
+            img.is-hidden.landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/4.jpg')
+            img.is-hidden.landingHeroImage(src='https://eventz.nyc3.cdn.digitaloceanspaces.com/1.jpg')
   section.hero.is-medium#definition
     .hero-body
       .container
@@ -26,16 +30,16 @@ block content
   section.hero.is-link.is-large.is-bold
     .hero-body
       .container
-        .columns.is-variable.is-8
-          .column.is-4#ourMission
+        .columns.is-vcentered
+          .column.is-4#ourMissionTitle
             p.title.is-hidden-tablet Our Mission 🌎
             p.title.has-text-right.is-hidden-mobile Our
               br
               ='Mission'
               br
               ='🌎'
-          .column.is-6
-            p.title flittermouse.io is a website where anticapitalists, antifascists, communists, anarchists, and others can easily and privately share events with one another without relying on exploitative capitalist organizations like Facebook, Google, Microsoft, and Amazon
+          .column.is-6#ourMissionText
+            p.is-size-3.is-size-4-mobile to be a website where leftists can share events with one another calmly, easily, and privately without relying on awful corporations like Facebook, Google, Microsoft, and Amazon
   section.section#whyFlittermouse
     .container
       h1.title.is-2.has-text-centered Why flittermouse? 🤔

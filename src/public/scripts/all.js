@@ -446,50 +446,19 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // LANDING
-  const landingHeroFadeText = document.getElementById('landingHeroFadeText')
-  const landingHeroImage = document.getElementById('landingHeroImage')
-  if (landingHeroFadeText) {
-    const textStates = ['action', 'support', 'power', 'events']
-    let nextTextState = 0
-    const imageStates = [
-      'https://eventz.nyc3.cdn.digitaloceanspaces.com/3.jpg',
-      'https://eventz.nyc3.cdn.digitaloceanspaces.com/2.jpg',
-      'https://eventz.nyc3.cdn.digitaloceanspaces.com/4.jpg',
-      'https://eventz.nyc3.cdn.digitaloceanspaces.com/1.jpg'
-    ]
-    let nextImageState = 0
-    landingHeroFadeText.addEventListener('animationend', (event) => {
-      landingHeroFadeText.classList.remove('delay-2s')
-      if (nextTextState === textStates.length) return
-      if (landingHeroFadeText.classList.contains('fadeOutUp')) {
-        landingHeroFadeText.innerText = textStates[nextTextState++]
-        setTimeout(() => {
-          landingHeroFadeText.classList.remove('fadeOutUp')
-          landingHeroFadeText.classList.add('fadeInDown')
-        }, 200)
-      } else {
-        setTimeout(() => {
-          landingHeroFadeText.classList.remove('fadeInDown')
-          landingHeroFadeText.classList.add('fadeOutUp')
-        }, 3000)
-      }
-    })
-    landingHeroImage.addEventListener('animationend', (event) => {
-      landingHeroImage.classList.remove('delay-2s')
-      if (nextImageState === imageStates.length) return
-      if (landingHeroImage.classList.contains('fadeOut')) {
-        landingHeroImage.setAttribute('src', imageStates[nextImageState++])
-        setTimeout(() => {
-          landingHeroImage.classList.remove('fadeOut')
-          landingHeroImage.classList.add('fadeIn')
-        }, 200)
-      } else {
-        setTimeout(() => {
-          landingHeroImage.classList.remove('fadeIn')
-          landingHeroImage.classList.add('fadeOut')
-        }, 3000)
-      }
-    })
+  if (document.querySelector('.landingHeroFadeText')) {
+    const animationCycle = (elementList) => {
+      elementList.forEach((element, index, array) => {
+        element.addEventListener('animationend', (event) => {
+          if (event.animationName === 'fadeOutUp' && index < array.length - 1) {
+            element.classList.add('is-hidden')
+            array[index + 1].classList.remove('is-hidden')
+          }
+        })
+      })
+    }
+    animationCycle(document.querySelectorAll('.landingHeroFadeText'))
+    animationCycle(document.querySelectorAll('.landingHeroImage'))
   }
 
   // CREATE EVENT
@@ -558,7 +527,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.assign('/home')
           }
         })
-      
     }
   }
 })
