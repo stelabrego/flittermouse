@@ -11,6 +11,9 @@ const {
 
 let pool
 if (NODE_ENV === 'production') {
+  if (!POSTGRES_USER || !POSTGRES_PASSWORD || !POSTGRES_DB) {
+    console.log('missing env variables')
+  }
   const connectionString = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}`
   pool = new Pool({
     connectionString
