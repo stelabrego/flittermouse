@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (res.invalidFields && res.invalidFields.length > 0) {
             res.invalidFields.forEach(item => {
               if (item === 'dateStart' || item === 'dateEnd') {
-                className = item + 'Visible'
+                const className = item + 'Visible'
                 const el = document.querySelector(`.${className}`)
                 el.classList.add('is-danger')
               } else formElems[item].classList.add('is-danger')
