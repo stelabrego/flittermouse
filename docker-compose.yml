@@ -45,6 +45,8 @@ services:
       - db
       - cache
     env_file: ~/.environments/flittermouse/app.env
+    environment:
+      - LETSENCRYPT_HOST=flittermouse.io,www.flittermouse.io
 
 
   cache:
@@ -60,9 +62,27 @@ services:
     container_name: nginx
     environment:
       - DEFAULT_HOST=flittermouse.io
+      - VIRTUAL_PROTO=https
+      - VIRTUAL_PORT=443
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /etc/nginx/certs
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt
+    environment:
+      - DEFAULT_EMAIL=stelabrego@icloud.com
+    volumes:
+      - /etc/nginx/certs
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   
       

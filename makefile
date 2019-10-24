@@ -34,3 +34,6 @@ prod:
 # which triggers db queries out of nowhere
 # i think there's a bug with the url of the parcel css sourcemaps
 # there is https://github.com/parcel-bundler/parcel/pull/2867
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+# install latest docker-compose release https://github.com/docker/compose/releases
+# don't use snap install docker! it runs docker in a container and you can't access env variables
