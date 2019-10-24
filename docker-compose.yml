@@ -78,11 +78,12 @@ services:
     container_name: letsencrypt
     environment:
       - DEFAULT_EMAIL=stelabrego@icloud.com
+      - NGINX_PROXY_CONTAINER=nginx
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/nginx/certs
       - /etc/nginx/vhost.d
       - /usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
 
   
       
