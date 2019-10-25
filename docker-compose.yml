@@ -69,9 +69,16 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /etc/nginx/certs
-      - /etc/nginx/vhost.d
-      - /usr/share/nginx/html
+      - type: volume
+        source: certs
+        target: /etc/nginx/certs
+      - type: volume
+        source: vhost
+        target: /etc/nginx/vhost.d
+      - type: volume
+        source: html
+        target: /usr/share/nginx/html
+
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -79,11 +86,23 @@ services:
     environment:
       - DEFAULT_EMAIL=stelabrego@icloud.com
       - NGINX_PROXY_CONTAINER=nginx
+      - DEBUG=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/nginx/certs
-      - /etc/nginx/vhost.d
-      - /usr/share/nginx/html
+      - type: volume
+        source: certs
+        target: /etc/nginx/certs
+      - type: volume
+        source: vhost
+        target: /etc/nginx/vhost.d
+      - type: volume
+        source: html
+        target: /usr/share/nginx/html
+
+volumes:
+  certs:
+  vhost:
+  html:
 
   
       
