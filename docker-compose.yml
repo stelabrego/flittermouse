@@ -18,6 +18,7 @@ services:
     restart: always
     volumes:
       - './deploy/postgres:/docker-entrypoint-initdb.d'
+      - '~/flittermouse-data:/var/lib/postgresql/data'
     env_file: ~/.environments/flittermouse/db.env
     expose:
       - 5432

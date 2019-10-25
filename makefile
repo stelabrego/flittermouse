@@ -26,9 +26,8 @@ start:
 	${MAKE} -j watch
 
 prod:
-	docker-compose kill app
-	docker-compose rm --force app
-	docker-compose start app
+	docker-compose down --remove-orphans
+	docker-compose up -d --force-recreate
 
 # must install redis and start redis too
 # chrome does a weird asset reload when it notices it got changed on the server
