@@ -15,7 +15,7 @@ test:
 db:
 	docker-compose stop db adminer
 	docker-compose rm --force db adminer
-	docker-compose start db adminer
+	docker-compose start --build db adminer
 
 rm-containers:
 	docker-compose down --remove-orphans
@@ -27,7 +27,7 @@ start:
 
 prod:
 	docker-compose down --remove-orphans
-	docker-compose up -d --force-recreate
+	docker-compose up -d --build
 
 # must install redis and start redis too
 # chrome does a weird asset reload when it notices it got changed on the server
