@@ -23,7 +23,7 @@ services:
     expose:
       - 5432
     ports:
-      - '5432:5432' # only here for adminer
+      - '5432:5432' # only here for adminer and development
   
         
   adminer:
