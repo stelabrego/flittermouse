@@ -175,9 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => {
             console.log(res)
             if (res.body.success) {
-              updateAttendanceButton.innerHTML = 'Remove RSVP'
-              updateAttendanceButton.classList.remove('is-link')
-              updateAttendanceButton.classList.add('is-warning')
+              // updateAttendanceButton.innerHTML = 'Remove RSVP'
+              // updateAttendanceButton.classList.remove('is-link')
+              // updateAttendanceButton.classList.add('is-warning')
+              window.location.reload(true)
             } else if (res.body.needToLogin) {
               toggleLoginModal()
             }
@@ -190,9 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
           .then(res => {
             console.log(res)
             if (res.body.success) {
-              updateAttendanceButton.innerHTML = 'RSVP'
-              updateAttendanceButton.classList.add('is-link')
-              updateAttendanceButton.classList.remove('is-warning')
+              // updateAttendanceButton.innerHTML = 'RSVP'
+              // updateAttendanceButton.classList.add('is-link')
+              // updateAttendanceButton.classList.remove('is-warning')
+              window.location.reload(true)
             } else if (res.body.needToLogin) {
               toggleLoginModal()
             }
@@ -527,6 +529,18 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.assign('/home')
           }
         })
+    }
+  }
+  rsvpModal = document.getElementById('rsvp-modal')
+  if (rsvpModal) {
+    console.log('rsvp modal detected');
+    openRsvpModal = document.getElementById('open-rsvp-modal')
+    openRsvpModal.onclick = (target) => {
+      rsvpModal.classList.toggle('is-active')
+    }
+    rsvpModalClose = document.getElementById('rsvp-modal-close')
+    rsvpModalClose.onclick = (target) => {
+      rsvpModal.classList.toggle('is-active')
     }
   }
 })

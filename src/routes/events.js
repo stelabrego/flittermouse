@@ -56,6 +56,8 @@ router.get('/:urlKey', async (req, res, next) => {
     const eventTags = result.rows
     result = await db.query('SELECT * FROM event_questions WHERE event_id = $1', [event.event_id])
     const eventQuestions = result.rows
+    result = await db.query('SELECT * FROM users WHERE user_id IN (SELECT user_id FROM attendance WHERE event_id = $1)', [event.event_id])
+    const rsvpUsers = result.rows
     let userIsAttending = false
     let userOwnsEvent = false
     if (sessionUser) {
@@ -63,7 +65,7 @@ router.get('/:urlKey', async (req, res, next) => {
       userIsAttending = result.rows.length > 0
       userOwnsEvent = event.user_id === sessionUser.user_id
     }
-    res.render('event', { sessionUser, event, eventTags, eventQuestions, eventUser, userIsAttending, userOwnsEvent })
+    res.render('event', { sessionUser, event, eventTags, eventQuestions, eventUser, userIsAttending, userOwnsEvent, rsvpUsers })
   } catch (err) {
     console.error(err.stack)
     next(err)

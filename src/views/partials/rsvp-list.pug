@@ -1,0 +1,16 @@
+.modal#rsvp-modal
+  .modal-background
+  .modal-content
+    .box
+      h2.title Public RSVP's 🦇
+      hr
+      if rsvpUsers.length === 0
+        p No RSVP's 😴
+      for user in rsvpUsers
+        .rsvp-user-container
+          img.rsvp-avatar(src=user.avatar_url)
+          .rsvp-name-container
+            if user.display_name
+              p.rsvp-display-name=user.display_name
+            p.rsvp-username='@' + user.username
+  button#rsvp-modal-close.modal-close.is-large(aria-label='close')

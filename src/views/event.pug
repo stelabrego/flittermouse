@@ -25,26 +25,25 @@ block content
                   =event.location
           each tag in eventTags
             a.button.is-primary.is-inverted.is-outlined.is-rounded.event-tag=tag.name
-          
-  if event.description
-    section.section
-      .columns.is-centered
-        .column.is-6
+  section.section
+    .columns.is-centered
+      .column.is-6  
+        if event.description
           p.title.is-4='From the host, '
             a(href='/' + eventUser.username)='@'+eventUser.username
           p.is-size-5=event.description
-          if eventQuestions.length > 0
-            hr
-            each question in eventQuestions
-              if question.visible === 1
-                p.is-size-5 
-                  em=question.question
-                p.is-size-5 
-                  =question.answer
-          if event.lat && event.lon
-            hr
-            #map(location=event.location lat=event.lat lon=event.lon)
-          button.button.is-link.is-medium.is-rounded.is-fullwidth.attend.see-attendees See Who Is Going
-          if !userOwnsEvent
-            button.button.is-medium.is-rounded.is-fullwidth.attend.update-attendance(urlKey=event.url_key class=userIsAttending ? 'is-warning' : 'is-link' )=userIsAttending ? 'Remove RSVP' : 'RSVP'
-
+        if eventQuestions.length > 0
+          hr
+          each question in eventQuestions
+            if question.visible === 1
+              p.is-size-5 
+                em=question.question
+              p.is-size-5 
+                =question.answer
+        if event.lat && event.lon
+          hr
+          #map(location=event.location lat=event.lat lon=event.lon)
+        button#open-rsvp-modal.button.is-link.is-medium.is-rounded.is-fullwidth.attend.see-attendees See Who Is Going
+        if !userOwnsEvent
+          button.button.is-medium.is-rounded.is-fullwidth.attend.update-attendance(urlKey=event.url_key class=userIsAttending ? 'is-warning' : 'is-link' )=userIsAttending ? 'Remove RSVP' : 'RSVP'
+  include partials/rsvp-list

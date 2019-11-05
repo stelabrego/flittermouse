@@ -101,3 +101,8 @@ label.privacy{text-align: left}
 
 
 // .user-search-result .avatar {max-width: 150px;}
+
+.rsvp-user-container {display: flex; align-items: center; margin-bottom: 1rem;}
+.rsvp-avatar {border-radius: 100%; width: 70px;}
+.rsvp-display-name {display: inline-block; font-size: 1.5rem; font-weight: 700}
+.rsvp-name-container{display: flex; flex-direction: column; margin-left: 1rem;}
