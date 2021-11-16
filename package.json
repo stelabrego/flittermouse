@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
-    "aws-sdk": "^2.521.0",
+    "aws-sdk": "^2.814.0",
     "bulma": "^0.7.5",
     "connect-redis": "^4.0.0",
     "croppie": "^2.6.4",
