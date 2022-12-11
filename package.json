@@ -26,7 +26,7 @@
     "bulma": "^0.7.5",
     "connect-redis": "^4.0.0",
     "croppie": "^2.6.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-promise-router": "^3.0.3",
     "express-session": "^1.16.2",
     "flatpickr": "^4.6.2",
